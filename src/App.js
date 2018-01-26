@@ -116,7 +116,7 @@ const Repository = ({
     </div>
   </div>
 
-const repositoriesOfOrganization = gql`
+const RepositoriesOfOrganization = gql`
   query RepositoriesOfOrganization($organization: String!) {
     organization(login: $organization) {
       name
@@ -146,7 +146,7 @@ const repositoriesOfOrganization = gql`
   }
 `
 
-const watchRepository = gql`
+const WatchRepository = gql`
   mutation updateSubscription($id: ID!, $isWatch: SubscriptionState!) {
     updateSubscription(input:{state: $isWatch, subscribableId: $id}) {
       subscribable {
@@ -158,17 +158,18 @@ const watchRepository = gql`
 `
 
 export default compose(
-  graphql(repositoriesOfOrganization, {
+  graphql(RepositoriesOfOrganization, {
     options: {
       variables: {
         organization: ORGANIZATION_DEFAULT,
       }
     },
   }),
-  graphql(watchRepository, {
-    props: ({ mutate }) => ({
+  graphql(WatchRepository, {
+    name: 'watchRepository',
+    props: ({ watchRepository }) => ({
       onWatchToggle: (id, isWatch) =>
-        mutate({
+        watchRepository({
           variables: { id, isWatch },
           optimisticResponse: {
             updateSubscription: {
@@ -189,13 +190,13 @@ export default compose(
         const variables = { organization: 'the-road-to-learn-react' };
 
         // Read the data from our cache for this query.
-        const data = proxy.readQuery({ query: repositoriesOfOrganization, variables });
+        const data = proxy.readQuery({ query: RepositoriesOfOrganization, variables });
 
         // Mutate your repository node.
         data.organization.repositories.edges.find(edge => edge.node.id === id).node.viewerSubscription = viewerSubscription;
 
         // Write our data back to the cache.
-        proxy.writeQuery({ query: repositoriesOfOrganization, data, variables });
+        proxy.writeQuery({ query: RepositoriesOfOrganization, data, variables });
       },
     }
   }),
