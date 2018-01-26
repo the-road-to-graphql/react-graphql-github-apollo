@@ -212,7 +212,7 @@ export default compose(
         const { id, viewerSubscription } = props.data.updateSubscription.subscribable;
 
         const fragment = proxy.readFragment({
-          id,
+          id: `Repository:${id}`,
           fragment: RepositoryFragment,
         });
 
@@ -221,7 +221,7 @@ export default compose(
           : fragment.watchers.totalCount - 1;
 
         proxy.writeFragment({
-          id,
+          id: `Repository:${id}`,
           fragment: RepositoryFragment,
           data: {
             ...fragment,

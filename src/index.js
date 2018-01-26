@@ -4,7 +4,7 @@ import { ApolloProvider } from 'react-apollo';
 import { ApolloClient } from 'apollo-client';
 import { ApolloLink } from 'apollo-link';
 import { HttpLink } from 'apollo-link-http';
-import { InMemoryCache, defaultDataIdFromObject } from 'apollo-cache-inmemory';
+import { InMemoryCache } from 'apollo-cache-inmemory';
 import { onError } from 'apollo-link-error';
 
 import './index.css';
@@ -35,14 +35,7 @@ const link = ApolloLink.from([
   httpLink,
 ]);
 
-const cache = new InMemoryCache({
-  dataIdFromObject: object => {
-    switch (object.__typename) {
-      case 'Repository': return object.id;
-      default: return defaultDataIdFromObject(object);
-    }
-  }
-});
+const cache = new InMemoryCache();
 
 const client = new ApolloClient({
   link,
