@@ -37,7 +37,7 @@ class App extends Component {
     const { input } = this.state;
     const { data } = this.props;
     const { loading, error, organization } = data;
-
+    console.log(error);
     return (
       <div className="App">
         <header className="App-header">
@@ -79,7 +79,7 @@ const Organization = ({ organization, loading, error, onWatchToggle }) => {
   if (error) {
     return (
       <div>
-        <p>Something went wrong ...</p>
+        <p><strong>Something went wrong:</strong> {error.toString()}</p>
       </div>
     );
   }
