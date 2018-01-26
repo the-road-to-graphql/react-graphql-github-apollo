@@ -30,6 +30,16 @@ class App extends Component {
 
     mutate({
       variables: { id, isWatch },
+      optimisticResponse: {
+        updateSubscription: {
+          __typename: 'Mutation',
+          subscribable: {
+            __typename: 'Repository',
+            id,
+            viewerSubscription: isWatch,
+          }
+        }
+      },
     });
   }
 
@@ -37,7 +47,7 @@ class App extends Component {
     const { input } = this.state;
     const { data } = this.props;
     const { loading, error, organization } = data;
-    console.log(error);
+
     return (
       <div className="App">
         <header className="App-header">
