@@ -12,7 +12,7 @@ class App extends Component {
     super();
 
     this.state = {
-      input: ORGANIZATION_DEFAULT
+      input: ORGANIZATION_DEFAULT,
     };
   }
 
@@ -80,7 +80,10 @@ const Organization = ({ organization, loading, error, onWatchToggle }) => {
     <div className="Repositories">
       {organization.repositories.edges.map(repository =>
         <div key={repository.node.id}>
-          <Repository { ...repository.node } onWatchToggle={onWatchToggle} />
+          <Repository
+            { ...repository.node }
+            onWatchToggle={onWatchToggle}
+          />
           <hr />
         </div>
       )}
@@ -129,6 +132,26 @@ const Repository = ({
     </div>
   </div>
 
+const RepositoryFragment = gql`
+  fragment repository on Repository {
+    id
+    name
+    url
+    description
+    stargazers {
+      totalCount
+    }
+    viewerHasStarred
+    forks {
+      totalCount
+    }
+    watchers {
+      totalCount
+    }
+    viewerSubscription
+  }
+`
+
 const RepositoriesOfOrganization = gql`
   query RepositoriesOfOrganization($organization: String!) {
     organization(login: $organization) {
@@ -137,26 +160,14 @@ const RepositoriesOfOrganization = gql`
       repositories(first: 10) {
         edges {
           node {
-            id
-            name
-            url
-            description
-            stargazers {
-              totalCount
-            }
-            viewerHasStarred
-            forks {
-              totalCount
-            }
-            watchers {
-              totalCount
-            }
-            viewerSubscription
+            ...repository
           }
         }
       }
     }
   }
+
+  ${RepositoryFragment}
 `
 
 const WatchRepository = gql`
@@ -200,21 +211,26 @@ export default compose(
       update: (proxy, props) => {
         const { id, viewerSubscription } = props.data.updateSubscription.subscribable;
 
-        const variables = { organization: 'the-road-to-learn-react' };
+        const fragment = proxy.readFragment({
+          id,
+          fragment: RepositoryFragment,
+        });
 
-        // Read the data from our cache for this query.
-        const data = proxy.readQuery({ query: RepositoriesOfOrganization, variables });
+        const totalCount = viewerSubscription === 'SUBSCRIBED'
+          ? fragment.watchers.totalCount + 1
+          : fragment.watchers.totalCount - 1;
 
-        // Mutate your repository node.
-        const node = data.organization.repositories.edges
-          .find(edge => edge.node.id === id).node;
-
-        node.watchers.totalCount = viewerSubscription === 'SUBSCRIBED'
-            ? node.watchers.totalCount + 1
-            : node.watchers.totalCount - 1;
-
-        // Write our data back to the cache.
-        proxy.writeQuery({ query: RepositoriesOfOrganization, data, variables });
+        proxy.writeFragment({
+          id,
+          fragment: RepositoryFragment,
+          data: {
+            ...fragment,
+            watchers: {
+              ...fragment.watchers,
+              totalCount,
+            }
+          },
+        });
       },
     }
   }),
