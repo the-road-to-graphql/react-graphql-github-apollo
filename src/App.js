@@ -193,7 +193,12 @@ export default compose(
         const data = proxy.readQuery({ query: RepositoriesOfOrganization, variables });
 
         // Mutate your repository node.
-        data.organization.repositories.edges.find(edge => edge.node.id === id).node.viewerSubscription = viewerSubscription;
+        const node = data.organization.repositories.edges
+          .find(edge => edge.node.id === id).node;
+
+        node.watchers.totalCount = viewerSubscription === 'SUBSCRIBED'
+            ? node.watchers.totalCount + 1
+            : node.watchers.totalCount - 1;
 
         // Write our data back to the cache.
         proxy.writeQuery({ query: RepositoriesOfOrganization, data, variables });
