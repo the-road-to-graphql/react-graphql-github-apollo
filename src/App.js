@@ -25,27 +25,9 @@ class App extends Component {
     refetch({ organization: input });
   }
 
-  onWatchToggle = (id, isWatch) => {
-    const { mutate } = this.props;
-
-    mutate({
-      variables: { id, isWatch },
-      optimisticResponse: {
-        updateSubscription: {
-          __typename: 'Mutation',
-          subscribable: {
-            __typename: 'Repository',
-            id,
-            viewerSubscription: isWatch,
-          }
-        }
-      },
-    });
-  }
-
   render() {
     const { input } = this.state;
-    const { data } = this.props;
+    const { data, onWatchToggle } = this.props;
     const { loading, error, organization } = data;
 
     return (
@@ -69,7 +51,7 @@ class App extends Component {
             organization={organization}
             loading={loading}
             error={error}
-            onWatchToggle={this.onWatchToggle}
+            onWatchToggle={onWatchToggle}
           />
         </div>
       </div>
@@ -184,6 +166,22 @@ export default compose(
     },
   }),
   graphql(watchRepository, {
+    props: ({ mutate }) => ({
+      onWatchToggle: (id, isWatch) =>
+        mutate({
+          variables: { id, isWatch },
+          optimisticResponse: {
+            updateSubscription: {
+              __typename: 'Mutation',
+              subscribable: {
+                __typename: 'Repository',
+                id,
+                viewerSubscription: isWatch,
+              }
+            }
+          },
+        })
+    }),
     options: {
       update: (proxy, props) => {
         const { id, viewerSubscription } = props.data.updateSubscription.subscribable;
