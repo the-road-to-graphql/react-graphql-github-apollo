@@ -109,10 +109,23 @@ const Repository = ({
       <p>Stars: {stargazers.totalCount}</p>
       <p>Forks: {forks.totalCount}</p>
 
-      <p>Watchers: {watchers.totalCount} {viewerSubscription === 'SUBSCRIBED'
-        ? <button onClick={() => onWatchToggle(id, 'UNSUBSCRIBED')} type="button">Unwatch</button>
-        : <button onClick={() => onWatchToggle(id, 'SUBSCRIBED')} type="button">Watch</button>
-      }</p>
+      {viewerSubscription === 'SUBSCRIBED'
+        ? (
+            <button
+              onClick={() => onWatchToggle(id, 'UNSUBSCRIBED')}
+              type="button"
+            >
+              {watchers.totalCount} Unwatch
+            </button>
+        ) : (
+          <button
+            onClick={() => onWatchToggle(id, 'SUBSCRIBED')}
+            type="button"
+          >
+            {watchers.totalCount} Watch
+          </button>
+        )
+      }
     </div>
   </div>
 
