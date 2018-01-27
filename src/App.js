@@ -27,8 +27,9 @@ class App extends Component {
 
   render() {
     const { input } = this.state;
-    const { data, onWatchToggle } = this.props;
+    const { data, onWatchToggle, onFetchMoreRepositories } = this.props;
     const { loading, error, organization } = data;
+    console.log(organization);
 
     return (
       <div className="App">
@@ -52,6 +53,7 @@ class App extends Component {
             loading={loading}
             error={error}
             onWatchToggle={onWatchToggle}
+            onFetchMoreRepositories={onFetchMoreRepositories}
           />
         </div>
       </div>
@@ -59,7 +61,13 @@ class App extends Component {
   }
 }
 
-const Organization = ({ organization, loading, error, onWatchToggle }) => {
+const Organization = ({
+  organization,
+  loading,
+  error,
+  onWatchToggle,
+  onFetchMoreRepositories,
+}) => {
   if (loading) {
     return (
       <div>
@@ -75,9 +83,12 @@ const Organization = ({ organization, loading, error, onWatchToggle }) => {
       </div>
     );
   }
+  const { endCursor } = organization.repositories.pageInfo;
 
   return (
     <div className="Repositories">
+      <button onClick={() => onFetchMoreRepositories(endCursor)} type="button">More</button>
+
       {organization.repositories.edges.map(repository =>
         <div key={repository.node.id}>
           <Repository
@@ -153,15 +164,19 @@ const RepositoryFragment = gql`
 `
 
 const RepositoriesOfOrganization = gql`
-  query RepositoriesOfOrganization($organization: String!) {
+  query RepositoriesOfOrganization($organization: String!, $cursor: String!) {
     organization(login: $organization) {
       name
       url
-      repositories(first: 10) {
+      repositories(first: 3, after: $cursor) {
         edges {
           node {
             ...repository
           }
+        }
+        pageInfo {
+          endCursor
+          hasNextPage
         }
       }
     }
@@ -186,13 +201,14 @@ export default compose(
     options: {
       variables: {
         organization: ORGANIZATION_DEFAULT,
+        cursor: '0'
       }
     },
   }),
   graphql(WatchRepository, {
     name: 'watchRepository',
-    props: ({ watchRepository }) => ({
-      onWatchToggle: (id, isWatch) =>
+    props: ({ watchRepository, ownProps: { data: { fetchMore } } }) => ({
+      onWatchToggle(id, isWatch) {
         watchRepository({
           variables: { id, isWatch },
           optimisticResponse: {
@@ -206,6 +222,27 @@ export default compose(
             }
           },
         })
+      },
+      onFetchMoreRepositories(cursor) {
+        fetchMore({
+          // query: ... (you can specify a different query. FEED_QUERY is used by default)
+          variables: {
+            // We are able to figure out which offset to use because it matches
+            // the feed length, but we could also use state, or the previous
+            // variables to calculate this (see the cursor example below)
+            cursor,
+          },
+          updateQuery: (previousResult, { fetchMoreResult }) => {
+            console.log(previousResult);
+            console.log(fetchMoreResult);
+            // if (!fetchMoreResult) { return previousResult; }
+            // return Object.assign({}, previousResult, {
+            //   // Append the new feed results to the old one
+            //   feed: [...previousResult.feed, ...fetchMoreResult.feed],
+            // });
+          },
+        })
+      },
     }),
     options: {
       update: (proxy, props) => {
