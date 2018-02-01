@@ -28,8 +28,8 @@ class App extends Component {
   render() {
     const { input } = this.state;
     const { data, onWatchToggle, onFetchMoreRepositories } = this.props;
+    console.log(data);
     const { loading, error, organization } = data;
-    console.log(organization);
 
     return (
       <div className="App">
@@ -87,7 +87,13 @@ const Organization = ({
 
   return (
     <div className="Repositories">
-      <button onClick={() => onFetchMoreRepositories(endCursor)} type="button">More</button>
+      <button
+        onClick={() => onFetchMoreRepositories(endCursor)}
+        type="button"
+        disabled={!organization.repositories.pageInfo.hasNextPage}
+      >
+        More
+      </button>
 
       {organization.repositories.edges.map(repository =>
         <div key={repository.node.id}>
@@ -164,7 +170,7 @@ const RepositoryFragment = gql`
 `
 
 const RepositoriesOfOrganization = gql`
-  query RepositoriesOfOrganization($organization: String!, $cursor: String!) {
+  query RepositoriesOfOrganization($organization: String!, $cursor: String) {
     organization(login: $organization) {
       name
       url
@@ -201,8 +207,8 @@ export default compose(
     options: {
       variables: {
         organization: ORGANIZATION_DEFAULT,
-        cursor: '0'
-      }
+        cursor: null,
+      },
     },
   }),
   graphql(WatchRepository, {
@@ -227,19 +233,31 @@ export default compose(
         fetchMore({
           // query: ... (you can specify a different query. FEED_QUERY is used by default)
           variables: {
-            // We are able to figure out which offset to use because it matches
-            // the feed length, but we could also use state, or the previous
-            // variables to calculate this (see the cursor example below)
             cursor,
           },
           updateQuery: (previousResult, { fetchMoreResult }) => {
-            console.log(previousResult);
-            console.log(fetchMoreResult);
-            // if (!fetchMoreResult) { return previousResult; }
-            // return Object.assign({}, previousResult, {
-            //   // Append the new feed results to the old one
-            //   feed: [...previousResult.feed, ...fetchMoreResult.feed],
-            // });
+            if (!fetchMoreResult) {
+              return previousResult;
+            }
+
+            return {
+              // keep previous result, no new result expected
+              ...previousResult,
+              organization: {
+                // keep previous result, no new result expected
+                ...previousResult.organization,
+                repositories: {
+                  // update pageInfo
+                  ...previousResult.organization.repositories,
+                  ...fetchMoreResult.organization.repositories,
+                  edges: [
+                    // update edges
+                    ...previousResult.organization.repositories.edges,
+                    ...fetchMoreResult.organization.repositories.edges,
+                  ],
+                }
+              }
+            }
           },
         })
       },
