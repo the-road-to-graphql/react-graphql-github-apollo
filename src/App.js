@@ -172,7 +172,7 @@ const Repository = ({
   </div>
 
 const doFetchMore = (fetchMore, cursor) => fetchMore({
-  // query: ... (you can specify a different query. FEED_QUERY is used by default)
+  // query: ... (you can specify a different query, otherwise your previous quert is used)
   variables: {
     cursor,
   },
@@ -293,9 +293,10 @@ export default compose(
           fragment: RepositoryFragment,
         });
 
-        const totalCount = viewerSubscription === 'SUBSCRIBED'
-          ? fragment.watchers.totalCount + 1
-          : fragment.watchers.totalCount - 1;
+        let { totalCount } = fragment.watchers;
+        totalCount = viewerSubscription === 'SUBSCRIBED'
+          ? totalCount + 1
+          : totalCount - 1;
 
         proxy.writeFragment({
           id: `Repository:${id}`,
