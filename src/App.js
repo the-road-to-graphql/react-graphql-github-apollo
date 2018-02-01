@@ -27,9 +27,8 @@ class App extends Component {
 
   render() {
     const { input } = this.state;
-    const { data, onWatchToggle, onFetchMoreRepositories } = this.props;
-    console.log(data);
-    const { loading, error, organization } = data;
+    const { data, onWatchToggle } = this.props;
+    const { loading, error, organization, fetchMore } = data;
 
     return (
       <div className="App">
@@ -52,8 +51,8 @@ class App extends Component {
             organization={organization}
             loading={loading}
             error={error}
+            fetchMore={fetchMore}
             onWatchToggle={onWatchToggle}
-            onFetchMoreRepositories={onFetchMoreRepositories}
           />
         </div>
       </div>
@@ -65,8 +64,8 @@ const Repositories = ({
   organization,
   loading,
   error,
+  fetchMore,
   onWatchToggle,
-  onFetchMoreRepositories,
 }) => {
   if (error) {
     return (
@@ -89,7 +88,7 @@ const Repositories = ({
       <FetchMoreButton
         loading={loading}
         pageInfo={organization.repositories.pageInfo}
-        onFetchMoreRepositories={onFetchMoreRepositories}
+        fetchMore={fetchMore}
       />
 
       <div>
@@ -110,7 +109,7 @@ const Repositories = ({
 const FetchMoreButton = ({
   loading,
   pageInfo,
-  onFetchMoreRepositories,
+  fetchMore,
 }) =>
   <div>
     {
@@ -118,7 +117,7 @@ const FetchMoreButton = ({
         <Loading />
       ) : (
         <button
-          onClick={() => onFetchMoreRepositories(pageInfo.endCursor)}
+          onClick={() => doFetchMore(fetchMore, pageInfo.endCursor)}
           type="button"
           disabled={!pageInfo.hasNextPage}
         >
@@ -171,6 +170,37 @@ const Repository = ({
       }
     </div>
   </div>
+
+const doFetchMore = (fetchMore, cursor) => fetchMore({
+  // query: ... (you can specify a different query. FEED_QUERY is used by default)
+  variables: {
+    cursor,
+  },
+  updateQuery: (previousResult, { fetchMoreResult }) => {
+    if (!fetchMoreResult) {
+      return previousResult;
+    }
+
+    return {
+      // keep previous result, no new result expected
+      ...previousResult,
+      organization: {
+        // keep previous result, no new result expected
+        ...previousResult.organization,
+        repositories: {
+          // update pageInfo
+          ...previousResult.organization.repositories,
+          ...fetchMoreResult.organization.repositories,
+          edges: [
+            // update edges
+            ...previousResult.organization.repositories.edges,
+            ...fetchMoreResult.organization.repositories.edges,
+          ],
+        }
+      }
+    }
+  },
+});
 
 const RepositoryFragment = gql`
   fragment repository on Repository {
@@ -233,11 +263,11 @@ export default compose(
         cursor: null,
       },
       notifyOnNetworkStatusChange: true,
-    },
+    }
   }),
   graphql(WatchRepository, {
     name: 'watchRepository',
-    props: ({ watchRepository, ownProps: { data: { fetchMore } } }) => ({
+    props: ({ watchRepository }) => ({
       onWatchToggle(id, isWatch) {
         watchRepository({
           variables: { id, isWatch },
@@ -248,38 +278,6 @@ export default compose(
                 __typename: 'Repository',
                 id,
                 viewerSubscription: isWatch,
-              }
-            }
-          },
-        })
-      },
-      onFetchMoreRepositories(cursor) {
-        fetchMore({
-          // query: ... (you can specify a different query. FEED_QUERY is used by default)
-          variables: {
-            cursor,
-          },
-          updateQuery: (previousResult, { fetchMoreResult }) => {
-            if (!fetchMoreResult) {
-              return previousResult;
-            }
-
-            return {
-              // keep previous result, no new result expected
-              ...previousResult,
-              organization: {
-                // keep previous result, no new result expected
-                ...previousResult.organization,
-                repositories: {
-                  // update pageInfo
-                  ...previousResult.organization.repositories,
-                  ...fetchMoreResult.organization.repositories,
-                  edges: [
-                    // update edges
-                    ...previousResult.organization.repositories.edges,
-                    ...fetchMoreResult.organization.repositories.edges,
-                  ],
-                }
               }
             }
           },
