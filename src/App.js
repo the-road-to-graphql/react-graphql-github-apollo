@@ -12,23 +12,21 @@ class App extends Component {
     super();
 
     this.state = {
-      input: ORGANIZATION_DEFAULT,
+      search: ORGANIZATION_DEFAULT,
+      organization: '',
     };
   }
 
   onSubmit = (event) => {
-    const { refetch } = this.props.data;
-    const { input } = this.state;
+    const { search } = this.state;
+
+    this.setState({ organization: search });
 
     event.preventDefault();
-
-    refetch({ organization: input });
   }
 
   render() {
-    const { input } = this.state;
-    const { data, onWatchToggle } = this.props;
-    const { loading, error, organization, fetchMore } = data;
+    const { search, organization } = this.state;
 
     return (
       <div className="App">
@@ -41,42 +39,40 @@ class App extends Component {
           <form onSubmit={this.onSubmit}>
             <input
               type="text"
-              value={input}
-              onChange={event => this.setState({ input: event.target.value })}
+              value={search}
+              onChange={e => this.setState({ search: e.target.value })}
             />
             <button type="submit">Send</button>
           </form>
 
-          <Repositories
-            organization={organization}
-            loading={loading}
-            error={error}
-            fetchMore={fetchMore}
-            onWatchToggle={onWatchToggle}
-          />
+          <Repositories organization={organization} />
         </div>
       </div>
     );
   }
 }
 
-const Repositories = ({
-  organization,
-  loading,
-  error,
-  fetchMore,
+const RepositoriesPresenter = ({
+  data,
   onWatchToggle,
 }) => {
+  if (!data) {
+    return null;
+  }
+
+  const {
+    loading,
+    error,
+    organization,
+    fetchMore,
+  } = data;
+
   if (error) {
     return (
       <div>
         <p><strong>Something went wrong:</strong> {error.toString()}</p>
       </div>
     );
-  }
-
-  if (!organization && !loading) {
-    return null;
   }
 
   if (!organization && <p>Loading ...</p>) {
@@ -182,17 +178,13 @@ const doFetchMore = (fetchMore, cursor) => fetchMore({
     }
 
     return {
-      // keep previous result, no new result expected
       ...previousResult,
       organization: {
-        // keep previous result, no new result expected
         ...previousResult.organization,
         repositories: {
-          // update pageInfo
           ...previousResult.organization.repositories,
           ...fetchMoreResult.organization.repositories,
           edges: [
-            // update edges
             ...previousResult.organization.repositories.edges,
             ...fetchMoreResult.organization.repositories.edges,
           ],
@@ -255,15 +247,16 @@ const WatchRepository = gql`
   }
 `
 
-export default compose(
+const Repositories = compose(
   graphql(RepositoriesOfOrganization, {
-    options: {
+    options: ({ organization }) => ({
       variables: {
-        organization: ORGANIZATION_DEFAULT,
+        organization,
         cursor: null,
       },
+      skip: organization === '',
       notifyOnNetworkStatusChange: true,
-    }
+    }),
   }),
   graphql(WatchRepository, {
     name: 'watchRepository',
@@ -312,4 +305,6 @@ export default compose(
       },
     }
   }),
-)(App);
+)(RepositoriesPresenter);
+
+export default App;
