@@ -48,7 +48,7 @@ class App extends Component {
             <button type="submit">Send</button>
           </form>
 
-          <Organization
+          <Repositories
             organization={organization}
             loading={loading}
             error={error}
@@ -61,21 +61,13 @@ class App extends Component {
   }
 }
 
-const Organization = ({
+const Repositories = ({
   organization,
   loading,
   error,
   onWatchToggle,
   onFetchMoreRepositories,
 }) => {
-  if (loading) {
-    return (
-      <div>
-        <p>Loading ...</p>
-      </div>
-    );
-  }
-
   if (error) {
     return (
       <div>
@@ -83,30 +75,61 @@ const Organization = ({
       </div>
     );
   }
-  const { endCursor } = organization.repositories.pageInfo;
+
+  if (!organization && !loading) {
+    return null;
+  }
+
+  if (!organization && <p>Loading ...</p>) {
+    return <Loading />;
+  }
 
   return (
-    <div className="Repositories">
-      <button
-        onClick={() => onFetchMoreRepositories(endCursor)}
-        type="button"
-        disabled={!organization.repositories.pageInfo.hasNextPage}
-      >
-        More
-      </button>
+    <div>
+      <FetchMoreButton
+        loading={loading}
+        pageInfo={organization.repositories.pageInfo}
+        onFetchMoreRepositories={onFetchMoreRepositories}
+      />
 
-      {organization.repositories.edges.map(repository =>
-        <div key={repository.node.id}>
-          <Repository
-            { ...repository.node }
-            onWatchToggle={onWatchToggle}
-          />
-          <hr />
-        </div>
-      )}
+      <div>
+        {organization.repositories.edges.map(repository =>
+          <div key={repository.node.id}>
+            <Repository
+              { ...repository.node }
+              onWatchToggle={onWatchToggle}
+            />
+            <hr />
+          </div>
+        )}
+      </div>
     </div>
   );
 }
+
+const FetchMoreButton = ({
+  loading,
+  pageInfo,
+  onFetchMoreRepositories,
+}) =>
+  <div>
+    {
+      loading ? (
+        <Loading />
+      ) : (
+        <button
+          onClick={() => onFetchMoreRepositories(pageInfo.endCursor)}
+          type="button"
+          disabled={!pageInfo.hasNextPage}
+        >
+          More
+        </button>
+      )
+    }
+  </div>
+
+const Loading = () =>
+  <p>Loading ...</p>
 
 const Repository = ({
   id,
@@ -209,6 +232,7 @@ export default compose(
         organization: ORGANIZATION_DEFAULT,
         cursor: null,
       },
+      notifyOnNetworkStatusChange: true,
     },
   }),
   graphql(WatchRepository, {
