@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { compose, graphql } from 'react-apollo';
 import gql from 'graphql-tag';
+import { withState } from 'recompose';
 
 import logo from './logo.svg';
 import './App.css';
@@ -94,6 +95,10 @@ const RepositoriesPresenter = ({
               { ...repository.node }
               onWatchToggle={onWatchToggle}
             />
+            <Issues
+              organizationLogin={organization.login}
+              repositoryName={repository.node.name}
+            />
             <hr />
           </div>
         )}
@@ -101,6 +106,93 @@ const RepositoriesPresenter = ({
     </div>
   );
 }
+
+const IssuesPresenter = ({ organizationLogin, repositoryName, isOpen, onOpen }) =>
+  <div>
+    <button
+      onClick={() => onOpen(!isOpen)}
+      type="button"
+    >
+      { isOpen ? 'Close' : 'Open' }
+    </button>
+
+    <IssuesList
+      organizationLogin={organizationLogin}
+      repositoryName={repositoryName}
+      isOpen={isOpen}
+    />
+  </div>
+
+const Issues = withState('isOpen', 'onOpen', false)(IssuesPresenter);
+
+const IssuesListPresenter = ({ isOpen, data }) => {
+  if (!isOpen || !data) {
+    return null;
+  }
+
+  const {
+    error,
+    organization,
+  } = data;
+
+  if (error) {
+    return (
+      <div>
+        <p><strong>Something went wrong:</strong> {error.toString()}</p>
+      </div>
+    );
+  }
+
+  const { issues } = organization.repository;
+
+  return (
+    issues.edges.length ? (
+      <div>
+        {data.organization.repository.issues.edges.map(issue =>
+          <div key={issue.node.id}>{issue.node.title}</div>
+        )}
+      </div>
+    ) : (
+      <div>
+        <p><strong>No [STATE] issues</strong></p>
+      </div>
+    )
+  );
+}
+
+const IssuesOfRepository = gql`
+  query IssuesOfRepository($organizationLogin: String!, $repositoryName: String!) {
+    organization(login: $organizationLogin) {
+      name
+      url
+      repository(name: $repositoryName) {
+        issues(last: 3, states: [OPEN]) {
+          edges {
+            node {
+              id
+              title
+            }
+          }
+          pageInfo {
+            endCursor
+            hasNextPage
+          }
+        }
+      }
+    }
+  }
+`
+
+const IssuesList = graphql(IssuesOfRepository, {
+    options: ({ organizationLogin, repositoryName }) => ({
+      variables: {
+        organizationLogin,
+        repositoryName,
+      },
+      // skip: organization === '',
+      // notifyOnNetworkStatusChange: true,
+    }),
+  })(IssuesListPresenter);
 
 const FetchMoreButton = ({
   loading,
@@ -218,6 +310,7 @@ const RepositoriesOfOrganization = gql`
   query RepositoriesOfOrganization($organization: String!, $cursor: String) {
     organization(login: $organization) {
       name
+      login
       url
       repositories(first: 3, after: $cursor) {
         edges {
@@ -235,6 +328,7 @@ const RepositoriesOfOrganization = gql`
 
   ${RepositoryFragment}
 `
+
 
 const WatchRepository = gql`
   mutation updateSubscription($id: ID!, $isWatch: SubscriptionState!) {
