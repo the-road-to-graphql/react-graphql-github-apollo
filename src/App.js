@@ -49,20 +49,14 @@ class App extends Component {
 }
 
 const RepositoriesPresenter = ({
-  data,
-  onWatchToggle,
-}) => {
-  if (!data) {
-    return null;
-  }
-
-  const {
+  data: {
     loading,
     error,
     organization,
     fetchMore,
-  } = data;
-
+  },
+  onWatchToggle,
+}) => {
   if (error) {
     return (
       <div>
@@ -162,13 +156,14 @@ const Issues = compose(
   withApollo
 )(IssuesPresenter);
 
-const IssuesListPresenter = ({ isShow, data }) => {
-  const {
+const IssuesListPresenter = ({
+  isShow,
+  data: {
     error,
     loading,
     organization,
-  } = data;
-
+  },
+}) => {
   if (loading) {
     return (
       <div>
@@ -190,7 +185,7 @@ const IssuesListPresenter = ({ isShow, data }) => {
   return (
     issues.edges.length ? (
       <div>
-        {data.organization.repository.issues.edges.map(issue =>
+        {organization.repository.issues.edges.map(issue =>
           <div key={issue.node.id}>
             <a href={issue.node.url}>{issue.node.title}</a>
           </div>
