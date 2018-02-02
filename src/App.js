@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { compose, graphql } from 'react-apollo';
+import { compose, graphql, withApollo } from 'react-apollo';
 import gql from 'graphql-tag';
 import { withState } from 'recompose';
 
@@ -107,6 +107,17 @@ const KIND_OF_ISSUES = {
   CLOSED: 'CLOSED',
 };
 
+const prefetchIssues = (client, organizationLogin, repositoryName, kindOfIssue) => {
+  client.query({
+    query: IssuesOfRepository,
+    variables: {
+      organizationLogin,
+      repositoryName,
+      kindOfIssue,
+    },
+  });
+};
+
 const IssuesPresenter = ({
   organizationLogin,
   repositoryName,
@@ -114,10 +125,12 @@ const IssuesPresenter = ({
   kindOfIssue,
   onShow,
   onChangeKindOfIssue,
+  client,
 }) =>
   <div>
     <button
       onClick={() => onShow(!isShow)}
+      onMouseOver={prefetchIssues(client, organizationLogin, repositoryName, kindOfIssue)}
       type="button"
     >
       { isShow ? 'Hide Issues' : 'Show Issues' }
@@ -126,6 +139,7 @@ const IssuesPresenter = ({
     { isShow &&
       <button
         onClick={() => onChangeKindOfIssue(kindOfIssue === KIND_OF_ISSUES.OPEN ? KIND_OF_ISSUES.CLOSED : KIND_OF_ISSUES.OPEN)}
+        onMouseOver={prefetchIssues(client, organizationLogin, repositoryName, kindOfIssue === KIND_OF_ISSUES.OPEN ? KIND_OF_ISSUES.CLOSED : KIND_OF_ISSUES.OPEN)}
         type="button"
       >
         { kindOfIssue === KIND_OF_ISSUES.OPEN ? 'Only Closed Issues' : 'Only Open Issues' }
@@ -144,7 +158,8 @@ const IssuesPresenter = ({
 
 const Issues = compose(
   withState('isShow', 'onShow', false),
-  withState('kindOfIssue', 'onChangeKindOfIssue', KIND_OF_ISSUES.OPEN)
+  withState('kindOfIssue', 'onChangeKindOfIssue', KIND_OF_ISSUES.OPEN),
+  withApollo
 )(IssuesPresenter);
 
 const IssuesListPresenter = ({ isShow, data }) => {
@@ -176,7 +191,9 @@ const IssuesListPresenter = ({ isShow, data }) => {
     issues.edges.length ? (
       <div>
         {data.organization.repository.issues.edges.map(issue =>
-          <div key={issue.node.id}>{issue.node.title}</div>
+          <div key={issue.node.id}>
+            <a href={issue.node.url}>{issue.node.title}</a>
+          </div>
         )}
       </div>
     ) : (
@@ -198,6 +215,7 @@ const IssuesOfRepository = gql`
             node {
               id
               title
+              url
             }
           }
           pageInfo {
