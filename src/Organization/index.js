@@ -35,6 +35,7 @@ const Organization = ({
 
       <Repositories
         loading={loading}
+        entry={'organization'}
         repositories={organization.repositories}
         fetchMore={fetchMore}
       />

@@ -7,7 +7,7 @@ import Loading from '../Loading';
 
 import './style.css';
 
-const doFetchMore = (fetchMore, cursor) => fetchMore({
+const doFetchMore = (fetchMore, entry, cursor) => fetchMore({
   // query: ... (you can specify a different query, otherwise your previous quert is used)
   variables: {
     cursor,
@@ -19,14 +19,14 @@ const doFetchMore = (fetchMore, cursor) => fetchMore({
 
     return {
       ...previousResult,
-      organization: {
-        ...previousResult.organization,
+      [entry]: {
+        ...previousResult[entry],
         repositories: {
-          ...previousResult.organization.repositories,
-          ...fetchMoreResult.organization.repositories,
+          ...previousResult[entry].repositories,
+          ...fetchMoreResult[entry].repositories,
           edges: [
-            ...previousResult.organization.repositories.edges,
-            ...fetchMoreResult.organization.repositories.edges,
+            ...previousResult[entry].repositories.edges,
+            ...fetchMoreResult[entry].repositories.edges,
           ],
         }
       }
@@ -37,6 +37,7 @@ const doFetchMore = (fetchMore, cursor) => fetchMore({
 const Repositories = ({
   loading,
   repositories,
+  entry,
   fetchMore,
   onWatchToggle,
 }) =>
@@ -44,6 +45,7 @@ const Repositories = ({
     <FetchMoreButton
       loading={loading}
       pageInfo={repositories.pageInfo}
+      entry={entry}
       fetchMore={fetchMore}
     />
 
@@ -108,6 +110,7 @@ const Repository = ({
 const FetchMoreButton = ({
   loading,
   pageInfo,
+  entry,
   fetchMore,
 }) =>
   <div>
@@ -116,7 +119,7 @@ const FetchMoreButton = ({
         <Loading />
       ) : (
         <button
-          onClick={() => doFetchMore(fetchMore, pageInfo.endCursor)}
+          onClick={() => doFetchMore(fetchMore, entry, pageInfo.endCursor)}
           type="button"
           disabled={!pageInfo.hasNextPage}
         >

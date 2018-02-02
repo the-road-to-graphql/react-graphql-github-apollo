@@ -35,7 +35,10 @@ const link = ApolloLink.from([
   httpLink,
 ]);
 
-const cache = new InMemoryCache();
+const cache = new InMemoryCache({
+  logger: console.log,
+  loggerEnabled: true,
+});
 
 const client = new ApolloClient({
   link,

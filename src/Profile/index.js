@@ -35,6 +35,7 @@ const Profile = ({
 
       <Repositories
         loading={loading}
+        entry={'viewer'}
         repositories={viewer.repositories}
         fetchMore={fetchMore}
       />
