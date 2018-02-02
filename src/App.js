@@ -123,35 +123,44 @@ const IssuesPresenter = ({
       { isShow ? 'Hide Issues' : 'Show Issues' }
     </button>
 
-    <button
-      onClick={() => onChangeKindOfIssue(kindOfIssue === KIND_OF_ISSUES.OPEN ? KIND_OF_ISSUES.CLOSED : KIND_OF_ISSUES.OPEN)}
-      type="button"
-    >
-      { kindOfIssue === KIND_OF_ISSUES.OPEN ? 'Only Closed Issues' : 'Only Open Issues' }
-    </button>
+    { isShow &&
+      <button
+        onClick={() => onChangeKindOfIssue(kindOfIssue === KIND_OF_ISSUES.OPEN ? KIND_OF_ISSUES.CLOSED : KIND_OF_ISSUES.OPEN)}
+        type="button"
+      >
+        { kindOfIssue === KIND_OF_ISSUES.OPEN ? 'Only Closed Issues' : 'Only Open Issues' }
+      </button>
+    }
 
-    <IssuesList
-      organizationLogin={organizationLogin}
-      repositoryName={repositoryName}
-      kindOfIssue={kindOfIssue}
-      isShow={isShow}
-    />
+    { isShow &&
+      <IssuesList
+        organizationLogin={organizationLogin}
+        repositoryName={repositoryName}
+        kindOfIssue={kindOfIssue}
+        isShow={isShow}
+      />
+    }
   </div>
 
 const Issues = compose(
   withState('isShow', 'onShow', false),
-  withState('kindOfIssue', 'onChangeKindOfIssue', KIND_OF_ISSUES.OPEN),
+  withState('kindOfIssue', 'onChangeKindOfIssue', KIND_OF_ISSUES.OPEN)
 )(IssuesPresenter);
 
 const IssuesListPresenter = ({ isShow, data }) => {
-  if (!isShow || !data) {
-    return null;
-  }
-
   const {
     error,
+    loading,
     organization,
   } = data;
+
+  if (loading) {
+    return (
+      <div>
+        <Loading />
+      </div>
+    );
+  }
 
   if (error) {
     return (
@@ -202,14 +211,13 @@ const IssuesOfRepository = gql`
 `
 
 const IssuesList = graphql(IssuesOfRepository, {
-    options: ({ organizationLogin, repositoryName, kindOfIssue }) => ({
+    options: ({ organizationLogin, repositoryName, isShow, kindOfIssue }) => ({
       variables: {
         organizationLogin,
         repositoryName,
         kindOfIssue,
       },
-      // skip: organization === '',
-      // notifyOnNetworkStatusChange: true,
+      skip: !isShow,
     }),
   })(IssuesListPresenter);
 
