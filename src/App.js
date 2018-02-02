@@ -109,7 +109,7 @@ const KIND_OF_ISSUES = {
 
 const prefetchIssues = (client, organizationLogin, repositoryName, kindOfIssue) => {
   client.query({
-    query: IssuesOfRepository,
+    query: ISSUES_OF_REPOSITORY,
     variables: {
       organizationLogin,
       repositoryName,
@@ -204,8 +204,8 @@ const IssuesListPresenter = ({ isShow, data }) => {
   );
 }
 
-const IssuesOfRepository = gql`
-  query IssuesOfRepository($organizationLogin: String!, $repositoryName: String!, $kindOfIssue: IssueState!) {
+const ISSUES_OF_REPOSITORY = gql`
+  query ($organizationLogin: String!, $repositoryName: String!, $kindOfIssue: IssueState!) {
     organization(login: $organizationLogin) {
       name
       url
@@ -228,7 +228,7 @@ const IssuesOfRepository = gql`
   }
 `
 
-const IssuesList = graphql(IssuesOfRepository, {
+const IssuesList = graphql(ISSUES_OF_REPOSITORY, {
     options: ({ organizationLogin, repositoryName, isShow, kindOfIssue }) => ({
       variables: {
         organizationLogin,
@@ -331,7 +331,7 @@ const doFetchMore = (fetchMore, cursor) => fetchMore({
   },
 });
 
-const RepositoryFragment = gql`
+const REPOSITORY_FRAGMENT = gql`
   fragment repository on Repository {
     id
     name
@@ -351,8 +351,8 @@ const RepositoryFragment = gql`
   }
 `
 
-const RepositoriesOfOrganization = gql`
-  query RepositoriesOfOrganization($organization: String!, $cursor: String) {
+const REPOSITORIES_OF_ORGANIZATION = gql`
+  query ($organization: String!, $cursor: String) {
     organization(login: $organization) {
       name
       login
@@ -371,11 +371,11 @@ const RepositoriesOfOrganization = gql`
     }
   }
 
-  ${RepositoryFragment}
+  ${REPOSITORY_FRAGMENT}
 `
 
-const WatchRepository = gql`
-  mutation updateSubscription($id: ID!, $isWatch: SubscriptionState!) {
+const WATCH_REPOSITORY = gql`
+  mutation ($id: ID!, $isWatch: SubscriptionState!) {
     updateSubscription(input:{state: $isWatch, subscribableId: $id}) {
       subscribable {
         id
@@ -386,7 +386,7 @@ const WatchRepository = gql`
 `
 
 const Repositories = compose(
-  graphql(RepositoriesOfOrganization, {
+  graphql(REPOSITORIES_OF_ORGANIZATION, {
     options: ({ organization }) => ({
       variables: {
         organization,
@@ -396,7 +396,7 @@ const Repositories = compose(
       notifyOnNetworkStatusChange: true,
     }),
   }),
-  graphql(WatchRepository, {
+  graphql(WATCH_REPOSITORY, {
     name: 'watchRepository',
     props: ({ watchRepository }) => ({
       onWatchToggle(id, isWatch) {
@@ -421,7 +421,7 @@ const Repositories = compose(
 
         const fragment = proxy.readFragment({
           id: `Repository:${id}`,
-          fragment: RepositoryFragment,
+          fragment: REPOSITORY_FRAGMENT,
         });
 
         let { totalCount } = fragment.watchers;
@@ -431,7 +431,7 @@ const Repositories = compose(
 
         proxy.writeFragment({
           id: `Repository:${id}`,
-          fragment: RepositoryFragment,
+          fragment: REPOSITORY_FRAGMENT,
           data: {
             ...fragment,
             watchers: {
