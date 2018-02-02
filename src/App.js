@@ -3,7 +3,6 @@ import { compose, graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 import { withState } from 'recompose';
 
-import logo from './logo.svg';
 import './App.css';
 
 const ORGANIZATION_DEFAULT = 'the-road-to-learn-react';
@@ -31,11 +30,6 @@ class App extends Component {
 
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome</h1>
-        </header>
-
         <div className="App-content">
           <form onSubmit={this.onSubmit}>
             <input
@@ -113,7 +107,7 @@ const IssuesPresenter = ({ organizationLogin, repositoryName, isOpen, onOpen }) 
       onClick={() => onOpen(!isOpen)}
       type="button"
     >
-      { isOpen ? 'Close' : 'Open' }
+      { isOpen ? 'Hide Issues' : 'Show Issues' }
     </button>
 
     <IssuesList
@@ -328,7 +322,6 @@ const RepositoriesOfOrganization = gql`
 
   ${RepositoryFragment}
 `
-
 
 const WatchRepository = gql`
   mutation updateSubscription($id: ID!, $isWatch: SubscriptionState!) {
