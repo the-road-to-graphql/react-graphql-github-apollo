@@ -10,11 +10,11 @@ const KIND_OF_ISSUES = {
   CLOSED: 'CLOSED',
 };
 
-const prefetchIssues = (client, organizationLogin, repositoryName, kindOfIssue) => {
+const prefetchIssues = (client, repositoryOwner, repositoryName, kindOfIssue) => {
   client.query({
     query: ISSUES_OF_REPOSITORY,
     variables: {
-      organizationLogin,
+      repositoryOwner,
       repositoryName,
       kindOfIssue,
     },
@@ -22,7 +22,7 @@ const prefetchIssues = (client, organizationLogin, repositoryName, kindOfIssue) 
 };
 
 const IssuesPresenter = ({
-  organizationLogin,
+  repositoryOwner,
   repositoryName,
   isShow,
   kindOfIssue,
@@ -33,7 +33,7 @@ const IssuesPresenter = ({
   <div>
     <button
       onClick={() => onShow(!isShow)}
-      onMouseOver={prefetchIssues(client, organizationLogin, repositoryName, kindOfIssue)}
+      onMouseOver={prefetchIssues(client, repositoryOwner, repositoryName, kindOfIssue)}
       type="button"
     >
       { isShow ? 'Hide Issues' : 'Show Issues' }
@@ -42,7 +42,7 @@ const IssuesPresenter = ({
     { isShow &&
       <button
         onClick={() => onChangeKindOfIssue(kindOfIssue === KIND_OF_ISSUES.OPEN ? KIND_OF_ISSUES.CLOSED : KIND_OF_ISSUES.OPEN)}
-        onMouseOver={prefetchIssues(client, organizationLogin, repositoryName, kindOfIssue === KIND_OF_ISSUES.OPEN ? KIND_OF_ISSUES.CLOSED : KIND_OF_ISSUES.OPEN)}
+        onMouseOver={prefetchIssues(client, repositoryOwner, repositoryName, kindOfIssue === KIND_OF_ISSUES.OPEN ? KIND_OF_ISSUES.CLOSED : KIND_OF_ISSUES.OPEN)}
         type="button"
       >
         { kindOfIssue === KIND_OF_ISSUES.OPEN ? 'Only Closed Issues' : 'Only Open Issues' }
@@ -51,7 +51,7 @@ const IssuesPresenter = ({
 
     { isShow &&
       <IssuesList
-        organizationLogin={organizationLogin}
+        repositoryOwner={repositoryOwner}
         repositoryName={repositoryName}
         kindOfIssue={kindOfIssue}
         isShow={isShow}
@@ -64,7 +64,7 @@ const IssuesListPresenter = ({
   data: {
     error,
     loading,
-    organization,
+    repository,
   },
 }) => {
   if (loading) {
@@ -83,12 +83,12 @@ const IssuesListPresenter = ({
     );
   }
 
-  const { issues } = organization.repository;
+  const { issues } = repository;
 
   return (
     issues.edges.length ? (
       <div>
-        {organization.repository.issues.edges.map(issue =>
+        {issues.edges.map(issue =>
           <div key={issue.node.id}>
             <a href={issue.node.url}>{issue.node.title}</a>
           </div>
@@ -103,23 +103,19 @@ const IssuesListPresenter = ({
 }
 
 const ISSUES_OF_REPOSITORY = gql`
-  query ($organizationLogin: String!, $repositoryName: String!, $kindOfIssue: IssueState!) {
-    organization(login: $organizationLogin) {
-      name
-      url
-      repository(name: $repositoryName) {
-        issues(last: 5, states: [$kindOfIssue]) {
-          edges {
-            node {
-              id
-              title
-              url
-            }
+  query ($repositoryOwner: String!, $repositoryName: String!, $kindOfIssue: IssueState!) {
+    repository(name: $repositoryName, owner: $repositoryOwner) {
+      issues(last: 5, states: [$kindOfIssue]) {
+        edges {
+          node {
+            id
+            title
+            url
           }
-          pageInfo {
-            endCursor
-            hasNextPage
-          }
+        }
+        pageInfo {
+          endCursor
+          hasNextPage
         }
       }
     }
@@ -127,9 +123,9 @@ const ISSUES_OF_REPOSITORY = gql`
 `
 
 const ISSUES_OF_REPOSITORY_CONFIG = {
-  options: ({ organizationLogin, repositoryName, isShow, kindOfIssue }) => ({
+  options: ({ repositoryOwner, repositoryName, isShow, kindOfIssue }) => ({
     variables: {
-      organizationLogin,
+      repositoryOwner,
       repositoryName,
       kindOfIssue,
     },

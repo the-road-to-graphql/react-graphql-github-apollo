@@ -36,10 +36,7 @@ const doFetchMore = (fetchMore, cursor) => fetchMore({
 
 const Repositories = ({
   loading,
-  organization: {
-    login,
-    repositories,
-  },
+  repositories,
   fetchMore,
   onWatchToggle,
 }) =>
@@ -58,8 +55,8 @@ const Repositories = ({
             onWatchToggle={onWatchToggle}
           />
           <Issues
-            organizationLogin={login}
             repositoryName={repository.node.name}
+            repositoryOwner={repository.node.owner.login}
           />
           <hr />
         </div>
@@ -133,6 +130,9 @@ const REPOSITORY_FRAGMENT = gql`
   fragment repository on Repository {
     id
     name
+    owner {
+      login
+    }
     url
     description
     stargazers {

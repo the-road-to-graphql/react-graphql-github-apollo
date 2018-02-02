@@ -35,7 +35,7 @@ const Organization = ({
 
       <Repositories
         loading={loading}
-        organization={organization}
+        repositories={organization.repositories}
         fetchMore={fetchMore}
       />
     </div>
@@ -48,7 +48,7 @@ const REPOSITORIES_OF_ORGANIZATION = gql`
       name
       login
       url
-      repositories(first: 3, after: $cursor) {
+      repositories(first: 5, after: $cursor) {
         edges {
           node {
             ...repository
