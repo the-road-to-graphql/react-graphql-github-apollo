@@ -102,7 +102,19 @@ const RepositoriesPresenter = ({
   );
 }
 
-const IssuesPresenter = ({ organizationLogin, repositoryName, isShow, onShow }) =>
+const KIND_OF_ISSUES = {
+  OPEN: 'OPEN',
+  CLOSED: 'CLOSED',
+};
+
+const IssuesPresenter = ({
+  organizationLogin,
+  repositoryName,
+  isShow,
+  kindOfIssue,
+  onShow,
+  onChangeKindOfIssue,
+}) =>
   <div>
     <button
       onClick={() => onShow(!isShow)}
@@ -111,14 +123,25 @@ const IssuesPresenter = ({ organizationLogin, repositoryName, isShow, onShow }) 
       { isShow ? 'Hide Issues' : 'Show Issues' }
     </button>
 
+    <button
+      onClick={() => onChangeKindOfIssue(kindOfIssue === KIND_OF_ISSUES.OPEN ? KIND_OF_ISSUES.CLOSED : KIND_OF_ISSUES.OPEN)}
+      type="button"
+    >
+      { kindOfIssue === KIND_OF_ISSUES.OPEN ? 'Only Closed Issues' : 'Only Open Issues' }
+    </button>
+
     <IssuesList
       organizationLogin={organizationLogin}
       repositoryName={repositoryName}
+      kindOfIssue={kindOfIssue}
       isShow={isShow}
     />
   </div>
 
-const Issues = withState('isShow', 'onShow', false)(IssuesPresenter);
+const Issues = compose(
+  withState('isShow', 'onShow', false),
+  withState('kindOfIssue', 'onChangeKindOfIssue', KIND_OF_ISSUES.OPEN),
+)(IssuesPresenter);
 
 const IssuesListPresenter = ({ isShow, data }) => {
   if (!isShow || !data) {
@@ -156,12 +179,12 @@ const IssuesListPresenter = ({ isShow, data }) => {
 }
 
 const IssuesOfRepository = gql`
-  query IssuesOfRepository($organizationLogin: String!, $repositoryName: String!) {
+  query IssuesOfRepository($organizationLogin: String!, $repositoryName: String!, $kindOfIssue: IssueState!) {
     organization(login: $organizationLogin) {
       name
       url
       repository(name: $repositoryName) {
-        issues(last: 3, states: [OPEN]) {
+        issues(last: 5, states: [$kindOfIssue]) {
           edges {
             node {
               id
@@ -179,10 +202,11 @@ const IssuesOfRepository = gql`
 `
 
 const IssuesList = graphql(IssuesOfRepository, {
-    options: ({ organizationLogin, repositoryName }) => ({
+    options: ({ organizationLogin, repositoryName, kindOfIssue }) => ({
       variables: {
         organizationLogin,
         repositoryName,
+        kindOfIssue,
       },
       // skip: organization === '',
       // notifyOnNetworkStatusChange: true,
