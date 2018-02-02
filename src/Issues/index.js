@@ -126,16 +126,21 @@ const ISSUES_OF_REPOSITORY = gql`
   }
 `
 
-const IssuesList = graphql(ISSUES_OF_REPOSITORY, {
-    options: ({ organizationLogin, repositoryName, isShow, kindOfIssue }) => ({
-      variables: {
-        organizationLogin,
-        repositoryName,
-        kindOfIssue,
-      },
-      skip: !isShow,
-    }),
-  })(IssuesListPresenter);
+const ISSUES_OF_REPOSITORY_CONFIG = {
+  options: ({ organizationLogin, repositoryName, isShow, kindOfIssue }) => ({
+    variables: {
+      organizationLogin,
+      repositoryName,
+      kindOfIssue,
+    },
+    skip: !isShow,
+  }),
+};
+
+const IssuesList = graphql(
+  ISSUES_OF_REPOSITORY,
+  ISSUES_OF_REPOSITORY_CONFIG
+)(IssuesListPresenter);
 
 export default compose(
   withState('isShow', 'onShow', false),
