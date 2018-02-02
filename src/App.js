@@ -41,14 +41,14 @@ class App extends Component {
             <button type="submit">Send</button>
           </form>
 
-          <Repositories organization={organization} />
+          <Organization organization={organization} />
         </div>
       </div>
     );
   }
 }
 
-const RepositoriesPresenter = ({
+const OrganizationPresenter = ({
   data: {
     loading,
     error,
@@ -57,6 +57,14 @@ const RepositoriesPresenter = ({
   },
   onWatchToggle,
 }) => {
+  if (loading && !organization) {
+    return (
+      <div>
+        <Loading />
+      </div>
+    );
+  }
+
   if (error) {
     return (
       <div>
@@ -65,36 +73,52 @@ const RepositoriesPresenter = ({
     );
   }
 
-  if (!organization && <p>Loading ...</p>) {
-    return <Loading />;
-  }
-
   return (
     <div>
-      <FetchMoreButton
-        loading={loading}
-        pageInfo={organization.repositories.pageInfo}
-        fetchMore={fetchMore}
-      />
+      PLACEHOLDER: Some Orgabnization Info
 
-      <div>
-        {organization.repositories.edges.map(repository =>
-          <div key={repository.node.id}>
-            <Repository
-              { ...repository.node }
-              onWatchToggle={onWatchToggle}
-            />
-            <Issues
-              organizationLogin={organization.login}
-              repositoryName={repository.node.name}
-            />
-            <hr />
-          </div>
-        )}
-      </div>
+      <Repositories
+        loading={loading}
+        organization={organization}
+        fetchMore={fetchMore}
+        onWatchToggle={onWatchToggle}
+      />
     </div>
   );
 }
+
+const Repositories = ({
+  loading,
+  organization: {
+    login,
+    repositories,
+  },
+  fetchMore,
+  onWatchToggle,
+}) =>
+  <div>
+    <FetchMoreButton
+      loading={loading}
+      pageInfo={repositories.pageInfo}
+      fetchMore={fetchMore}
+    />
+
+    <div>
+      {repositories.edges.map(repository =>
+        <div key={repository.node.id}>
+          <Repository
+            { ...repository.node }
+            onWatchToggle={onWatchToggle}
+          />
+          <Issues
+            organizationLogin={login}
+            repositoryName={repository.node.name}
+          />
+          <hr />
+        </div>
+      )}
+    </div>
+  </div>
 
 const KIND_OF_ISSUES = {
   OPEN: 'OPEN',
@@ -380,7 +404,7 @@ const WATCH_REPOSITORY = gql`
   }
 `
 
-const Repositories = compose(
+const Organization = compose(
   graphql(REPOSITORIES_OF_ORGANIZATION, {
     options: ({ organization }) => ({
       variables: {
@@ -438,6 +462,6 @@ const Repositories = compose(
       },
     }
   }),
-)(RepositoriesPresenter);
+)(OrganizationPresenter);
 
 export default App;
