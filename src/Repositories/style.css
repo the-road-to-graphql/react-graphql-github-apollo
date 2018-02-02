@@ -1,0 +1,15 @@
+.Repositories {
+
+}
+
+.Repository {
+  padding: 20px;
+}
+
+.Repository-details {
+  display: flex;
+}
+
+.Repository-details p {
+  padding-right: 20px;
+}

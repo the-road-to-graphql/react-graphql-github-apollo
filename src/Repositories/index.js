@@ -5,6 +5,8 @@ import gql from 'graphql-tag';
 import Issues from '../Issues';
 import Loading from '../Loading';
 
+import './style.css';
+
 const doFetchMore = (fetchMore, cursor) => fetchMore({
   // query: ... (you can specify a different query, otherwise your previous quert is used)
   variables: {
