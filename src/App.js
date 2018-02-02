@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { compose, graphql, withApollo } from 'react-apollo';
+import { graphql, withApollo } from 'react-apollo';
 import gql from 'graphql-tag';
-import { withState } from 'recompose';
+import { compose, withState } from 'recompose';
 
 import './App.css';
 
