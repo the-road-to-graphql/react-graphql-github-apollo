@@ -13,7 +13,8 @@ class App extends Component {
 
     this.state = {
       search: ORGANIZATION_DEFAULT,
-      organization: '',
+      organization: ORGANIZATION_DEFAULT,
+      // organization: '',
     };
   }
 
@@ -101,26 +102,26 @@ const RepositoriesPresenter = ({
   );
 }
 
-const IssuesPresenter = ({ organizationLogin, repositoryName, isOpen, onOpen }) =>
+const IssuesPresenter = ({ organizationLogin, repositoryName, isShow, onShow }) =>
   <div>
     <button
-      onClick={() => onOpen(!isOpen)}
+      onClick={() => onShow(!isShow)}
       type="button"
     >
-      { isOpen ? 'Hide Issues' : 'Show Issues' }
+      { isShow ? 'Hide Issues' : 'Show Issues' }
     </button>
 
     <IssuesList
       organizationLogin={organizationLogin}
       repositoryName={repositoryName}
-      isOpen={isOpen}
+      isShow={isShow}
     />
   </div>
 
-const Issues = withState('isOpen', 'onOpen', false)(IssuesPresenter);
+const Issues = withState('isShow', 'onShow', false)(IssuesPresenter);
 
-const IssuesListPresenter = ({ isOpen, data }) => {
-  if (!isOpen || !data) {
+const IssuesListPresenter = ({ isShow, data }) => {
+  if (!isShow || !data) {
     return null;
   }
 
