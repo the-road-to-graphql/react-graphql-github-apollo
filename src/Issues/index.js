@@ -10,62 +10,72 @@ import ErrorMessage from '../Error';
 
 import './style.css';
 
-const KIND_OF_ISSUES = {
-  OPEN: 'OPEN',
-  CLOSED: 'CLOSED',
+const SHOW_STATES = {
+  NO_ISSUES: 'NO_ISSUES',
+  OPEN_ISSUES: 'OPEN_ISSUES',
+  CLOSED_ISSUES: 'CLOSES_ISSUES',
 };
 
-const prefetchIssues = (client, repositoryOwner, repositoryName, kindOfIssue) => {
-  client.query({
-    query: ISSUES_OF_REPOSITORY,
-    variables: {
-      repositoryOwner,
-      repositoryName,
-      kindOfIssue,
-    },
-  });
+const SHOW_TRANSITION_LABELS = {
+  [SHOW_STATES.NO_ISSUES]: 'Show Open Issues',
+  [SHOW_STATES.OPEN_ISSUES]: 'Show Closed Issues',
+  [SHOW_STATES.CLOSED_ISSUES]: 'Hide Issues',
+};
+
+const SHOW_TRANSITION_STATE = {
+  [SHOW_STATES.NO_ISSUES]: SHOW_STATES.OPEN_ISSUES,
+  [SHOW_STATES.OPEN_ISSUES]: SHOW_STATES.CLOSED_ISSUES,
+  [SHOW_STATES.CLOSED_ISSUES]: SHOW_STATES.NO_ISSUES,
+};
+
+const KIND_OF_ISSUES = {
+  [SHOW_STATES.OPEN_ISSUES]: 'OPEN',
+  [SHOW_STATES.CLOSED_ISSUES]: 'CLOSED',
+};
+
+const isShow = (showState) =>
+  showState !== SHOW_STATES.NO_ISSUES;
+
+const prefetchIssues = (client, repositoryOwner, repositoryName, showState) => {
+  const nextShowState = SHOW_TRANSITION_STATE[showState];
+
+  if (isShow(nextShowState)) {
+    client.query({
+      query: ISSUES_OF_REPOSITORY,
+      variables: {
+        repositoryOwner,
+        repositoryName,
+        kindOfIssue: KIND_OF_ISSUES[nextShowState],
+      },
+    });
+  }
 };
 
 const IssuesPresenter = ({
   repositoryOwner,
   repositoryName,
-  isShow,
-  kindOfIssue,
-  onShow,
-  onChangeKindOfIssue,
+  showState,
+  onChangeShowState,
   client,
 }) =>
   <div className="Issues">
     <ButtonUnobtrusive
-      onClick={() => onShow(!isShow)}
-      onMouseOver={prefetchIssues(client, repositoryOwner, repositoryName, kindOfIssue)}
+      onClick={() => onChangeShowState(SHOW_TRANSITION_STATE[showState])}
+      onMouseOver={prefetchIssues(client, repositoryOwner, repositoryName, showState)}
     >
-      { isShow ? 'Hide Issues' : 'Show Issues' }
+      {SHOW_TRANSITION_LABELS[showState]}
     </ButtonUnobtrusive>
 
-    { isShow ? (
-      <div className="Issues-content">
-        <ButtonUnobtrusive
-          onClick={() => onChangeKindOfIssue(kindOfIssue === KIND_OF_ISSUES.OPEN ? KIND_OF_ISSUES.CLOSED : KIND_OF_ISSUES.OPEN)}
-          onMouseOver={prefetchIssues(client, repositoryOwner, repositoryName, kindOfIssue === KIND_OF_ISSUES.OPEN ? KIND_OF_ISSUES.CLOSED : KIND_OF_ISSUES.OPEN)}
-        >
-          Show Only {kindOfIssue} Issues
-        </ButtonUnobtrusive>
-
-        <IssuesList
-          repositoryOwner={repositoryOwner}
-          repositoryName={repositoryName}
-          kindOfIssue={kindOfIssue}
-          isShow={isShow}
-        />
-      </div>
-    ) : (
-      null
+    {isShow(showState) && (
+      <IssuesList
+        showState={showState}
+        repositoryOwner={repositoryOwner}
+        repositoryName={repositoryName}
+      />
     )}
   </div>
 
 const IssuesListPresenter = ({
-  isShow,
   repositoryOwner,
   repositoryName,
   data: {
@@ -127,13 +137,13 @@ const ISSUES_OF_REPOSITORY = gql`
 `
 
 const ISSUES_OF_REPOSITORY_CONFIG = {
-  options: ({ repositoryOwner, repositoryName, isShow, kindOfIssue }) => ({
+  options: ({ repositoryOwner, repositoryName, showState }) => ({
     variables: {
       repositoryOwner,
       repositoryName,
-      kindOfIssue,
+      kindOfIssue: KIND_OF_ISSUES[showState],
     },
-    skip: !isShow,
+    skip: !isShow(showState),
   }),
 };
 
@@ -143,7 +153,6 @@ const IssuesList = graphql(
 )(IssuesListPresenter);
 
 export default compose(
-  withState('isShow', 'onShow', false),
-  withState('kindOfIssue', 'onChangeKindOfIssue', KIND_OF_ISSUES.OPEN),
+  withState('showState', 'onChangeShowState', SHOW_STATES.NO_ISSUES),
   withApollo
 )(IssuesPresenter);
