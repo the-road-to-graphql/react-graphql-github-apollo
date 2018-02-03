@@ -5,21 +5,18 @@ const REPOSITORY_FRAGMENT = gql`
     id
     name
     url
-    description
+    descriptionHTML
     primaryLanguage {
       name
-      color
     }
     owner {
       login
+      url
     }
     stargazers {
       totalCount
     }
     viewerHasStarred
-    forks {
-      totalCount
-    }
     watchers {
       totalCount
     }

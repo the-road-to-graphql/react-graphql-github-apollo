@@ -2,6 +2,8 @@
   padding: 10px;
   background: none;
   cursor: pointer;
+  transition: color .25s ease-in-out;
+  transition: background .25s ease-in-out;
 }
 
 .Button_white {
@@ -9,7 +11,36 @@
   color: #fff;
 }
 
+.Button_white:hover {
+  color: #000;
+  background: #fff;
+}
+
 .Button_black {
   border: 1px solid #000;
   color: #000;
+}
+
+.Button_black:hover {
+  color: #fff;
+  background: #000;
+}
+
+.Button_unobtrusive {
+  padding: 10px;
+  color: #000;
+  background: none;
+  border: none;
+  cursor: pointer;
+  opacity: 1;
+  transition: opacity .25s ease-in-out;
+  outline: none;
+}
+
+.Button_unobtrusive:hover {
+  opacity: .35;
+}
+
+.Button_unobtrusive:focus {
+  outline: none;
 }

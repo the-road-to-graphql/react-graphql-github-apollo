@@ -2,14 +2,34 @@
 
 }
 
+.Repositories-more {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 10px 0;
+}
+
 .Repository {
   padding: 20px;
 }
 
-.Repository-details {
+.Repository-title {
   display: flex;
+  justify-content: space-between;
+  align-items: baseline;
 }
 
-.Repository-details p {
-  padding-right: 20px;
+.Repository-title-action {
+  margin-left: 10px;
+}
+
+.Repository-description {
+  margin: 10px 0;
+  display: flex;
+  justify-content: space-between;
+}
+
+.Repository-description-details {
+  text-align: right;
+  white-space: nowrap;
 }

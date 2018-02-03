@@ -3,7 +3,10 @@ import { graphql, withApollo } from 'react-apollo';
 import gql from 'graphql-tag';
 import { compose, withState } from 'recompose';
 
+import { ButtonUnobtrusive } from '../Button';
 import Loading from '../Loading';
+
+import './style.css';
 
 const KIND_OF_ISSUES = {
   OPEN: 'OPEN',
@@ -30,37 +33,38 @@ const IssuesPresenter = ({
   onChangeKindOfIssue,
   client,
 }) =>
-  <div>
-    <button
+  <div className="Issues">
+    <ButtonUnobtrusive
       onClick={() => onShow(!isShow)}
       onMouseOver={prefetchIssues(client, repositoryOwner, repositoryName, kindOfIssue)}
-      type="button"
     >
       { isShow ? 'Hide Issues' : 'Show Issues' }
-    </button>
+    </ButtonUnobtrusive>
 
-    { isShow &&
-      <button
-        onClick={() => onChangeKindOfIssue(kindOfIssue === KIND_OF_ISSUES.OPEN ? KIND_OF_ISSUES.CLOSED : KIND_OF_ISSUES.OPEN)}
-        onMouseOver={prefetchIssues(client, repositoryOwner, repositoryName, kindOfIssue === KIND_OF_ISSUES.OPEN ? KIND_OF_ISSUES.CLOSED : KIND_OF_ISSUES.OPEN)}
-        type="button"
-      >
-        { kindOfIssue === KIND_OF_ISSUES.OPEN ? 'Only Closed Issues' : 'Only Open Issues' }
-      </button>
-    }
+    { isShow ? (
+      <div className="Issues-content">
+        <IssuesList
+          repositoryOwner={repositoryOwner}
+          repositoryName={repositoryName}
+          kindOfIssue={kindOfIssue}
+          isShow={isShow}
+        />
 
-    { isShow &&
-      <IssuesList
-        repositoryOwner={repositoryOwner}
-        repositoryName={repositoryName}
-        kindOfIssue={kindOfIssue}
-        isShow={isShow}
-      />
-    }
+        <ButtonUnobtrusive
+          onClick={() => onChangeKindOfIssue(kindOfIssue === KIND_OF_ISSUES.OPEN ? KIND_OF_ISSUES.CLOSED : KIND_OF_ISSUES.OPEN)}
+          onMouseOver={prefetchIssues(client, repositoryOwner, repositoryName, kindOfIssue === KIND_OF_ISSUES.OPEN ? KIND_OF_ISSUES.CLOSED : KIND_OF_ISSUES.OPEN)}
+        >
+          { kindOfIssue === KIND_OF_ISSUES.OPEN ? 'Only Closed Issues' : 'Only Open Issues' }
+        </ButtonUnobtrusive>
+      </div>
+    ) : (
+      null
+    )}
   </div>
 
 const IssuesListPresenter = ({
   isShow,
+  kindOfIssue,
   data: {
     error,
     loading,
@@ -86,19 +90,21 @@ const IssuesListPresenter = ({
   const { issues } = repository;
 
   return (
-    issues.edges.length ? (
-      <div>
-        {issues.edges.map(issue =>
-          <div key={issue.node.id}>
-            <a href={issue.node.url}>{issue.node.title}</a>
-          </div>
-        )}
-      </div>
-    ) : (
-      <div>
-        <p><strong>No [STATE] issues</strong></p>
-      </div>
-    )
+    <div>
+      {issues.edges.length ? (
+        <div>
+          {issues.edges.map(issue =>
+            <div key={issue.node.id}>
+              <a href={issue.node.url}>{issue.node.title}</a>
+            </div>
+          )}
+        </div>
+      ) : (
+        <div>
+          <p>No {kindOfIssue} issues ...</p>
+        </div>
+      )}
+    </div>
   );
 }
 

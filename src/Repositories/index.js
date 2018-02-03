@@ -10,6 +10,7 @@ import {
 
 import Issues from '../Issues';
 import Loading from '../Loading';
+import Button, { ButtonUnobtrusive } from '../Button';
 
 import './style.css';
 
@@ -85,9 +86,10 @@ const Repository = ({
   id,
   name,
   url,
-  description,
+  descriptionHTML,
+  primaryLanguage,
+  owner,
   stargazers,
-  forks,
   watchers,
   viewerSubscription,
   viewerHasStarred,
@@ -96,48 +98,56 @@ const Repository = ({
   onStarRemove,
 }) =>
   <div className="Repository">
-    <h2><a href={url}>{name}</a></h2>
+    <div className="Repository-title">
+      <h2>
+        <a href={url}>{name}</a>
+      </h2>
 
-    <p>{description}</p>
-
-    <div className="Repository-details">
-      {viewerSubscription === VIEWER_SUBSCRIPTIONS.SUBSCRIBED
-        ? (
-            <button
-              onClick={() => onWatchToggle(id, VIEWER_SUBSCRIPTIONS.UNSUBSCRIBED)}
-              type="button"
+      <div>
+        {viewerSubscription === VIEWER_SUBSCRIPTIONS.SUBSCRIBED
+          ? (
+              <Button
+                className={'Repository-title-action'}
+                onClick={() => onWatchToggle(id, VIEWER_SUBSCRIPTIONS.UNSUBSCRIBED)}
+              >
+                {watchers.totalCount} Unwatch
+              </Button>
+          ) : (
+            <Button
+              className={'Repository-title-action'}
+              onClick={() => onWatchToggle(id, VIEWER_SUBSCRIPTIONS.SUBSCRIBED)}
             >
-              {watchers.totalCount} Unwatch
-            </button>
-        ) : (
-          <button
-            onClick={() => onWatchToggle(id, VIEWER_SUBSCRIPTIONS.SUBSCRIBED)}
-            type="button"
-          >
-            {watchers.totalCount} Watch
-          </button>
-        )
-      }
+              {watchers.totalCount} Watch
+            </Button>
+          )
+        }
 
-      {viewerHasStarred
-        ? (
-            <button
-              onClick={() => onStarRemove(id, !viewerHasStarred)}
-              type="button"
+        {viewerHasStarred
+          ? (
+              <Button
+                className={'Repository-title-action'}
+                onClick={() => onStarRemove(id, !viewerHasStarred)}
+              >
+                {stargazers.totalCount} Unstar
+              </Button>
+          ) : (
+            <Button
+              className={'Repository-title-action'}
+              onClick={() => onStarAdd(id, !viewerHasStarred)}
             >
-              {stargazers.totalCount} Unstar
-            </button>
-        ) : (
-          <button
-            onClick={() => onStarAdd(id, !viewerHasStarred)}
-            type="button"
-          >
-            {stargazers.totalCount} Star
-          </button>
-        )
-      }
+              {stargazers.totalCount} Star
+            </Button>
+          )
+        }
+      </div>
+    </div>
 
-      <p>Forks: {forks.totalCount}</p>
+    <div className="Repository-description">
+      <div dangerouslySetInnerHTML={{ __html: descriptionHTML }} />
+      <div className="Repository-description-details">
+        <div>{primaryLanguage && <span>Language: {primaryLanguage.name}</span>}</div>
+        <div>{owner && <span>Owner: <a href={owner.url}>{owner.login}</a></span>}</div>
+      </div>
     </div>
   </div>
 
@@ -147,18 +157,17 @@ const FetchMoreButton = ({
   entry,
   fetchMore,
 }) =>
-  <div>
+  <div className="Repositories-more">
     {
       loading ? (
         <Loading />
       ) : (
-        <button
+        <ButtonUnobtrusive
           onClick={() => doFetchMore(fetchMore, entry, pageInfo.endCursor)}
-          type="button"
           disabled={!pageInfo.hasNextPage}
         >
           More
-        </button>
+        </ButtonUnobtrusive>
       )
     }
   </div>

@@ -32,8 +32,6 @@ const Profile = ({
 
   return (
     <div>
-      PLACEHOLDER: Some User Info
-
       <Repositories
         loading={loading}
         entry={'viewer'}

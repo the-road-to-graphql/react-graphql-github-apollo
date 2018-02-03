@@ -25,16 +25,10 @@
   text-transform: uppercase;
   padding: 20px;
   text-decoration: none;
-  opacity: 1;
-  transition: opacity .25s ease-in-out;
 }
 
 .Navigation-link a {
   color: #ffffff;
-}
-
-.Navigation-link:hover {
-  opacity: .35;
 }
 
 .Navigation-search {

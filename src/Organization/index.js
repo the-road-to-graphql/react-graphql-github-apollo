@@ -32,8 +32,6 @@ const Organization = ({
 
   return (
     <div>
-      PLACEHOLDER: Some Orgabnization Info
-
       <Repositories
         loading={loading}
         entry={'organization'}
