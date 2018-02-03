@@ -3,6 +3,7 @@ import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 
 import Loading from '../Loading';
+import ErrorMessage from '../Error';
 import Repositories from '../Repositories';
 import REPOSITORY_FRAGMENT from '../Repositories/fragments';
 
@@ -19,11 +20,7 @@ const Profile = ({
   }
 
   if (error) {
-    return (
-      <div>
-        <p><strong>Something went wrong:</strong> {error.toString()}</p>
-      </div>
-    );
+    return <ErrorMessage error={error} />;
   }
 
   return (

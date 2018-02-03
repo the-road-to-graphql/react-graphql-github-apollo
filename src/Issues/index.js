@@ -5,6 +5,7 @@ import { compose, withState } from 'recompose';
 
 import { ButtonUnobtrusive } from '../Button';
 import Loading from '../Loading';
+import ErrorMessage from '../Error';
 
 import './style.css';
 
@@ -76,11 +77,7 @@ const IssuesListPresenter = ({
   }
 
   if (error) {
-    return (
-      <div>
-        <p><strong>Something went wrong:</strong> {error.toString()}</p>
-      </div>
-    );
+    return <ErrorMessage error={error} />;
   }
 
   const { issues } = repository;
