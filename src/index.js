@@ -7,7 +7,7 @@ import { HttpLink } from 'apollo-link-http';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { onError } from 'apollo-link-error';
 
-import './index.css';
+import './style.css';
 
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';

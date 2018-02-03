@@ -1,0 +1,15 @@
+.Button {
+  padding: 10px;
+  background: none;
+  cursor: pointer;
+}
+
+.Button_white {
+  border: 1px solid #fff;
+  color: #fff;
+}
+
+.Button_black {
+  border: 1px solid #000;
+  color: #000;
+}

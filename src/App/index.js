@@ -1,39 +1,68 @@
-import React from 'react';
+import React, { Component } from 'react';
 import {
   BrowserRouter as Router,
   Route,
-  Link,
 } from 'react-router-dom';
 
-import HomePage from '../Home';
+import Navigation from '../Navigation';
+import OrganizationPage from '../Organization';
 import ProfilePage from '../Profile';
 
 import * as routes from '../constants/routes';
 
-const App = () =>
-  <Router>
-    <div>
-      <Navigation />
+const ORGANIZATION_DEFAULT = 'the-road-to-learn-react';
 
-      <hr/>
+class App extends Component {
+  constructor() {
+    super();
 
-      <Route
-        exact path={routes.HOME}
-        component={() => <HomePage />}
-      />
-      <Route
-        exact path={routes.PROFILE}
-        component={() => <ProfilePage />}
-      />
-    </div>
-  </Router>
+    this.state = {
+      value: ORGANIZATION_DEFAULT,
+      organization: ORGANIZATION_DEFAULT,
+      // organization: '',
+    };
+  }
 
-const Navigation = () =>
-  <div>
-    <ul>
-      <li><Link to={routes.HOME}>Home</Link></li>
-      <li><Link to={routes.PROFILE}>Profile</Link></li>
-    </ul>
-  </div>
+  onSubmit = (event) => {
+    const { value } = this.state;
+
+    this.setState({ organization: value });
+
+    event.preventDefault();
+  }
+
+  onChange = (value) => {
+    this.setState({ value });
+  }
+
+  render() {
+    const { value, organization } = this.state;
+
+    return (
+      <Router>
+        <div>
+          <Navigation
+            value={value}
+            onChange={this.onChange}
+            onSubmit={this.onSubmit}
+          />
+
+          <hr/>
+
+          <Route
+            exact path={routes.HOME}
+            component={() => <OrganizationPage
+                organization={organization}
+            />}
+          />
+          <Route
+            exact path={routes.PROFILE}
+            component={() => <ProfilePage />}
+          />
+        </div>
+      </Router>
+    );
+  }
+}
 
 export default App;

@@ -42,13 +42,6 @@ const Repositories = ({
   onWatchToggle,
 }) =>
   <div>
-    <FetchMoreButton
-      loading={loading}
-      pageInfo={repositories.pageInfo}
-      entry={entry}
-      fetchMore={fetchMore}
-    />
-
     <div>
       {repositories.edges.map(repository =>
         <div key={repository.node.id}>
@@ -64,6 +57,13 @@ const Repositories = ({
         </div>
       )}
     </div>
+
+    <FetchMoreButton
+      loading={loading}
+      pageInfo={repositories.pageInfo}
+      entry={entry}
+      fetchMore={fetchMore}
+    />
   </div>
 
 const Repository = ({
@@ -133,11 +133,15 @@ const REPOSITORY_FRAGMENT = gql`
   fragment repository on Repository {
     id
     name
+    url
+    description
+    primaryLanguage {
+      name
+      color
+    }
     owner {
       login
     }
-    url
-    description
     stargazers {
       totalCount
     }

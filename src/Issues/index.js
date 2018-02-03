@@ -111,6 +111,12 @@ const ISSUES_OF_REPOSITORY = gql`
             id
             title
             url
+            bodyText
+            editor {
+              avatarUrl
+              login
+              url
+            }
           }
         }
         pageInfo {

@@ -1,0 +1,20 @@
+.Input {
+  border:none;
+  padding: 10px;
+  background: none;
+  outline: none;
+}
+
+.Input:focus {
+  outline: none;
+}
+
+.Input_white {
+  border-bottom: 1px solid #fff;
+  color: #fff;
+}
+
+.Input_black {
+  border-bottom: 1px solid #000;
+  color: #000;
+}
