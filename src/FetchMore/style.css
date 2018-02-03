@@ -1,0 +1,9 @@
+.FetchMore {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.FetchMore-button {
+  margin: 20px 0;
+}

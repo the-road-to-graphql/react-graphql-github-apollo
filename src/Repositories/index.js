@@ -9,8 +9,8 @@ import {
 } from './mutations';
 
 import Issues from '../Issues';
-import Loading from '../Loading';
-import Button, { ButtonUnobtrusive } from '../Button';
+import Button from '../Button';
+import FetchMore from '../FetchMore';
 
 import './style.css';
 
@@ -19,8 +19,7 @@ const VIEWER_SUBSCRIPTIONS = {
   UNSUBSCRIBED: 'UNSUBSCRIBED',
 };
 
-const doFetchMore = (fetchMore, entry, cursor) => fetchMore({
-  // query: ... (you can specify a different query, otherwise your previous quert is used)
+const doFetchMore = (fetchMore) => (entry, cursor) => fetchMore({
   variables: {
     cursor,
   },
@@ -56,29 +55,27 @@ const Repositories = ({
   onStarRemove,
 }) =>
   <div>
-    <div>
-      {repositories.edges.map(repository =>
-        <div key={repository.node.id}>
-          <Repository
-            { ...repository.node }
-            onWatchToggle={onWatchToggle}
-            onStarAdd={onStarAdd}
-            onStarRemove={onStarRemove}
-          />
-          <Issues
-            repositoryName={repository.node.name}
-            repositoryOwner={repository.node.owner.login}
-          />
-          <hr />
-        </div>
-      )}
-    </div>
+    {repositories.edges.map(repository =>
+      <div key={repository.node.id}>
+        <Repository
+          { ...repository.node }
+          onWatchToggle={onWatchToggle}
+          onStarAdd={onStarAdd}
+          onStarRemove={onStarRemove}
+        />
+        <Issues
+          repositoryName={repository.node.name}
+          repositoryOwner={repository.node.owner.login}
+        />
+        <hr />
+      </div>
+    )}
 
-    <FetchMoreButton
+    <FetchMore
+      entry={entry}
       loading={loading}
       pageInfo={repositories.pageInfo}
-      entry={entry}
-      fetchMore={fetchMore}
+      doFetchMore={doFetchMore(fetchMore)}
     />
   </div>
 
@@ -152,28 +149,6 @@ const Repository = ({
         <div>{owner && <span>Owner: <a href={owner.url}>{owner.login}</a></span>}</div>
       </div>
     </div>
-  </div>
-
-const FetchMoreButton = ({
-  loading,
-  pageInfo,
-  entry,
-  fetchMore,
-}) =>
-  <div className="Repositories-more">
-    {
-      loading ? (
-        <Loading />
-      ) : (
-        <ButtonUnobtrusive
-          className="Repositories-more-button"
-          onClick={() => doFetchMore(fetchMore, entry, pageInfo.endCursor)}
-          disabled={!pageInfo.hasNextPage}
-        >
-          More
-        </ButtonUnobtrusive>
-      )
-    }
   </div>
 
 export default compose(
