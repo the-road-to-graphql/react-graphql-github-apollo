@@ -3,6 +3,7 @@ import { graphql, withApollo } from 'react-apollo';
 import gql from 'graphql-tag';
 import { compose, withState } from 'recompose';
 
+import Issue from '../Issue';
 import { ButtonUnobtrusive } from '../Button';
 import Loading from '../Loading';
 import ErrorMessage from '../Error';
@@ -44,19 +45,19 @@ const IssuesPresenter = ({
 
     { isShow ? (
       <div className="Issues-content">
+        <ButtonUnobtrusive
+          onClick={() => onChangeKindOfIssue(kindOfIssue === KIND_OF_ISSUES.OPEN ? KIND_OF_ISSUES.CLOSED : KIND_OF_ISSUES.OPEN)}
+          onMouseOver={prefetchIssues(client, repositoryOwner, repositoryName, kindOfIssue === KIND_OF_ISSUES.OPEN ? KIND_OF_ISSUES.CLOSED : KIND_OF_ISSUES.OPEN)}
+        >
+          Show Only {kindOfIssue} Issues
+        </ButtonUnobtrusive>
+
         <IssuesList
           repositoryOwner={repositoryOwner}
           repositoryName={repositoryName}
           kindOfIssue={kindOfIssue}
           isShow={isShow}
         />
-
-        <ButtonUnobtrusive
-          onClick={() => onChangeKindOfIssue(kindOfIssue === KIND_OF_ISSUES.OPEN ? KIND_OF_ISSUES.CLOSED : KIND_OF_ISSUES.OPEN)}
-          onMouseOver={prefetchIssues(client, repositoryOwner, repositoryName, kindOfIssue === KIND_OF_ISSUES.OPEN ? KIND_OF_ISSUES.CLOSED : KIND_OF_ISSUES.OPEN)}
-        >
-          { kindOfIssue === KIND_OF_ISSUES.OPEN ? 'Only Closed Issues' : 'Only Open Issues' }
-        </ButtonUnobtrusive>
       </div>
     ) : (
       null
@@ -87,9 +88,7 @@ const IssuesListPresenter = ({
       {issues.edges.length ? (
         <div>
           {issues.edges.map(issue =>
-            <div key={issue.node.id}>
-              <a href={issue.node.url}>{issue.node.title}</a>
-            </div>
+            <Issue key={issue.node.id} issue={issue.node} />
           )}
         </div>
       ) : (
@@ -110,12 +109,7 @@ const ISSUES_OF_REPOSITORY = gql`
             id
             title
             url
-            bodyText
-            editor {
-              avatarUrl
-              login
-              url
-            }
+            bodyHTML
           }
         }
         pageInfo {

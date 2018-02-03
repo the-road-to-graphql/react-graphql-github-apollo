@@ -7,9 +7,16 @@ body {
 }
 
 h2 {
-  font-size: 22px;
-  font-weight: normal;
+  font-size: 24px;
+  font-weight: 600;
   line-height: 34px;
+  margin: 5px 0;
+}
+
+h3 {
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 27px;
   margin: 5px 0;
 }
 
