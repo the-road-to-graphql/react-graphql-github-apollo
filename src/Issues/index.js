@@ -147,7 +147,9 @@ const IssuesListPresenter = ({
             loading={loading}
             pageInfo={repository.issues.pageInfo}
             doFetchMore={doFetchMore(fetchMore)}
-          />
+          >
+            Issues
+          </FetchMore>
         </div>
       ) : (
         <div>

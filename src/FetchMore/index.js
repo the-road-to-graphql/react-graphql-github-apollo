@@ -6,6 +6,7 @@ import { ButtonUnobtrusive } from '../Button';
 import './style.css';
 
 const FetchMore = ({
+  children,
   payload,
   loading,
   pageInfo,
@@ -20,7 +21,7 @@ const FetchMore = ({
         onClick={() => doFetchMore(pageInfo.endCursor, payload)}
         disabled={!pageInfo.hasNextPage}
       >
-        {pageInfo.hasNextPage ? 'More' : 'No More' }
+        {pageInfo.hasNextPage ? `More ${children}` : `No More ${children}` }
       </ButtonUnobtrusive>
     )}
   </div>

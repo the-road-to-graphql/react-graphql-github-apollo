@@ -4,10 +4,47 @@ import gql from 'graphql-tag';
 
 import Loading from '../Loading';
 import ErrorMessage from '../Error';
+import FetchMore from '../FetchMore';
 
 import './style.css';
 
+const doFetchMore = (fetchMore) => (cursor, { repositoryOwner, repositoryName, number }) => fetchMore({
+  variables: {
+    cursor,
+    repositoryOwner,
+    repositoryName,
+    number,
+  },
+  updateQuery: (previousResult, { fetchMoreResult }) => {
+    if (!fetchMoreResult) {
+      return previousResult;
+    }
+
+    return {
+      ...previousResult,
+      repository: {
+        ...previousResult.repository,
+        issue: {
+          ...previousResult.repository.issue,
+          ...fetchMoreResult.repository.issue,
+          comments: {
+              ...previousResult.repository.issue.comments,
+              ...fetchMoreResult.repository.issue.comments,
+            edges: [
+              ...previousResult.repository.issue.comments.edges,
+              ...fetchMoreResult.repository.issue.comments.edges,
+            ],
+          }
+        }
+      }
+    }
+  },
+});
+
 const Comments = ({
+  repositoryOwner,
+  repositoryName,
+  issue,
   data: {
     loading,
     error,
@@ -33,6 +70,19 @@ const Comments = ({
               comment={comment.node}
             />
           )}
+
+          <FetchMore
+            payload={{
+              repositoryOwner,
+              repositoryName,
+              number: issue.number,
+            }}
+            loading={loading}
+            pageInfo={repository.issue.comments.pageInfo}
+            doFetchMore={doFetchMore(fetchMore)}
+          >
+            Comments
+          </FetchMore>
         </div>
       ) : (
         <div>
@@ -53,10 +103,10 @@ const Comment = ({ comment }) =>
   </div>
 
 const COMMENTS_OF_ISSUE = gql`
-  query ($repositoryOwner: String!, $repositoryName: String!, $number: Int!) {
+  query ($repositoryOwner: String!, $repositoryName: String!, $number: Int!, $cursor: String) {
     repository(name: $repositoryName, owner: $repositoryOwner) {
       issue(number: $number) {
-        comments(first: 5) {
+        comments(first: 5, after: $cursor) {
           edges {
             node {
               id
@@ -79,6 +129,7 @@ const COMMENTS_OF_ISSUE = gql`
 const COMMENTS_OF_ISSUE_CONFIG = {
   options: ({ issue, repositoryOwner, repositoryName }) => ({
     variables: {
+      cursor: null,
       repositoryOwner,
       repositoryName,
       number: issue.number,

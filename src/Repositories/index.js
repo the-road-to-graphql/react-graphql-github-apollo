@@ -76,7 +76,9 @@ const Repositories = ({
       loading={loading}
       pageInfo={repositories.pageInfo}
       doFetchMore={doFetchMore(fetchMore)}
-    />
+    >
+      Repositories
+    </FetchMore>
   </div>
 
 const Repository = ({
