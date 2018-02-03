@@ -19,7 +19,7 @@ const VIEWER_SUBSCRIPTIONS = {
   UNSUBSCRIBED: 'UNSUBSCRIBED',
 };
 
-const doFetchMore = (fetchMore) => (entry, cursor) => fetchMore({
+const doFetchMore = (fetchMore) => (cursor, { entry }) => fetchMore({
   variables: {
     cursor,
   },
@@ -72,7 +72,7 @@ const Repositories = ({
     )}
 
     <FetchMore
-      entry={entry}
+      payload={{ entry }}
       loading={loading}
       pageInfo={repositories.pageInfo}
       doFetchMore={doFetchMore(fetchMore)}

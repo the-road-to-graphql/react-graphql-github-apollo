@@ -40,3 +40,7 @@ a:hover {
 a:active {
   text-decoration: none;
 }
+
+pre {
+  white-space: pre-wrap;
+}

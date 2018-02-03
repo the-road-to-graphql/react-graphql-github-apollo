@@ -4,9 +4,10 @@ import gql from 'graphql-tag';
 import { compose, withState } from 'recompose';
 
 import Issue from '../Issue';
-import { ButtonUnobtrusive } from '../Button';
 import Loading from '../Loading';
 import ErrorMessage from '../Error';
+import FetchMore from '../FetchMore';
+import { ButtonUnobtrusive } from '../Button';
 
 import './style.css';
 
@@ -43,6 +44,7 @@ const prefetchIssues = (client, repositoryOwner, repositoryName, showState) => {
     client.query({
       query: ISSUES_OF_REPOSITORY,
       variables: {
+        cursor: null,
         repositoryOwner,
         repositoryName,
         kindOfIssue: KIND_OF_ISSUES[nextShowState],
@@ -50,6 +52,35 @@ const prefetchIssues = (client, repositoryOwner, repositoryName, showState) => {
     });
   }
 };
+
+const doFetchMore = (fetchMore) => (cursor, { repositoryOwner, repositoryName, showState }) => fetchMore({
+  variables: {
+    cursor,
+    repositoryOwner,
+    repositoryName,
+    kindOfIssue: KIND_OF_ISSUES[showState],
+  },
+  updateQuery: (previousResult, { fetchMoreResult }) => {
+    if (!fetchMoreResult) {
+      return previousResult;
+    }
+
+    return {
+      ...previousResult,
+      repository: {
+        ...previousResult.repository,
+        issues: {
+          ...previousResult.repository.issues,
+          ...fetchMoreResult.repository.issues,
+          edges: [
+            ...previousResult.repository.issues.edges,
+            ...fetchMoreResult.repository.issues.edges,
+          ],
+        }
+      }
+    }
+  },
+});
 
 const IssuesPresenter = ({
   repositoryOwner,
@@ -76,12 +107,14 @@ const IssuesPresenter = ({
   </div>
 
 const IssuesListPresenter = ({
+  showState,
   repositoryOwner,
   repositoryName,
   data: {
     error,
     loading,
     repository,
+    fetchMore,
   },
 }) => {
   if (loading) {
@@ -104,6 +137,17 @@ const IssuesListPresenter = ({
               repositoryName={repositoryName}
             />
           )}
+
+          <FetchMore
+            payload={{
+              repositoryOwner,
+              repositoryName,
+              showState,
+            }}
+            loading={loading}
+            pageInfo={repository.issues.pageInfo}
+            doFetchMore={doFetchMore(fetchMore)}
+          />
         </div>
       ) : (
         <div>
@@ -115,9 +159,9 @@ const IssuesListPresenter = ({
 }
 
 const ISSUES_OF_REPOSITORY = gql`
-  query ($repositoryOwner: String!, $repositoryName: String!, $kindOfIssue: IssueState!) {
+  query ($repositoryOwner: String!, $repositoryName: String!, $kindOfIssue: IssueState!, $cursor: String) {
     repository(name: $repositoryName, owner: $repositoryOwner) {
-      issues(last: 5, states: [$kindOfIssue]) {
+      issues(first: 5, states: [$kindOfIssue], after: $cursor) {
         edges {
           node {
             id
@@ -139,6 +183,7 @@ const ISSUES_OF_REPOSITORY = gql`
 const ISSUES_OF_REPOSITORY_CONFIG = {
   options: ({ repositoryOwner, repositoryName, showState }) => ({
     variables: {
+      cursor: null,
       repositoryOwner,
       repositoryName,
       kindOfIssue: KIND_OF_ISSUES[showState],

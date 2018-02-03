@@ -17,8 +17,8 @@ const Issue = ({
     <Button onClick={() => onShowComments(!isShowComments)}>
       { isShowComments ? '-' : '+' }
     </Button>
-    &nbsp;
-    <div>
+
+    <div className="Issue-content">
       <h3><a href={issue.url}>{issue.title}</a></h3>
       <div
         dangerouslySetInnerHTML={{ __html: issue.bodyHTML }}
