@@ -1,11 +1,22 @@
 import React from 'react';
 import { graphql } from 'react-apollo';
+import { compose } from 'recompose';
 
-import { WATCH_REPOSITORY } from './mutations';
+import {
+  WATCH_REPOSITORY,
+  STAR_REPOSITORY,
+  UNSTAR_REPOSITORY,
+} from './mutations';
+
 import Issues from '../Issues';
 import Loading from '../Loading';
 
 import './style.css';
+
+const VIEWER_SUBSCRIPTIONS = {
+  SUBSCRIBED: 'SUBSCRIBED',
+  UNSUBSCRIBED: 'UNSUBSCRIBED',
+};
 
 const doFetchMore = (fetchMore, entry, cursor) => fetchMore({
   // query: ... (you can specify a different query, otherwise your previous quert is used)
@@ -40,6 +51,8 @@ const Repositories = ({
   entry,
   fetchMore,
   onWatchToggle,
+  onStarAdd,
+  onStarRemove,
 }) =>
   <div>
     <div>
@@ -48,6 +61,8 @@ const Repositories = ({
           <Repository
             { ...repository.node }
             onWatchToggle={onWatchToggle}
+            onStarAdd={onStarAdd}
+            onStarRemove={onStarRemove}
           />
           <Issues
             repositoryName={repository.node.name}
@@ -76,7 +91,9 @@ const Repository = ({
   watchers,
   viewerSubscription,
   viewerHasStarred,
-  onWatchToggle
+  onWatchToggle,
+  onStarAdd,
+  onStarRemove,
 }) =>
   <div className="Repository">
     <h2><a href={url}>{name}</a></h2>
@@ -84,26 +101,43 @@ const Repository = ({
     <p>{description}</p>
 
     <div className="Repository-details">
-      <p>Stars: {stargazers.totalCount}</p>
-      <p>Forks: {forks.totalCount}</p>
-
-      {viewerSubscription === 'SUBSCRIBED'
+      {viewerSubscription === VIEWER_SUBSCRIPTIONS.SUBSCRIBED
         ? (
             <button
-              onClick={() => onWatchToggle(id, 'UNSUBSCRIBED')}
+              onClick={() => onWatchToggle(id, VIEWER_SUBSCRIPTIONS.UNSUBSCRIBED)}
               type="button"
             >
               {watchers.totalCount} Unwatch
             </button>
         ) : (
           <button
-            onClick={() => onWatchToggle(id, 'SUBSCRIBED')}
+            onClick={() => onWatchToggle(id, VIEWER_SUBSCRIPTIONS.SUBSCRIBED)}
             type="button"
           >
             {watchers.totalCount} Watch
           </button>
         )
       }
+
+      {viewerHasStarred
+        ? (
+            <button
+              onClick={() => onStarRemove(id, !viewerHasStarred)}
+              type="button"
+            >
+              {stargazers.totalCount} Unstar
+            </button>
+        ) : (
+          <button
+            onClick={() => onStarAdd(id, !viewerHasStarred)}
+            type="button"
+          >
+            {stargazers.totalCount} Star
+          </button>
+        )
+      }
+
+      <p>Forks: {forks.totalCount}</p>
     </div>
   </div>
 
@@ -129,7 +163,17 @@ const FetchMoreButton = ({
     }
   </div>
 
-export default graphql(
-  WATCH_REPOSITORY.WATCH_REPOSITORY_MUTATION,
-  WATCH_REPOSITORY.WATCH_REPOSITORY_CONFIG
+export default compose(
+  graphql(
+    WATCH_REPOSITORY.WATCH_REPOSITORY_MUTATION,
+    WATCH_REPOSITORY.WATCH_REPOSITORY_CONFIG
+  ),
+  graphql(
+    STAR_REPOSITORY.STAR_REPOSITORY_MUTATION,
+    STAR_REPOSITORY.STAR_REPOSITORY_CONFIG
+  ),
+  graphql(
+    UNSTAR_REPOSITORY.UNSTAR_REPOSITORY_MUTATION,
+    UNSTAR_REPOSITORY.UNSTAR_REPOSITORY_CONFIG
+  ),
 )(Repositories);
