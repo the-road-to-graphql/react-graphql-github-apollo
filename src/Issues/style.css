@@ -12,3 +12,18 @@
   justify-content: space-between;
   align-items: flex-start;
 }
+
+@media only screen and (max-device-width: 480px)
+{
+  .Issues-content {
+    flex-direction: column-reverse;
+    align-items: center;
+  }
+}
+
+@media only screen and (max-device-width: 480px)
+{
+  .IssueList {
+    margin: 20px 0;
+  }
+}

@@ -72,11 +72,7 @@ const IssuesListPresenter = ({
   },
 }) => {
   if (loading) {
-    return (
-      <div>
-        <Loading />
-      </div>
-    );
+    return <Loading />;
   }
 
   if (error) {
@@ -90,7 +86,7 @@ const IssuesListPresenter = ({
   const { issues } = repository;
 
   return (
-    <div>
+    <div className="IssueList">
       {issues.edges.length ? (
         <div>
           {issues.edges.map(issue =>
@@ -101,7 +97,7 @@ const IssuesListPresenter = ({
         </div>
       ) : (
         <div>
-          <p>No {kindOfIssue} issues ...</p>
+          No {kindOfIssue} issues ...
         </div>
       )}
     </div>

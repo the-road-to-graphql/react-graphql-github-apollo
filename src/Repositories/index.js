@@ -166,6 +166,7 @@ const FetchMoreButton = ({
         <Loading />
       ) : (
         <ButtonUnobtrusive
+          className="Repositories-more-button"
           onClick={() => doFetchMore(fetchMore, entry, pageInfo.endCursor)}
           disabled={!pageInfo.hasNextPage}
         >

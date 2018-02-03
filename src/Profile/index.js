@@ -15,11 +15,7 @@ const Profile = ({
   }
 }) => {
   if (loading && !viewer) {
-    return (
-      <div>
-        <Loading />
-      </div>
-    );
+    return <Loading />;
   }
 
   if (error) {

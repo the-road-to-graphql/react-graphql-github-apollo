@@ -6,7 +6,10 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 10px 0;
+}
+
+.Repositories-more-button {
+  margin: 20px 0;
 }
 
 .Repository {

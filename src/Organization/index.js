@@ -15,11 +15,7 @@ const Organization = ({
   }
 }) => {
   if (loading && !organization) {
-    return (
-      <div >
-        <Loading />
-      </div>
-    );
+    return <Loading />;
   }
 
   if (error) {
