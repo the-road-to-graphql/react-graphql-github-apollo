@@ -1,0 +1,14 @@
+.App-content_large-header, .App-content_small-header {
+  margin-top: 54px;
+}
+
+@media only screen and (max-device-width: 480px)
+{
+  .App-content_large-header {
+    margin-top: 123px;
+  }
+
+  .App-content_small-header {
+    margin-top: 68px;
+  }
+}

@@ -19,6 +19,14 @@
   align-items: baseline;
 }
 
+@media only screen and (max-device-width: 480px)
+{
+  .Repository-title {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
 .Repository-title-action {
   margin-left: 10px;
 }
@@ -29,7 +37,27 @@
   justify-content: space-between;
 }
 
+@media only screen and (max-device-width: 480px)
+{
+  .Repository-description {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .Repository-description-info {
+    text-align: center;
+    margin: 20px 0;
+  }
+}
+
 .Repository-description-details {
   text-align: right;
   white-space: nowrap;
+}
+
+@media only screen and (max-device-width: 480px)
+{
+  .Repository-description-details {
+    text-align: center;
+  }
 }

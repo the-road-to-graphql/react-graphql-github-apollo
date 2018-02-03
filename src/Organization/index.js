@@ -16,7 +16,7 @@ const Organization = ({
 }) => {
   if (loading && !organization) {
     return (
-      <div>
+      <div >
         <Loading />
       </div>
     );

@@ -143,7 +143,10 @@ const Repository = ({
     </div>
 
     <div className="Repository-description">
-      <div dangerouslySetInnerHTML={{ __html: descriptionHTML }} />
+      <div
+        className="Repository-description-info"
+        dangerouslySetInnerHTML={{ __html: descriptionHTML }}
+      />
       <div className="Repository-description-details">
         <div>{primaryLanguage && <span>Language: {primaryLanguage.name}</span>}</div>
         <div>{owner && <span>Owner: <a href={owner.url}>{owner.login}</a></span>}</div>

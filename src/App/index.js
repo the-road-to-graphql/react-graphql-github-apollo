@@ -10,6 +10,8 @@ import ProfilePage from '../Profile';
 
 import * as routes from '../constants/routes';
 
+import './style.css';
+
 const ORGANIZATION_DEFAULT = 'the-road-to-learn-react';
 
 class App extends Component {
@@ -47,17 +49,23 @@ class App extends Component {
             onSubmit={this.onSubmit}
           />
 
-          <hr/>
-
           <Route
             exact path={routes.HOME}
-            component={() => <OrganizationPage
-                organization={organization}
-            />}
+            component={() =>
+              <div className="App-content_large-header">
+                <OrganizationPage
+                  organization={organization}
+                />
+              </div>
+            }
           />
           <Route
             exact path={routes.PROFILE}
-            component={() => <ProfilePage />}
+            component={() =>
+              <div className="App-content_small-header">
+                <ProfilePage />
+              </div>
+            }
           />
         </div>
       </Router>
