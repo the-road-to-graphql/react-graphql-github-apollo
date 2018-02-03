@@ -3,7 +3,8 @@ import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 
 import Loading from '../Loading';
-import Repositories, { REPOSITORY_FRAGMENT } from '../Repositories';
+import Repositories from '../Repositories';
+import REPOSITORY_FRAGMENT from '../Repositories/fragments';
 
 const Profile = ({
   data: {

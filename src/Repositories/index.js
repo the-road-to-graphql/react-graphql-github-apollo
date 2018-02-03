@@ -1,7 +1,7 @@
 import React from 'react';
 import { graphql } from 'react-apollo';
-import gql from 'graphql-tag';
 
+import { WATCH_REPOSITORY } from './mutations';
 import Issues from '../Issues';
 import Loading from '../Loading';
 
@@ -129,97 +129,7 @@ const FetchMoreButton = ({
     }
   </div>
 
-const REPOSITORY_FRAGMENT = gql`
-  fragment repository on Repository {
-    id
-    name
-    url
-    description
-    primaryLanguage {
-      name
-      color
-    }
-    owner {
-      login
-    }
-    stargazers {
-      totalCount
-    }
-    viewerHasStarred
-    forks {
-      totalCount
-    }
-    watchers {
-      totalCount
-    }
-    viewerSubscription
-  }
-`
-
-const WATCH_REPOSITORY = gql`
-  mutation ($id: ID!, $isWatch: SubscriptionState!) {
-    updateSubscription(input:{state: $isWatch, subscribableId: $id}) {
-      subscribable {
-        id
-        viewerSubscription
-      }
-    }
-  }
-`
-
-const WATCH_REPOSITORY_CONFIG = {
-  name: 'watchRepository',
-  props: ({ watchRepository }) => ({
-    onWatchToggle(id, isWatch) {
-      watchRepository({
-        variables: { id, isWatch },
-        optimisticResponse: {
-          updateSubscription: {
-            __typename: 'Mutation',
-            subscribable: {
-              __typename: 'Repository',
-              id,
-              viewerSubscription: isWatch,
-            }
-          }
-        },
-      })
-    },
-  }),
-  options: {
-    update: (proxy, props) => {
-      const { id, viewerSubscription } = props.data.updateSubscription.subscribable;
-
-      const fragment = proxy.readFragment({
-        id: `Repository:${id}`,
-        fragment: REPOSITORY_FRAGMENT,
-      });
-
-      let { totalCount } = fragment.watchers;
-      totalCount = viewerSubscription === 'SUBSCRIBED'
-        ? totalCount + 1
-        : totalCount - 1;
-
-      proxy.writeFragment({
-        id: `Repository:${id}`,
-        fragment: REPOSITORY_FRAGMENT,
-        data: {
-          ...fragment,
-          watchers: {
-            ...fragment.watchers,
-            totalCount,
-          }
-        },
-      });
-    },
-  }
-};
-
-export {
-  REPOSITORY_FRAGMENT,
-};
-
 export default graphql(
-  WATCH_REPOSITORY,
-  WATCH_REPOSITORY_CONFIG
+  WATCH_REPOSITORY.WATCH_REPOSITORY_MUTATION,
+  WATCH_REPOSITORY.WATCH_REPOSITORY_CONFIG
 )(Repositories);

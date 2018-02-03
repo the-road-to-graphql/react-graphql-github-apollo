@@ -2,7 +2,8 @@ import React from 'react';
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 
-import Repositories, { REPOSITORY_FRAGMENT } from '../Repositories';
+import Repositories from '../Repositories';
+import REPOSITORY_FRAGMENT from '../Repositories/fragments';
 import Loading from '../Loading';
 
 const Organization = ({
