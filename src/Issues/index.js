@@ -66,7 +66,8 @@ const IssuesPresenter = ({
 
 const IssuesListPresenter = ({
   isShow,
-  kindOfIssue,
+  repositoryOwner,
+  repositoryName,
   data: {
     error,
     loading,
@@ -81,19 +82,22 @@ const IssuesListPresenter = ({
     return <ErrorMessage error={error} />;
   }
 
-  const { issues } = repository;
-
   return (
     <div className="IssueList">
-      {issues.edges.length ? (
+      {repository.issues.edges.length ? (
         <div>
-          {issues.edges.map(issue =>
-            <Issue key={issue.node.id} issue={issue.node} />
+          {repository.issues.edges.map(issue =>
+            <Issue
+              key={issue.node.id}
+              issue={issue.node}
+              repositoryOwner={repositoryOwner}
+              repositoryName={repositoryName}
+            />
           )}
         </div>
       ) : (
         <div>
-          No {kindOfIssue} issues ...
+          No issues ...
         </div>
       )}
     </div>
@@ -107,6 +111,7 @@ const ISSUES_OF_REPOSITORY = gql`
         edges {
           node {
             id
+            number
             title
             url
             bodyHTML

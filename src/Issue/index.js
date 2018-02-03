@@ -1,11 +1,18 @@
 import React from 'react';
-import { compose, withState } from 'recompose';
+import { withState } from 'recompose';
 
 import Button from '../Button';
+import Comments from '../Comments';
 
 import './style.css';
 
-const Issue = ({ issue, isShowComments, onShowComments, }) =>
+const Issue = ({
+  issue,
+  repositoryOwner,
+  repositoryName,
+  isShowComments,
+  onShowComments,
+}) =>
   <div className="Issue">
     <Button onClick={() => onShowComments(!isShowComments)}>
       { isShowComments ? '-' : '+' }
@@ -16,9 +23,15 @@ const Issue = ({ issue, isShowComments, onShowComments, }) =>
       <div
         dangerouslySetInnerHTML={{ __html: issue.bodyHTML }}
       />
+
+      {isShowComments && (
+        <Comments
+          repositoryOwner={repositoryOwner}
+          repositoryName={repositoryName}
+          issue={issue}
+        />
+      )}
     </div>
   </div>
 
-export default compose(
-  withState('isShowComments', 'onShowComments', false)
-)(Issue);
+export default withState('isShowComments', 'onShowComments', false)(Issue);
