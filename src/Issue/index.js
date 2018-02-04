@@ -3,6 +3,7 @@ import { withState } from 'recompose';
 
 import Button from '../Button';
 import Comments from '../Comments';
+import Link from '../Link';
 
 import './style.css';
 
@@ -19,7 +20,7 @@ const Issue = ({
     </Button>
 
     <div className="Issue-content">
-      <h3><a href={issue.url}>{issue.title}</a></h3>
+      <h3><Link href={issue.url}>{issue.title}</Link></h3>
       <div
         dangerouslySetInnerHTML={{ __html: issue.bodyHTML }}
       />

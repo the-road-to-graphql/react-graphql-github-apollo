@@ -11,6 +11,7 @@ import {
 import Issues from '../Issues';
 import Button from '../Button';
 import FetchMore from '../FetchMore';
+import Link from '../Link';
 
 import './style.css';
 
@@ -98,7 +99,7 @@ const Repository = ({
   <div>
     <div className="Repository-title">
       <h2>
-        <a href={url}>{name}</a>
+        <Link href={url}>{name}</Link>
       </h2>
 
       <div>
