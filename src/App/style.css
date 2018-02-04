@@ -1,3 +1,13 @@
+.App {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.App-main {
+  flex: 1;
+}
+
 .App-content_large-header, .App-content_small-header {
   margin-top: 54px;
 }

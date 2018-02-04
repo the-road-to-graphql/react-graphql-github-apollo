@@ -1,0 +1,25 @@
+.Footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #24292e;
+  padding: 20px;
+  color: #ffffff;
+}
+
+@media only screen and (max-device-width: 480px)
+{
+  .Footer {
+    text-align: center;
+    padding-bottom: 70px;
+  }
+}
+
+.Footer-text {
+  opacity: .35;
+}
+
+.Footer-link {
+  color: #ffffff;
+  opacity: 1;
+}

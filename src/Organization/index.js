@@ -16,7 +16,7 @@ const Organization = ({
   }
 }) => {
   if (loading && !organization) {
-    return <Loading />;
+    return <Loading isCenter={true} />;
   }
 
   if (error) {

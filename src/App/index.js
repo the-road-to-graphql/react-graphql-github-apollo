@@ -5,6 +5,7 @@ import {
 } from 'react-router-dom';
 
 import Navigation from '../Navigation';
+import Footer from '../Footer';
 import OrganizationPage from '../Organization';
 import ProfilePage from '../Profile';
 
@@ -43,31 +44,35 @@ class App extends Component {
 
     return (
       <Router>
-        <div>
+        <div className="App">
           <Navigation
             value={value}
             onChange={this.onChange}
             onSubmit={this.onSubmit}
           />
 
-          <Route
-            exact path={routes.HOME}
-            component={() =>
-              <div className="App-content_large-header">
-                <OrganizationPage
-                  organization={organization}
-                />
-              </div>
-            }
-          />
-          <Route
-            exact path={routes.PROFILE}
-            component={() =>
-              <div className="App-content_small-header">
-                <ProfilePage />
-              </div>
-            }
-          />
+          <div className="App-main">
+            <Route
+              exact path={routes.HOME}
+              component={() =>
+                <div className="App-content_large-header">
+                  <OrganizationPage
+                    organization={organization}
+                  />
+                </div>
+              }
+            />
+            <Route
+              exact path={routes.PROFILE}
+              component={() =>
+                <div className="App-content_small-header">
+                  <ProfilePage />
+                </div>
+              }
+            />
+          </div>
+
+          <Footer />
         </div>
       </Router>
     );
