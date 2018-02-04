@@ -1,5 +1,10 @@
 .Loading {
-  margin: 20px;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  margin: 20px 0;
+}
+
+.Loading_center {
+  margin-top: 30%;
 }

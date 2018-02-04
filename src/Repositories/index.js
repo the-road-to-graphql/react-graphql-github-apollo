@@ -56,7 +56,7 @@ const Repositories = ({
 }) =>
   <div>
     {repositories.edges.map(repository =>
-      <div key={repository.node.id}>
+      <div key={repository.node.id} className="Repository">
         <Repository
           { ...repository.node }
           onWatchToggle={onWatchToggle}
@@ -67,7 +67,6 @@ const Repositories = ({
           repositoryName={repository.node.name}
           repositoryOwner={repository.node.owner.login}
         />
-        <hr />
       </div>
     )}
 
@@ -96,7 +95,7 @@ const Repository = ({
   onStarAdd,
   onStarRemove,
 }) =>
-  <div className="Repository">
+  <div>
     <div className="Repository-title">
       <h2>
         <a href={url}>{name}</a>

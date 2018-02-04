@@ -16,7 +16,7 @@ const Profile = ({
   }
 }) => {
   if (loading && !viewer) {
-    return <Loading />;
+    return <Loading isCenter={true} />;
   }
 
   if (error) {

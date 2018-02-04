@@ -1,5 +1,6 @@
 .Repository {
   padding: 20px;
+  border-bottom: 1px solid #000;
 }
 
 .Repository-title {
@@ -32,7 +33,14 @@
     flex-direction: column;
     align-items: center;
   }
+}
 
+.Repository-description-info {
+  margin-right: 20px;
+}
+
+@media only screen and (max-device-width: 480px)
+{
   .Repository-description-info {
     text-align: center;
     margin: 20px 0;
