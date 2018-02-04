@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/rwieruch/react-graphql-github-apollo.svg?branch=master)](https://travis-ci.org/rwieruch/react-graphql-github-apollo)
 
-[Demo](https://react-graphql-github-apollo.wieruch.com) | [Upcoming Courses](https://www.getrevue.co/profile/rwieruch) | [Courses](https://roadtoreact.com)
+[Upcoming Courses](https://www.getrevue.co/profile/rwieruch) | [Courses](https://roadtoreact.com)
 
 ## Features
 
