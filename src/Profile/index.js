@@ -27,9 +27,9 @@ const Profile = ({
     <div>
       <Repositories
         loading={loading}
-        entry={'viewer'}
         repositories={viewer.repositories}
         fetchMore={fetchMore}
+        entry={'viewer'}
       />
     </div>
   );

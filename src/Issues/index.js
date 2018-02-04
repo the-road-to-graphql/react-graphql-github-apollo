@@ -82,11 +82,12 @@ const doFetchMore = (fetchMore) => (cursor, { repositoryOwner, repositoryName, s
   },
 });
 
-const IssuesPresenter = ({
+const Issues = ({
   repositoryOwner,
   repositoryName,
   showState,
   onChangeShowState,
+  data,
   client,
 }) =>
   <div className="Issues">
@@ -102,11 +103,12 @@ const IssuesPresenter = ({
         showState={showState}
         repositoryOwner={repositoryOwner}
         repositoryName={repositoryName}
+        data={data}
       />
     )}
   </div>
 
-const IssuesListPresenter = ({
+const IssuesList = ({
   showState,
   repositoryOwner,
   repositoryName,
@@ -194,12 +196,11 @@ const ISSUES_OF_REPOSITORY_CONFIG = {
   }),
 };
 
-const IssuesList = graphql(
-  ISSUES_OF_REPOSITORY,
-  ISSUES_OF_REPOSITORY_CONFIG
-)(IssuesListPresenter);
-
 export default compose(
   withState('showState', 'onChangeShowState', SHOW_STATES.NO_ISSUES),
+  graphql(
+    ISSUES_OF_REPOSITORY,
+    ISSUES_OF_REPOSITORY_CONFIG
+  ),
   withApollo
-)(IssuesPresenter);
+)(Issues);

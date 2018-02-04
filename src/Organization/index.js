@@ -2,10 +2,10 @@ import React from 'react';
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 
-import Repositories from '../Repositories';
-import REPOSITORY_FRAGMENT from '../Repositories/fragments';
 import Loading from '../Loading';
 import ErrorMessage from '../Error';
+import Repositories from '../Repositories';
+import REPOSITORY_FRAGMENT from '../Repositories/fragments';
 
 const Organization = ({
   data: {
@@ -27,9 +27,9 @@ const Organization = ({
     <div>
       <Repositories
         loading={loading}
-        entry={'organization'}
         repositories={organization.repositories}
         fetchMore={fetchMore}
+        entry={'organization'}
       />
     </div>
   );
