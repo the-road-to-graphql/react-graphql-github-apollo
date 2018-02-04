@@ -1,8 +1,8 @@
 # A React + Apollo + GraphQL GitHub Client
 
-[![Build Status](https://travis-ci.org/rwieruch/react-graphql-github-apollo.svg?branch=master)](https://travis-ci.org/rwieruch/react-graphql-github-apollo)
-
 [Upcoming Courses](https://www.getrevue.co/profile/rwieruch) | [Courses](https://roadtoreact.com)
+
+![feb-04-2018 13-11-50](https://user-images.githubusercontent.com/2479967/35777369-14a2d1ae-09ad-11e8-80c6-7a3ddeabb716.gif)
 
 ## Features
 

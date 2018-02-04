@@ -13,8 +13,7 @@ import * as routes from '../constants/routes';
 
 import './style.css';
 
-// const ORGANIZATION_DEFAULT = 'the-road-to-learn-react';
-const ORGANIZATION_DEFAULT = 'reactjs';
+const ORGANIZATION_DEFAULT = 'the-road-to-learn-react';
 
 class App extends Component {
   constructor() {
