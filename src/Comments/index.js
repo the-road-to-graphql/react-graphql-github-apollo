@@ -55,7 +55,7 @@ const Comments = ({
   if (loading && !repository) {
     return <Loading />;
   }
-  console.log(1);
+
   if (error) {
     return <ErrorMessage error={error} />;
   }
