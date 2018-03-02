@@ -19,9 +19,19 @@ class AddComment extends Component {
   };
 
   onSubmit = event => {
-    const { value } = this.state;
-    console.log(value);
     event.preventDefault();
+    const { value } = this.state;
+    const { onCommentAdd } = this.props;
+
+    onCommentAdd({
+      variables: { body: value }
+    })
+      .then(({ data }) => {
+        console.log('got data', data);
+      })
+      .catch(error => {
+        console.log('there was an error sending the query', error);
+      });
   };
 
   render() {
