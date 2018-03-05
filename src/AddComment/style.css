@@ -1,0 +1,20 @@
+.AddComment-message {
+  padding: 15px;
+  border-radius: 3px;
+  margin-bottom: 10px;
+  font-size: 12px;
+}
+
+.AddComment-message--success {
+  background-color: #e5f9e7;
+  color: #1ebc30;
+  -webkit-box-shadow: 0 0 0 1px #1ebc30 inset, 0 0 0 0 transparent;
+  box-shadow: 0 0 0 1px #1ebc30 inset, 0 0 0 0 transparent;
+}
+
+.AddComment-message--error {
+  background-color: #ffe8e6;
+  color: #db2828;
+  -webkit-box-shadow: 0 0 0 1px #db2828 inset, 0 0 0 0 transparent;
+  box-shadow: 0 0 0 1px #db2828 inset, 0 0 0 0 transparent;
+}

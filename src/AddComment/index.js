@@ -10,7 +10,9 @@ class AddComment extends Component {
     super(props);
 
     this.state = {
-      value: ''
+      value: '',
+      displaySuccess: false,
+      displayError: false
     };
   }
 
@@ -27,17 +29,30 @@ class AddComment extends Component {
       variables: { body: value }
     })
       .then(({ data }) => {
-        console.log('got data', data);
+        this.setState({ displaySuccess: true });
       })
       .catch(error => {
-        console.log('there was an error sending the query', error);
+        console.log(error);
+        this.setState({ displayError: true, errorMessage: String(error) });
       });
+  };
+
+  renderMessage = () => {
+    const { displaySuccess, displayError, errorMessage } = this.state;
+    if (displaySuccess) {
+      return <div className="AddComment-message AddComment-message--success">Your comment has been posted</div>;
+    } else if (displayError) {
+      return <div className="AddComment-message AddComment-message--error">{errorMessage}</div>;
+    } else {
+      return null;
+    }
   };
 
   render() {
     const { value } = this.state;
     return (
       <div>
+        {this.renderMessage()}
         <form onSubmit={this.onSubmit}>
           <TextArea value={value} onChange={e => this.onChange(e.target.value)} placeholder="Leave a comment" />
           <Button type="submit">Comment</Button>
