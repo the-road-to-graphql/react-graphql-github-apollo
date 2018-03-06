@@ -32,8 +32,7 @@ class AddComment extends Component {
         this.setState({ displaySuccess: true });
       })
       .catch(error => {
-        console.log(error);
-        this.setState({ displayError: true, errorMessage: String(error) });
+        this.setState({ displayError: true, errorMessage: error.toString() });
       });
   };
 
