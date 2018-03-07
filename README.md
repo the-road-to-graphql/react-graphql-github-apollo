@@ -1,5 +1,9 @@
 # A React + Apollo + GraphQL GitHub Client
 
+<img src="https://user-images.githubusercontent.com/2479967/35777369-14a2d1ae-09ad-11e8-80c6-7a3ddeabb716.gif" width="300" />
+
+## Features
+
 * React 16 with create-react-app
 * Responsive
 * React Router 4
@@ -9,8 +13,6 @@
   * Pagination
   * Optimistic Fetch (e.g. Issues)
     * not everywhere for the purpose of demonstrating
-
-<img src="https://user-images.githubusercontent.com/2479967/35777369-14a2d1ae-09ad-11e8-80c6-7a3ddeabb716.gif" width="300" />
 
 ## Installation
 
