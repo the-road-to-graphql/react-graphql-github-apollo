@@ -16,12 +16,13 @@ const FetchMore = ({
     {loading ? (
       <Loading />
     ) : (
-      <ButtonUnobtrusive
+      pageInfo.hasNextPage &&
+        <ButtonUnobtrusive
         className="FetchMore-button"
         onClick={() => doFetchMore(pageInfo.endCursor, payload)}
         disabled={!pageInfo.hasNextPage}
       >
-        {pageInfo.hasNextPage ? `More ${children}` : `No More ${children}` }
+        {`More ${children}` }
       </ButtonUnobtrusive>
     )}
   </div>
