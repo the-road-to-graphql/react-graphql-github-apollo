@@ -2,8 +2,8 @@
   padding: 10px;
   background: none;
   cursor: pointer;
-  transition: color .25s ease-in-out;
-  transition: background .25s ease-in-out;
+  transition: color 0.25s ease-in-out;
+  transition: background 0.25s ease-in-out;
 }
 
 .Button_white {
@@ -33,12 +33,12 @@
   border: none;
   cursor: pointer;
   opacity: 1;
-  transition: opacity .25s ease-in-out;
+  transition: opacity 0.25s ease-in-out;
   outline: none;
 }
 
 .Button_unobtrusive:hover {
-  opacity: .35;
+  opacity: 0.35;
 }
 
 .Button_unobtrusive:focus {

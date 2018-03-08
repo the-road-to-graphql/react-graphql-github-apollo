@@ -20,31 +20,32 @@ const VIEWER_SUBSCRIPTIONS = {
   UNSUBSCRIBED: 'UNSUBSCRIBED',
 };
 
-const doFetchMore = (fetchMore) => (cursor, { entry }) => fetchMore({
-  variables: {
-    cursor,
-  },
-  updateQuery: (previousResult, { fetchMoreResult }) => {
-    if (!fetchMoreResult) {
-      return previousResult;
-    }
-
-    return {
-      ...previousResult,
-      [entry]: {
-        ...previousResult[entry],
-        repositories: {
-          ...previousResult[entry].repositories,
-          ...fetchMoreResult[entry].repositories,
-          edges: [
-            ...previousResult[entry].repositories.edges,
-            ...fetchMoreResult[entry].repositories.edges,
-          ],
-        }
+const doFetchMore = fetchMore => (cursor, { entry }) =>
+  fetchMore({
+    variables: {
+      cursor,
+    },
+    updateQuery: (previousResult, { fetchMoreResult }) => {
+      if (!fetchMoreResult) {
+        return previousResult;
       }
-    }
-  },
-});
+
+      return {
+        ...previousResult,
+        [entry]: {
+          ...previousResult[entry],
+          repositories: {
+            ...previousResult[entry].repositories,
+            ...fetchMoreResult[entry].repositories,
+            edges: [
+              ...previousResult[entry].repositories.edges,
+              ...fetchMoreResult[entry].repositories.edges,
+            ],
+          },
+        },
+      };
+    },
+  });
 
 const Repositories = ({
   loading,
@@ -54,12 +55,12 @@ const Repositories = ({
   onWatchToggle,
   onStarAdd,
   onStarRemove,
-}) =>
+}) => (
   <div>
-    {repositories.edges.map(repository =>
+    {repositories.edges.map(repository => (
       <div key={repository.node.id} className="Repository">
         <Repository
-          { ...repository.node }
+          {...repository.node}
           onWatchToggle={onWatchToggle}
           onStarAdd={onStarAdd}
           onStarRemove={onStarRemove}
@@ -69,7 +70,7 @@ const Repositories = ({
           repositoryOwner={repository.node.owner.login}
         />
       </div>
-    )}
+    ))}
 
     <FetchMore
       payload={{ entry }}
@@ -80,6 +81,7 @@ const Repositories = ({
       Repositories
     </FetchMore>
   </div>
+);
 
 const Repository = ({
   id,
@@ -95,7 +97,7 @@ const Repository = ({
   onWatchToggle,
   onStarAdd,
   onStarRemove,
-}) =>
+}) => (
   <div>
     <div className="Repository-title">
       <h2>
@@ -103,41 +105,37 @@ const Repository = ({
       </h2>
 
       <div>
-        {viewerSubscription === VIEWER_SUBSCRIPTIONS.SUBSCRIBED
-          ? (
-              <Button
-                className={'Repository-title-action'}
-                onClick={() => onWatchToggle(id, VIEWER_SUBSCRIPTIONS.UNSUBSCRIBED)}
-              >
-                {watchers.totalCount} Unwatch
-              </Button>
-          ) : (
-            <Button
-              className={'Repository-title-action'}
-              onClick={() => onWatchToggle(id, VIEWER_SUBSCRIPTIONS.SUBSCRIBED)}
-            >
-              {watchers.totalCount} Watch
-            </Button>
-          )
-        }
+        {viewerSubscription === VIEWER_SUBSCRIPTIONS.SUBSCRIBED ? (
+          <Button
+            className={'Repository-title-action'}
+            onClick={() => onWatchToggle(id, VIEWER_SUBSCRIPTIONS.UNSUBSCRIBED)}
+          >
+            {watchers.totalCount} Unwatch
+          </Button>
+        ) : (
+          <Button
+            className={'Repository-title-action'}
+            onClick={() => onWatchToggle(id, VIEWER_SUBSCRIPTIONS.SUBSCRIBED)}
+          >
+            {watchers.totalCount} Watch
+          </Button>
+        )}
 
-        {viewerHasStarred
-          ? (
-              <Button
-                className={'Repository-title-action'}
-                onClick={() => onStarRemove(id, !viewerHasStarred)}
-              >
-                {stargazers.totalCount} Unstar
-              </Button>
-          ) : (
-            <Button
-              className={'Repository-title-action'}
-              onClick={() => onStarAdd(id, !viewerHasStarred)}
-            >
-              {stargazers.totalCount} Star
-            </Button>
-          )
-        }
+        {viewerHasStarred ? (
+          <Button
+            className={'Repository-title-action'}
+            onClick={() => onStarRemove(id, !viewerHasStarred)}
+          >
+            {stargazers.totalCount} Unstar
+          </Button>
+        ) : (
+          <Button
+            className={'Repository-title-action'}
+            onClick={() => onStarAdd(id, !viewerHasStarred)}
+          >
+            {stargazers.totalCount} Star
+          </Button>
+        )}
       </div>
     </div>
 
@@ -147,23 +145,32 @@ const Repository = ({
         dangerouslySetInnerHTML={{ __html: descriptionHTML }}
       />
       <div className="Repository-description-details">
-        <div>{primaryLanguage && <span>Language: {primaryLanguage.name}</span>}</div>
-        <div>{owner && <span>Owner: <a href={owner.url}>{owner.login}</a></span>}</div>
+        <div>
+          {primaryLanguage && <span>Language: {primaryLanguage.name}</span>}
+        </div>
+        <div>
+          {owner && (
+            <span>
+              Owner: <a href={owner.url}>{owner.login}</a>
+            </span>
+          )}
+        </div>
       </div>
     </div>
   </div>
+);
 
 export default compose(
   graphql(
     WATCH_REPOSITORY.WATCH_REPOSITORY_MUTATION,
-    WATCH_REPOSITORY.WATCH_REPOSITORY_CONFIG
+    WATCH_REPOSITORY.WATCH_REPOSITORY_CONFIG,
   ),
   graphql(
     STAR_REPOSITORY.STAR_REPOSITORY_MUTATION,
-    STAR_REPOSITORY.STAR_REPOSITORY_CONFIG
+    STAR_REPOSITORY.STAR_REPOSITORY_CONFIG,
   ),
   graphql(
     UNSTAR_REPOSITORY.UNSTAR_REPOSITORY_MUTATION,
-    UNSTAR_REPOSITORY.UNSTAR_REPOSITORY_CONFIG
+    UNSTAR_REPOSITORY.UNSTAR_REPOSITORY_CONFIG,
   ),
 )(Repositories);

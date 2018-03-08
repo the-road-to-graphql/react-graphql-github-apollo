@@ -9,8 +9,7 @@
   align-items: baseline;
 }
 
-@media only screen and (max-device-width: 480px)
-{
+@media only screen and (max-device-width: 480px) {
   .Navigation {
     flex-direction: column;
     justify-content: center;
@@ -35,8 +34,7 @@
   padding: 0 10px;
 }
 
-@media only screen and (max-device-width: 480px)
-{
+@media only screen and (max-device-width: 480px) {
   .Navigation-link {
     padding: 10px;
   }

@@ -23,7 +23,7 @@ class Loading extends Component {
 
   onTick = () => {
     this.setState(prevState => ({ dots: (prevState.dots + 1) % 4 }));
-  }
+  };
 
   render() {
     const { isCenter } = this.props;

@@ -7,15 +7,14 @@
   color: #ffffff;
 }
 
-@media only screen and (max-device-width: 480px)
-{
+@media only screen and (max-device-width: 480px) {
   .Footer {
     text-align: center;
   }
 }
 
 .Footer-text {
-  opacity: .35;
+  opacity: 0.35;
 }
 
 .Footer-link {

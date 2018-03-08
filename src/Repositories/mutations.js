@@ -3,15 +3,15 @@ import gql from 'graphql-tag';
 import REPOSITORY_FRAGMENT from './fragments';
 
 const STAR_REPOSITORY_MUTATION = gql`
-  mutation ($id: ID!) {
-    addStar(input:{starrableId: $id}) {
+  mutation($id: ID!) {
+    addStar(input: { starrableId: $id }) {
       starrable {
         id
         viewerHasStarred
       }
     }
   }
-`
+`;
 
 const STAR_REPOSITORY_CONFIG = {
   name: 'starRepository',
@@ -26,10 +26,10 @@ const STAR_REPOSITORY_CONFIG = {
               __typename: 'Repository',
               id,
               viewerHasStarred: isStar,
-            }
-          }
+            },
+          },
         },
-      })
+      });
     },
   }),
   options: {
@@ -44,19 +44,19 @@ const STAR_REPOSITORY_CONFIG = {
         data: updatedData,
       });
     },
-  }
+  },
 };
 
 const UNSTAR_REPOSITORY_MUTATION = gql`
-  mutation ($id: ID!) {
-    removeStar(input:{starrableId: $id}) {
+  mutation($id: ID!) {
+    removeStar(input: { starrableId: $id }) {
       starrable {
         id
         viewerHasStarred
       }
     }
   }
-`
+`;
 
 const UNSTAR_REPOSITORY_CONFIG = {
   name: 'unstarRepository',
@@ -71,10 +71,10 @@ const UNSTAR_REPOSITORY_CONFIG = {
               __typename: 'Repository',
               id,
               viewerHasStarred: isStar,
-            }
-          }
+            },
+          },
         },
-      })
+      });
     },
   }),
   options: {
@@ -89,7 +89,7 @@ const UNSTAR_REPOSITORY_CONFIG = {
         data: updatedData,
       });
     },
-  }
+  },
 };
 
 const getUpdatedData = (proxy, id, viewerHasStarred) => {
@@ -99,29 +99,27 @@ const getUpdatedData = (proxy, id, viewerHasStarred) => {
   });
 
   let { totalCount } = fragment.stargazers;
-  totalCount = viewerHasStarred
-    ? totalCount + 1
-    : totalCount - 1;
+  totalCount = viewerHasStarred ? totalCount + 1 : totalCount - 1;
 
   return {
     ...fragment,
     stargazers: {
       ...fragment.stargazers,
       totalCount,
-    }
+    },
   };
-}
+};
 
 const WATCH_REPOSITORY_MUTATION = gql`
-  mutation ($id: ID!, $isWatch: SubscriptionState!) {
-    updateSubscription(input:{state: $isWatch, subscribableId: $id}) {
+  mutation($id: ID!, $isWatch: SubscriptionState!) {
+    updateSubscription(input: { state: $isWatch, subscribableId: $id }) {
       subscribable {
         id
         viewerSubscription
       }
     }
   }
-`
+`;
 
 const WATCH_REPOSITORY_CONFIG = {
   name: 'watchRepository',
@@ -136,15 +134,18 @@ const WATCH_REPOSITORY_CONFIG = {
               __typename: 'Repository',
               id,
               viewerSubscription: isWatch,
-            }
-          }
+            },
+          },
         },
-      })
+      });
     },
   }),
   options: {
     update: (proxy, props) => {
-      const { id, viewerSubscription } = props.data.updateSubscription.subscribable;
+      const {
+        id,
+        viewerSubscription,
+      } = props.data.updateSubscription.subscribable;
 
       const fragment = proxy.readFragment({
         id: `Repository:${id}`,
@@ -152,9 +153,8 @@ const WATCH_REPOSITORY_CONFIG = {
       });
 
       let { totalCount } = fragment.watchers;
-      totalCount = viewerSubscription === 'SUBSCRIBED'
-        ? totalCount + 1
-        : totalCount - 1;
+      totalCount =
+        viewerSubscription === 'SUBSCRIBED' ? totalCount + 1 : totalCount - 1;
 
       proxy.writeFragment({
         id: `Repository:${id}`,
@@ -164,11 +164,11 @@ const WATCH_REPOSITORY_CONFIG = {
           watchers: {
             ...fragment.watchers,
             totalCount,
-          }
+          },
         },
       });
     },
-  }
+  },
 };
 
 const STAR_REPOSITORY = {
@@ -186,8 +186,4 @@ const WATCH_REPOSITORY = {
   WATCH_REPOSITORY_CONFIG,
 };
 
-export {
-  WATCH_REPOSITORY,
-  STAR_REPOSITORY,
-  UNSTAR_REPOSITORY,
-};
+export { WATCH_REPOSITORY, STAR_REPOSITORY, UNSTAR_REPOSITORY };

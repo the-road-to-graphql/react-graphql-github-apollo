@@ -15,8 +15,7 @@
   margin: 20px 0;
 }
 
-@media only screen and (max-device-width: 480px)
-{
+@media only screen and (max-device-width: 480px) {
   .Issues-content {
     align-items: center;
   }

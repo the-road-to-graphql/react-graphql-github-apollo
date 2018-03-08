@@ -1,11 +1,13 @@
-#root, html, body {
+#root,
+html,
+body {
   height: 100%;
 }
 
 body {
   margin: 0;
   padding: 0;
-  font-family: 'Source Sans Pro',sans-serif;
+  font-family: 'Source Sans Pro', sans-serif;
   font-weight: 200;
   text-rendering: optimizeLegibility;
 }
@@ -24,7 +26,8 @@ h3 {
   margin: 5px 0;
 }
 
-ul, li {
+ul,
+li {
   list-style: none;
   padding-left: 0;
 }
@@ -33,11 +36,11 @@ a {
   text-decoration: none;
   color: #000;
   opacity: 1;
-  transition: opacity .25s ease-in-out;
+  transition: opacity 0.25s ease-in-out;
 }
 
 a:hover {
-  opacity: .35;
+  opacity: 0.35;
   text-decoration: none;
 }
 

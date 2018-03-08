@@ -7,30 +7,26 @@ import Input from '../Input';
 
 import './style.css';
 
-const Navigation = ({
-  location: { pathname },
-  value,
-  onChange,
-  onSubmit,
-}) =>
+const Navigation = ({ location: { pathname }, value, onChange, onSubmit }) => (
   <header className="Navigation">
-    <div className="Navigation-link"><Link to={routes.PROFILE}>Profile</Link></div>
-    <div className="Navigation-link"><Link to={routes.HOME}>Organization</Link></div>
+    <div className="Navigation-link">
+      <Link to={routes.PROFILE}>Profile</Link>
+    </div>
+    <div className="Navigation-link">
+      <Link to={routes.HOME}>Organization</Link>
+    </div>
 
-    {pathname === routes.HOME &&
+    {pathname === routes.HOME && (
       <OrganizationSearch
         value={value}
         onChange={onChange}
         onSubmit={onSubmit}
       />
-    }
+    )}
   </header>
+);
 
-const OrganizationSearch = ({
-  value,
-  onChange,
-  onSubmit,
-}) =>
+const OrganizationSearch = ({ value, onChange, onSubmit }) => (
   <div className="Navigation-search">
     <form onSubmit={onSubmit}>
       <Input
@@ -38,10 +34,12 @@ const OrganizationSearch = ({
         type="text"
         value={value}
         onChange={e => onChange(e.target.value)}
-      />
-      {' '}
-      <Button color={'white'} type="submit">Search</Button>
+      />{' '}
+      <Button color={'white'} type="submit">
+        Search
+      </Button>
     </form>
   </div>
+);
 
 export default withRouter(Navigation);

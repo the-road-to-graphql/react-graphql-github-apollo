@@ -7,14 +7,7 @@ import ErrorMessage from '../Error';
 import Repositories from '../Repositories';
 import REPOSITORY_FRAGMENT from '../Repositories/fragments';
 
-const Profile = ({
-  data: {
-    loading,
-    error,
-    viewer,
-    fetchMore,
-  }
-}) => {
+const Profile = ({ data: { loading, error, viewer, fetchMore } }) => {
   if (loading && !viewer) {
     return <Loading isCenter={true} />;
   }
@@ -33,15 +26,19 @@ const Profile = ({
       />
     </div>
   );
-}
+};
 
 const REPOSITORIES_OF_CURRENT_USER = gql`
-  query ($cursor: String) {
+  query($cursor: String) {
     viewer {
       login
       name
       avatarUrl
-      repositories(first: 5, orderBy: {direction: DESC, field: STARGAZERS}, after: $cursor) {
+      repositories(
+        first: 5
+        orderBy: { direction: DESC, field: STARGAZERS }
+        after: $cursor
+      ) {
         edges {
           node {
             ...repository
@@ -56,7 +53,7 @@ const REPOSITORIES_OF_CURRENT_USER = gql`
   }
 
   ${REPOSITORY_FRAGMENT}
-`
+`;
 
 const REPOSITORIES_OF_CURRENT_USER_CONFIG = {
   options: ({ organization }) => ({
@@ -69,5 +66,5 @@ const REPOSITORIES_OF_CURRENT_USER_CONFIG = {
 
 export default graphql(
   REPOSITORIES_OF_CURRENT_USER,
-  REPOSITORIES_OF_CURRENT_USER_CONFIG
+  REPOSITORIES_OF_CURRENT_USER_CONFIG,
 )(Profile);

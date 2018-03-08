@@ -12,7 +12,7 @@ class AddComment extends Component {
     this.state = {
       value: '',
       displaySuccess: false,
-      displayError: false
+      displayError: false,
     };
   }
 
@@ -26,7 +26,7 @@ class AddComment extends Component {
     const { onCommentAdd } = this.props;
 
     onCommentAdd({
-      variables: { body: value }
+      variables: { body: value },
     })
       .then(({ data }) => {
         this.setState({ displaySuccess: true });
@@ -39,9 +39,17 @@ class AddComment extends Component {
   renderMessage = () => {
     const { displaySuccess, displayError, errorMessage } = this.state;
     if (displaySuccess) {
-      return <div className="AddComment-message AddComment-message--success">Your comment has been posted</div>;
+      return (
+        <div className="AddComment-message AddComment-message--success">
+          Your comment has been posted
+        </div>
+      );
     } else if (displayError) {
-      return <div className="AddComment-message AddComment-message--error">{errorMessage}</div>;
+      return (
+        <div className="AddComment-message AddComment-message--error">
+          {errorMessage}
+        </div>
+      );
     } else {
       return null;
     }
@@ -53,7 +61,11 @@ class AddComment extends Component {
       <div>
         {this.renderMessage()}
         <form onSubmit={this.onSubmit}>
-          <TextArea value={value} onChange={e => this.onChange(e.target.value)} placeholder="Leave a comment" />
+          <TextArea
+            value={value}
+            onChange={e => this.onChange(e.target.value)}
+            placeholder="Leave a comment"
+          />
           <Button type="submit">Comment</Button>
         </form>
       </div>

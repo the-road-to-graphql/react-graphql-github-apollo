@@ -11,13 +11,16 @@ import AddComment from '../AddComment';
 
 import './style.css';
 
-const doFetchMore = fetchMore => (cursor, { repositoryOwner, repositoryName, number }) =>
+const doFetchMore = fetchMore => (
+  cursor,
+  { repositoryOwner, repositoryName, number },
+) =>
   fetchMore({
     variables: {
       cursor,
       repositoryOwner,
       repositoryName,
-      number
+      number,
     },
     updateQuery: (previousResult, { fetchMoreResult }) => {
       if (!fetchMoreResult) {
@@ -36,13 +39,13 @@ const doFetchMore = fetchMore => (cursor, { repositoryOwner, repositoryName, num
               ...fetchMoreResult.repository.issue.comments,
               edges: [
                 ...previousResult.repository.issue.comments.edges,
-                ...fetchMoreResult.repository.issue.comments.edges
-              ]
-            }
-          }
-        }
+                ...fetchMoreResult.repository.issue.comments.edges,
+              ],
+            },
+          },
+        },
       };
-    }
+    },
   });
 
 const Comments = ({
@@ -50,7 +53,7 @@ const Comments = ({
   repositoryName,
   issue,
   onCommentAdd,
-  data: { loading, error, repository, fetchMore }
+  data: { loading, error, repository, fetchMore },
 }) => {
   if (loading && !repository) {
     return <Loading />;
@@ -63,17 +66,20 @@ const Comments = ({
     <div className="Comments">
       {repository.issue.comments.edges.length ? (
         <div>
-          {repository.issue.comments.edges.map(comment => <Comment key={comment.node.id} comment={comment.node} />)}
+          {repository.issue.comments.edges.map(comment => (
+            <Comment key={comment.node.id} comment={comment.node} />
+          ))}
 
           <FetchMore
             payload={{
               repositoryOwner,
               repositoryName,
-              number: issue.number
+              number: issue.number,
             }}
             loading={loading}
             pageInfo={repository.issue.comments.pageInfo}
-            doFetchMore={doFetchMore(fetchMore)}>
+            doFetchMore={doFetchMore(fetchMore)}
+          >
             Comments
           </FetchMore>
           <AddComment onCommentAdd={onCommentAdd} />
@@ -96,7 +102,12 @@ const Comment = ({ comment }) => (
 );
 
 const COMMENTS_OF_ISSUE = gql`
-  query($repositoryOwner: String!, $repositoryName: String!, $number: Int!, $cursor: String) {
+  query(
+    $repositoryOwner: String!
+    $repositoryName: String!
+    $number: Int!
+    $cursor: String
+  ) {
     repository(name: $repositoryName, owner: $repositoryOwner) {
       issue(number: $number) {
         comments(first: 5, after: $cursor) {
@@ -125,12 +136,12 @@ const COMMENTS_OF_ISSUE_CONFIG = {
       cursor: null,
       repositoryOwner,
       repositoryName,
-      number: issue.number
-    }
-  })
+      number: issue.number,
+    },
+  }),
 };
 
 export default compose(
   graphql(COMMENTS_OF_ISSUE, COMMENTS_OF_ISSUE_CONFIG),
-  graphql(ADD_COMMENT.ADD_COMMENT_MUTATION, ADD_COMMENT.ADD_COMMENT_CONFIG)
+  graphql(ADD_COMMENT.ADD_COMMENT_MUTATION, ADD_COMMENT.ADD_COMMENT_CONFIG),
 )(Comments);

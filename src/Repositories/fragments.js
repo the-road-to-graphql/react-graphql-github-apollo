@@ -22,6 +22,6 @@ const REPOSITORY_FRAGMENT = gql`
     }
     viewerSubscription
   }
-`
+`;
 
 export default REPOSITORY_FRAGMENT;

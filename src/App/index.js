@@ -1,8 +1,5 @@
 import React, { Component } from 'react';
-import {
-  BrowserRouter as Router,
-  Route,
-} from 'react-router-dom';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 
 import Navigation from '../Navigation';
 import Footer from '../Footer';
@@ -26,17 +23,17 @@ class App extends Component {
     };
   }
 
-  onSubmit = (event) => {
+  onSubmit = event => {
     const { value } = this.state;
 
     this.setState({ organization: value });
 
     event.preventDefault();
-  }
+  };
 
-  onChange = (value) => {
+  onChange = value => {
     this.setState({ value });
-  }
+  };
 
   render() {
     const { value, organization } = this.state;
@@ -52,22 +49,22 @@ class App extends Component {
 
           <div className="App-main">
             <Route
-              exact path={routes.HOME}
-              component={() =>
+              exact
+              path={routes.HOME}
+              component={() => (
                 <div className="App-content_large-header">
-                  <OrganizationPage
-                    organization={organization}
-                  />
+                  <OrganizationPage organization={organization} />
                 </div>
-              }
+              )}
             />
             <Route
-              exact path={routes.PROFILE}
-              component={() =>
+              exact
+              path={routes.PROFILE}
+              component={() => (
                 <div className="App-content_small-header">
                   <ProfilePage />
                 </div>
-              }
+              )}
             />
           </div>
 

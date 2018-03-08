@@ -8,12 +8,7 @@ import Repositories from '../Repositories';
 import REPOSITORY_FRAGMENT from '../Repositories/fragments';
 
 const Organization = ({
-  data: {
-    loading,
-    error,
-    organization,
-    fetchMore,
-  }
+  data: { loading, error, organization, fetchMore },
 }) => {
   if (loading && !organization) {
     return <Loading isCenter={true} />;
@@ -33,10 +28,10 @@ const Organization = ({
       />
     </div>
   );
-}
+};
 
 const REPOSITORIES_OF_ORGANIZATION = gql`
-  query ($organization: String!, $cursor: String) {
+  query($organization: String!, $cursor: String) {
     organization(login: $organization) {
       name
       login
@@ -56,7 +51,7 @@ const REPOSITORIES_OF_ORGANIZATION = gql`
   }
 
   ${REPOSITORY_FRAGMENT}
-`
+`;
 
 const REPOSITORIES_OF_ORGANIZATION_CONFIG = {
   options: ({ organization }) => ({
@@ -71,5 +66,5 @@ const REPOSITORIES_OF_ORGANIZATION_CONFIG = {
 
 export default graphql(
   REPOSITORIES_OF_ORGANIZATION,
-  REPOSITORIES_OF_ORGANIZATION_CONFIG
+  REPOSITORIES_OF_ORGANIZATION_CONFIG,
 )(Organization);

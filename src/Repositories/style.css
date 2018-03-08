@@ -9,8 +9,7 @@
   align-items: baseline;
 }
 
-@media only screen and (max-device-width: 480px)
-{
+@media only screen and (max-device-width: 480px) {
   .Repository-title {
     flex-direction: column;
     align-items: center;
@@ -27,8 +26,7 @@
   justify-content: space-between;
 }
 
-@media only screen and (max-device-width: 480px)
-{
+@media only screen and (max-device-width: 480px) {
   .Repository-description {
     flex-direction: column;
     align-items: center;
@@ -39,8 +37,7 @@
   margin-right: 20px;
 }
 
-@media only screen and (max-device-width: 480px)
-{
+@media only screen and (max-device-width: 480px) {
   .Repository-description-info {
     text-align: center;
     margin: 20px 0;
@@ -52,8 +49,7 @@
   white-space: nowrap;
 }
 
-@media only screen and (max-device-width: 480px)
-{
+@media only screen and (max-device-width: 480px) {
   .Repository-description-details {
     text-align: center;
   }

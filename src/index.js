@@ -15,8 +15,10 @@ import registerServiceWorker from './registerServiceWorker';
 const httpLink = new HttpLink({
   uri: 'https://api.github.com/graphql',
   headers: {
-    authorization: `Bearer ${process.env.REACT_APP_GITHUB_PERSONAL_ACCESS_TOKEN}`,
-  }
+    authorization: `Bearer ${
+      process.env.REACT_APP_GITHUB_PERSONAL_ACCESS_TOKEN
+    }`,
+  },
 });
 
 const errorLink = onError(({ graphQLErrors, networkError }) => {
@@ -30,10 +32,7 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
   if (networkError) console.log(`[Network error]: ${networkError}`);
 });
 
-const link = ApolloLink.from([
-  errorLink,
-  httpLink,
-]);
+const link = ApolloLink.from([errorLink, httpLink]);
 
 const cache = new InMemoryCache({
   logger: console.log,
@@ -49,7 +48,7 @@ ReactDOM.render(
   <ApolloProvider client={client}>
     <App />
   </ApolloProvider>,
-  document.getElementById('root')
+  document.getElementById('root'),
 );
 
 registerServiceWorker();

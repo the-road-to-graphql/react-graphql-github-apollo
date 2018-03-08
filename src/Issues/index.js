@@ -34,8 +34,7 @@ const KIND_OF_ISSUES = {
   [SHOW_STATES.CLOSED_ISSUES]: 'CLOSED',
 };
 
-const isShow = (showState) =>
-  showState !== SHOW_STATES.NO_ISSUES;
+const isShow = showState => showState !== SHOW_STATES.NO_ISSUES;
 
 const prefetchIssues = (client, repositoryOwner, repositoryName, showState) => {
   const nextShowState = SHOW_TRANSITION_STATE[showState];
@@ -53,34 +52,38 @@ const prefetchIssues = (client, repositoryOwner, repositoryName, showState) => {
   }
 };
 
-const doFetchMore = (fetchMore) => (cursor, { repositoryOwner, repositoryName, showState }) => fetchMore({
-  variables: {
-    cursor,
-    repositoryOwner,
-    repositoryName,
-    kindOfIssue: KIND_OF_ISSUES[showState],
-  },
-  updateQuery: (previousResult, { fetchMoreResult }) => {
-    if (!fetchMoreResult) {
-      return previousResult;
-    }
-
-    return {
-      ...previousResult,
-      repository: {
-        ...previousResult.repository,
-        issues: {
-          ...previousResult.repository.issues,
-          ...fetchMoreResult.repository.issues,
-          edges: [
-            ...previousResult.repository.issues.edges,
-            ...fetchMoreResult.repository.issues.edges,
-          ],
-        }
+const doFetchMore = fetchMore => (
+  cursor,
+  { repositoryOwner, repositoryName, showState },
+) =>
+  fetchMore({
+    variables: {
+      cursor,
+      repositoryOwner,
+      repositoryName,
+      kindOfIssue: KIND_OF_ISSUES[showState],
+    },
+    updateQuery: (previousResult, { fetchMoreResult }) => {
+      if (!fetchMoreResult) {
+        return previousResult;
       }
-    }
-  },
-});
+
+      return {
+        ...previousResult,
+        repository: {
+          ...previousResult.repository,
+          issues: {
+            ...previousResult.repository.issues,
+            ...fetchMoreResult.repository.issues,
+            edges: [
+              ...previousResult.repository.issues.edges,
+              ...fetchMoreResult.repository.issues.edges,
+            ],
+          },
+        },
+      };
+    },
+  });
 
 const Issues = ({
   repositoryOwner,
@@ -89,11 +92,16 @@ const Issues = ({
   onChangeShowState,
   data,
   client,
-}) =>
+}) => (
   <div className="Issues">
     <ButtonUnobtrusive
       onClick={() => onChangeShowState(SHOW_TRANSITION_STATE[showState])}
-      onMouseOver={prefetchIssues(client, repositoryOwner, repositoryName, showState)}
+      onMouseOver={prefetchIssues(
+        client,
+        repositoryOwner,
+        repositoryName,
+        showState,
+      )}
     >
       {SHOW_TRANSITION_LABELS[showState]}
     </ButtonUnobtrusive>
@@ -107,17 +115,13 @@ const Issues = ({
       />
     )}
   </div>
+);
 
 const IssuesList = ({
   showState,
   repositoryOwner,
   repositoryName,
-  data: {
-    error,
-    loading,
-    repository,
-    fetchMore,
-  },
+  data: { error, loading, repository, fetchMore },
 }) => {
   if (loading) {
     return <Loading />;
@@ -131,14 +135,14 @@ const IssuesList = ({
     <div className="IssueList">
       {repository.issues.edges.length ? (
         <div>
-          {repository.issues.edges.map(issue =>
+          {repository.issues.edges.map(issue => (
             <Issue
               key={issue.node.id}
               issue={issue.node}
               repositoryOwner={repositoryOwner}
               repositoryName={repositoryName}
             />
-          )}
+          ))}
 
           <FetchMore
             payload={{
@@ -154,16 +158,19 @@ const IssuesList = ({
           </FetchMore>
         </div>
       ) : (
-        <div>
-          No issues ...
-        </div>
+        <div>No issues ...</div>
       )}
     </div>
   );
-}
+};
 
 const ISSUES_OF_REPOSITORY = gql`
-  query ($repositoryOwner: String!, $repositoryName: String!, $kindOfIssue: IssueState!, $cursor: String) {
+  query(
+    $repositoryOwner: String!
+    $repositoryName: String!
+    $kindOfIssue: IssueState!
+    $cursor: String
+  ) {
     repository(name: $repositoryName, owner: $repositoryOwner) {
       issues(first: 5, states: [$kindOfIssue], after: $cursor) {
         edges {
@@ -182,7 +189,7 @@ const ISSUES_OF_REPOSITORY = gql`
       }
     }
   }
-`
+`;
 
 const ISSUES_OF_REPOSITORY_CONFIG = {
   options: ({ repositoryOwner, repositoryName, showState }) => ({
@@ -198,9 +205,6 @@ const ISSUES_OF_REPOSITORY_CONFIG = {
 
 export default compose(
   withState('showState', 'onChangeShowState', SHOW_STATES.NO_ISSUES),
-  graphql(
-    ISSUES_OF_REPOSITORY,
-    ISSUES_OF_REPOSITORY_CONFIG
-  ),
-  withApollo
+  graphql(ISSUES_OF_REPOSITORY, ISSUES_OF_REPOSITORY_CONFIG),
+  withApollo,
 )(Issues);
