@@ -19,7 +19,12 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "lint":
+      "prettier --config ./.prettierrc 'src/**/*.js' 'src/**/*.css' --write",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
+  },
+  "devDependencies": {
+    "prettier": "^1.11.1"
   }
 }
