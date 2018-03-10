@@ -24,7 +24,16 @@
 * npm start
 * visit `http://localhost:3000`
 
-## Want to learn more about React + GraphQL + Apollo?	
+## Contributing
 
-* Don't miss [upcoming Tutorials and Courses](https://www.getrevue.co/profile/rwieruch)	
+* Please install [Prettier integration](https://prettier.io/docs/en/editors.html) to your editor and turn on **format on save** option.
+  * [Prettier For Atom](https://github.com/prettier/prettier-atom)
+  * [Prettier for VSCode](https://github.com/prettier/prettier-vscode)
+  * [Prettier for EMACS](https://github.com/prettier/prettier-emacs)
+  * [Prettier for VIM](https://prettier.io/docs/en/vim.html)
+  * [others...](https://prettier.io/docs/en/editors.html)
+
+## Want to learn more about React + GraphQL + Apollo?
+
+* Don't miss [upcoming Tutorials and Courses](https://www.getrevue.co/profile/rwieruch)
 * Check out current [React Courses](https://roadtoreact.com)
