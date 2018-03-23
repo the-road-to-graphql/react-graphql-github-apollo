@@ -1,32 +1,11 @@
 import React from 'react';
-import { graphql } from 'react-apollo';
+import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
 
 import Loading from '../Loading';
 import ErrorMessage from '../Error';
 import Repositories from '../Repositories';
 import REPOSITORY_FRAGMENT from '../Repositories/fragments';
-
-const Profile = ({ data: { loading, error, viewer, fetchMore } }) => {
-  if (loading && !viewer) {
-    return <Loading isCenter={true} />;
-  }
-
-  if (error) {
-    return <ErrorMessage error={error} />;
-  }
-
-  return (
-    <div>
-      <Repositories
-        loading={loading}
-        repositories={viewer.repositories}
-        fetchMore={fetchMore}
-        entry={'viewer'}
-      />
-    </div>
-  );
-};
 
 const REPOSITORIES_OF_CURRENT_USER = gql`
   query($cursor: String) {
@@ -55,16 +34,35 @@ const REPOSITORIES_OF_CURRENT_USER = gql`
   ${REPOSITORY_FRAGMENT}
 `;
 
-const REPOSITORIES_OF_CURRENT_USER_CONFIG = {
-  options: ({ organization }) => ({
-    variables: {
+const Profile = () => (
+  <Query
+    query={REPOSITORIES_OF_CURRENT_USER}
+    variables={{
       cursor: null,
-    },
-    notifyOnNetworkStatusChange: true,
-  }),
-};
+    }}
+    notifyOnNetworkStatusChange={true}
+  >
+    {({ data, loading, error, fetchMore }) => {
+      const { viewer } = data;
 
-export default graphql(
-  REPOSITORIES_OF_CURRENT_USER,
-  REPOSITORIES_OF_CURRENT_USER_CONFIG,
-)(Profile);
+      if (loading && !viewer) {
+        return <Loading isCenter={true} />;
+      }
+
+      if (error) {
+        return <ErrorMessage error={error} />;
+      }
+
+      return (
+        <Repositories
+          loading={loading}
+          repositories={viewer.repositories}
+          fetchMore={fetchMore}
+          entry={'viewer'}
+        />
+      );
+    }}
+  </Query>
+);
+
+export default Profile;
