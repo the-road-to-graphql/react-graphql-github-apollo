@@ -1,7 +1,7 @@
 import React from 'react';
-import { Query, withApollo } from 'react-apollo';
+import { Query, ApolloConsumer } from 'react-apollo';
 import gql from 'graphql-tag';
-import { compose, withState } from 'recompose';
+import { withState } from 'recompose';
 
 import Issue from '../Issue';
 import Loading from '../Loading';
@@ -90,29 +90,32 @@ const Issues = ({
   repositoryName,
   showState,
   onChangeShowState,
-  client,
 }) => (
-  <div className="Issues">
-    <ButtonUnobtrusive
-      onClick={() => onChangeShowState(SHOW_TRANSITION_STATE[showState])}
-      onMouseOver={prefetchIssues(
-        client,
-        repositoryOwner,
-        repositoryName,
-        showState,
-      )}
-    >
-      {SHOW_TRANSITION_LABELS[showState]}
-    </ButtonUnobtrusive>
+  <ApolloConsumer>
+    {client => (
+      <div className="Issues">
+        <ButtonUnobtrusive
+          onClick={() => onChangeShowState(SHOW_TRANSITION_STATE[showState])}
+          onMouseOver={prefetchIssues(
+            client,
+            repositoryOwner,
+            repositoryName,
+            showState,
+          )}
+        >
+          {SHOW_TRANSITION_LABELS[showState]}
+        </ButtonUnobtrusive>
 
-    {isShow(showState) && (
-      <IssuesList
-        showState={showState}
-        repositoryOwner={repositoryOwner}
-        repositoryName={repositoryName}
-      />
+        {isShow(showState) && (
+          <IssuesList
+            showState={showState}
+            repositoryOwner={repositoryOwner}
+            repositoryName={repositoryName}
+          />
+        )}
+      </div>
     )}
-  </div>
+  </ApolloConsumer>
 );
 
 const IssuesList = ({ showState, repositoryOwner, repositoryName }) => (
@@ -199,7 +202,8 @@ const ISSUES_OF_REPOSITORY = gql`
   }
 `;
 
-export default compose(
-  withState('showState', 'onChangeShowState', SHOW_STATES.NO_ISSUES),
-  withApollo,
+export default withState(
+  'showState',
+  'onChangeShowState',
+  SHOW_STATES.NO_ISSUES,
 )(Issues);
