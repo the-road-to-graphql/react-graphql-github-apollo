@@ -1,5 +1,5 @@
 import React from 'react';
-import { graphql } from 'react-apollo';
+import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
 
 import Loading from '../Loading';
@@ -7,32 +7,44 @@ import ErrorMessage from '../Error';
 import Repositories from '../Repositories';
 import REPOSITORY_FRAGMENT from '../Repositories/fragments';
 
-const Organization = ({
-  data: { loading, error, organization, fetchMore },
-}) => {
-  if (loading && !organization) {
-    return <Loading isCenter={true} />;
-  }
+const Organization = ({ organizationName }) => (
+  <Query
+    query={REPOSITORIES_OF_ORGANIZATION}
+    variables={{
+      organizationName: organizationName,
+      cursor: null,
+    }}
+    skip={organizationName === ''}
+    notifyOnNetworkStatusChange={true}
+  >
+    {({ data, loading, error, fetchMore }) => {
+      const { organization } = data;
 
-  if (error) {
-    return <ErrorMessage error={error} />;
-  }
+      if (loading && !organization) {
+        return <Loading isCenter={true} />;
+      }
 
-  return (
-    <div>
-      <Repositories
-        loading={loading}
-        repositories={organization.repositories}
-        fetchMore={fetchMore}
-        entry={'organization'}
-      />
-    </div>
-  );
-};
+      if (error) {
+        return <ErrorMessage error={error} />;
+      }
+
+      return (
+        <div>
+          <Repositories
+            loading={loading}
+            repositories={organization.repositories}
+            fetchMore={fetchMore}
+            entry={'organization'}
+          />
+        </div>
+      );
+    }}
+  </Query>
+);
 
 const REPOSITORIES_OF_ORGANIZATION = gql`
-  query($organization: String!, $cursor: String) {
-    organization(login: $organization) {
+  query($organizationName: String!, $cursor: String) {
+    organization(login: $organizationName) {
       name
       login
       url
@@ -53,18 +65,4 @@ const REPOSITORIES_OF_ORGANIZATION = gql`
   ${REPOSITORY_FRAGMENT}
 `;
 
-const REPOSITORIES_OF_ORGANIZATION_CONFIG = {
-  options: ({ organization }) => ({
-    variables: {
-      organization,
-      cursor: null,
-    },
-    skip: organization === '',
-    notifyOnNetworkStatusChange: true,
-  }),
-};
-
-export default graphql(
-  REPOSITORIES_OF_ORGANIZATION,
-  REPOSITORIES_OF_ORGANIZATION_CONFIG,
-)(Organization);
+export default Organization;

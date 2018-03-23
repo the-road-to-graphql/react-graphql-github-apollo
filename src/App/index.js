@@ -18,14 +18,14 @@ class App extends Component {
 
     this.state = {
       value: ORGANIZATION_DEFAULT,
-      organization: ORGANIZATION_DEFAULT,
+      organizationName: ORGANIZATION_DEFAULT,
     };
   }
 
   onSubmit = event => {
     const { value } = this.state;
 
-    this.setState({ organization: value });
+    this.setState({ organizationName: value });
 
     event.preventDefault();
   };
@@ -35,7 +35,7 @@ class App extends Component {
   };
 
   render() {
-    const { value, organization } = this.state;
+    const { value, organizationName } = this.state;
 
     return (
       <Router>
@@ -52,7 +52,7 @@ class App extends Component {
               path={routes.HOME}
               component={() => (
                 <div className="App-content_large-header">
-                  <OrganizationPage organization={organization} />
+                  <OrganizationPage organizationName={organizationName} />
                 </div>
               )}
             />
