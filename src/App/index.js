@@ -19,7 +19,6 @@ class App extends Component {
     this.state = {
       value: ORGANIZATION_DEFAULT,
       organization: ORGANIZATION_DEFAULT,
-      // organization: '',
     };
   }
 

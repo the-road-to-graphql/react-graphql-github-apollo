@@ -12,8 +12,10 @@ import './style.css';
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 
+const GITHUB_BASE_URL = 'https://api.github.com/graphql';
+
 const httpLink = new HttpLink({
-  uri: 'https://api.github.com/graphql',
+  uri: GITHUB_BASE_URL,
   headers: {
     authorization: `Bearer ${
       process.env.REACT_APP_GITHUB_PERSONAL_ACCESS_TOKEN
