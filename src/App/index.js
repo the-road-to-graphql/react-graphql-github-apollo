@@ -13,14 +13,10 @@ import './style.css';
 const ORGANIZATION_DEFAULT = 'the-road-to-learn-react';
 
 class App extends Component {
-  constructor() {
-    super();
-
-    this.state = {
-      value: ORGANIZATION_DEFAULT,
-      organizationName: ORGANIZATION_DEFAULT,
-    };
-  }
+  state = {
+    value: ORGANIZATION_DEFAULT,
+    organizationName: ORGANIZATION_DEFAULT,
+  };
 
   onSubmit = event => {
     const { value } = this.state;

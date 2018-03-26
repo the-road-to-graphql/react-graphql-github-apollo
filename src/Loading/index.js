@@ -5,13 +5,9 @@ import './style.css';
 const TICK_RATE = 500;
 
 class Loading extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      dots: 0,
-    };
-  }
+  state = {
+    dots: 0,
+  };
 
   componentDidMount() {
     this.interval = setInterval(this.onTick, TICK_RATE);

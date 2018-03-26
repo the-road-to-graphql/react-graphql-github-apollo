@@ -10,13 +10,9 @@ import ErrorMessage from '../Error';
 import './style.css';
 
 class AddComment extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      value: '',
-    };
-  }
+  state = {
+    value: '',
+  };
 
   onChange = value => {
     this.setState({ value });
