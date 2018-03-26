@@ -70,26 +70,22 @@ const CommentList = ({ repositoryOwner, repositoryName, issue }) => (
 
       return (
         <div className="Comments">
-          {repository.issue.comments.edges.length ? (
-            <div>
-              {repository.issue.comments.edges.map(({ node }) => (
-                <CommentItem key={node.id} comment={node} />
-              ))}
+          {repository.issue.comments.edges.map(({ node }) => (
+            <CommentItem key={node.id} comment={node} />
+          ))}
 
-              <FetchMore
-                payload={{
-                  repositoryOwner,
-                  repositoryName,
-                  number: issue.number,
-                }}
-                loading={loading}
-                pageInfo={repository.issue.comments.pageInfo}
-                doFetchMore={doFetchMore(fetchMore)}
-              >
-                Comments
-              </FetchMore>
-            </div>
-          ) : null}
+          <FetchMore
+            payload={{
+              repositoryOwner,
+              repositoryName,
+              number: issue.number,
+            }}
+            loading={loading}
+            pageInfo={repository.issue.comments.pageInfo}
+            doFetchMore={doFetchMore(fetchMore)}
+          >
+            Comments
+          </FetchMore>
 
           <CommentAdd issueId={repository.issue.id} />
         </div>
