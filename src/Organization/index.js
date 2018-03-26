@@ -2,7 +2,7 @@ import React from 'react';
 import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
 
-import Loading from '../Loading';
+import LoadingIndicator from '../Loading';
 import ErrorMessage from '../Error';
 import RepositoryList, { REPOSITORY_FRAGMENT } from '../Repository';
 
@@ -20,7 +20,7 @@ const Organization = ({ organizationName }) => (
       const { organization } = data;
 
       if (loading && !organization) {
-        return <Loading isCenter={true} />;
+        return <LoadingIndicator isCenter={true} />;
       }
 
       if (error) {
@@ -28,14 +28,12 @@ const Organization = ({ organizationName }) => (
       }
 
       return (
-        <div>
-          <RepositoryList
-            loading={loading}
-            repositories={organization.repositories}
-            fetchMore={fetchMore}
-            entry={'organization'}
-          />
-        </div>
+        <RepositoryList
+          loading={loading}
+          repositories={organization.repositories}
+          fetchMore={fetchMore}
+          entry={'organization'}
+        />
       );
     }}
   </Query>

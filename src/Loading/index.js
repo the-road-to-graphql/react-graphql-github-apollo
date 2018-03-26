@@ -4,7 +4,7 @@ import './style.css';
 
 const TICK_RATE = 500;
 
-class Loading extends Component {
+class LoadingIndicator extends Component {
   state = {
     dots: 0,
   };
@@ -39,4 +39,4 @@ class Loading extends Component {
   }
 }
 
-export default Loading;
+export default LoadingIndicator;

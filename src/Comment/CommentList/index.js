@@ -2,7 +2,7 @@ import React from 'react';
 import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
 
-import Loading from '../../Loading';
+import LoadingIndicator from '../../Loading';
 import ErrorMessage from '../../Error';
 import FetchMore from '../../FetchMore';
 import CommentAdd from '../CommentAdd';
@@ -61,7 +61,7 @@ const CommentList = ({ repositoryOwner, repositoryName, issue }) => (
       const { repository } = data;
 
       if (loading && !repository) {
-        return <Loading />;
+        return <LoadingIndicator />;
       }
 
       if (error) {

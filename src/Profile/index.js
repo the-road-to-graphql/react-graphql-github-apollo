@@ -2,7 +2,7 @@ import React from 'react';
 import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
 
-import Loading from '../Loading';
+import LoadingIndicator from '../Loading';
 import ErrorMessage from '../Error';
 import RepositoryList, { REPOSITORY_FRAGMENT } from '../Repository';
 
@@ -45,7 +45,7 @@ const Profile = () => (
       const { viewer } = data;
 
       if (loading && !viewer) {
-        return <Loading isCenter={true} />;
+        return <LoadingIndicator isCenter={true} />;
       }
 
       if (error) {

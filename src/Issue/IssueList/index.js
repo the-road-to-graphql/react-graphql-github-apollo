@@ -4,7 +4,7 @@ import gql from 'graphql-tag';
 import { withState } from 'recompose';
 
 import IssueItem from '../IssueItem';
-import Loading from '../../Loading';
+import LoadingIndicator from '../../Loading';
 import ErrorMessage from '../../Error';
 import FetchMore from '../../FetchMore';
 import { ButtonUnobtrusive } from '../../Button';
@@ -131,7 +131,7 @@ const IssuesList = ({ showState, repositoryOwner, repositoryName }) => (
       const { repository } = data;
 
       if (loading && !repository) {
-        return <Loading />;
+        return <LoadingIndicator />;
       }
 
       if (error) {
