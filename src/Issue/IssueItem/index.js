@@ -2,7 +2,7 @@ import React from 'react';
 import { withState } from 'recompose';
 
 import Button from '../../Button';
-import Comments from '../../Comments';
+import CommentList from '../../Comment/CommentList';
 import Link from '../../Link';
 
 import './style.css';
@@ -26,7 +26,7 @@ const Issue = ({
       <div dangerouslySetInnerHTML={{ __html: issue.bodyHTML }} />
 
       {isShowComments && (
-        <Comments
+        <CommentList
           repositoryOwner={repositoryOwner}
           repositoryName={repositoryName}
           issue={issue}

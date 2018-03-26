@@ -2,10 +2,11 @@ import React from 'react';
 import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
 
-import Loading from '../Loading';
-import ErrorMessage from '../Error';
-import FetchMore from '../FetchMore';
-import AddComment from '../AddComment';
+import Loading from '../../Loading';
+import ErrorMessage from '../../Error';
+import FetchMore from '../../FetchMore';
+import CommentAdd from '../CommentAdd';
+import CommentItem from '../CommentItem';
 
 import './style.css';
 
@@ -46,7 +47,7 @@ const doFetchMore = fetchMore => (
     },
   });
 
-const Comments = ({ repositoryOwner, repositoryName, issue }) => (
+const CommentList = ({ repositoryOwner, repositoryName, issue }) => (
   <Query
     query={COMMENTS_OF_ISSUE}
     variables={{
@@ -72,7 +73,7 @@ const Comments = ({ repositoryOwner, repositoryName, issue }) => (
           {repository.issue.comments.edges.length ? (
             <div>
               {repository.issue.comments.edges.map(comment => (
-                <Comment key={comment.node.id} comment={comment.node} />
+                <CommentItem key={comment.node.id} comment={comment.node} />
               ))}
 
               <FetchMore
@@ -87,23 +88,15 @@ const Comments = ({ repositoryOwner, repositoryName, issue }) => (
               >
                 Comments
               </FetchMore>
-              <AddComment issueId={repository.issue.id} />
+              <CommentAdd issueId={repository.issue.id} />
             </div>
           ) : (
-            <AddComment issueId={repository.issue.id} />
+            <CommentAdd issueId={repository.issue.id} />
           )}
         </div>
       );
     }}
   </Query>
-);
-
-const Comment = ({ comment }) => (
-  <div className="Comment">
-    <div>{comment.author.login}:</div>
-    &nbsp;
-    <div dangerouslySetInnerHTML={{ __html: comment.bodyHTML }} />
-  </div>
 );
 
 const COMMENTS_OF_ISSUE = gql`
@@ -136,4 +129,4 @@ const COMMENTS_OF_ISSUE = gql`
   }
 `;
 
-export default Comments;
+export default CommentList;

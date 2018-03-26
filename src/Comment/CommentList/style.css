@@ -2,8 +2,3 @@
   padding-left: 20px;
   border-left: 1px solid #000;
 }
-
-.Comment {
-  display: flex;
-  align-items: baseline;
-}
