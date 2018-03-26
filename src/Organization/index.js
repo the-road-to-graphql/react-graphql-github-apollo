@@ -4,8 +4,7 @@ import gql from 'graphql-tag';
 
 import Loading from '../Loading';
 import ErrorMessage from '../Error';
-import Repositories from '../Repositories';
-import REPOSITORY_FRAGMENT from '../Repositories/fragments';
+import RepositoryList, { REPOSITORY_FRAGMENT } from '../Repositories';
 
 const Organization = ({ organizationName }) => (
   <Query
@@ -30,7 +29,7 @@ const Organization = ({ organizationName }) => (
 
       return (
         <div>
-          <Repositories
+          <RepositoryList
             loading={loading}
             repositories={organization.repositories}
             fetchMore={fetchMore}

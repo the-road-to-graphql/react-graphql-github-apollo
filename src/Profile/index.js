@@ -4,8 +4,7 @@ import gql from 'graphql-tag';
 
 import Loading from '../Loading';
 import ErrorMessage from '../Error';
-import Repositories from '../Repositories';
-import REPOSITORY_FRAGMENT from '../Repositories/fragments';
+import RepositoryList, { REPOSITORY_FRAGMENT } from '../Repositories';
 
 const REPOSITORIES_OF_CURRENT_USER = gql`
   query($cursor: String) {
@@ -54,7 +53,7 @@ const Profile = () => (
       }
 
       return (
-        <Repositories
+        <RepositoryList
           loading={loading}
           repositories={viewer.repositories}
           fetchMore={fetchMore}
