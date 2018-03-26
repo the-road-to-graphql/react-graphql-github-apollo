@@ -11,7 +11,7 @@ const Organization = ({ organizationName }) => (
   <Query
     query={REPOSITORIES_OF_ORGANIZATION}
     variables={{
-      organizationName: organizationName,
+      organizationName,
       cursor: null,
     }}
     skip={organizationName === ''}

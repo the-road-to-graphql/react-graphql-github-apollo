@@ -14,12 +14,12 @@ const Issue = ({
   isShowComments,
   onShowComments,
 }) => (
-  <div className="Issue">
+  <div className="IssueItem">
     <Button onClick={() => onShowComments(!isShowComments)}>
       {isShowComments ? '-' : '+'}
     </Button>
 
-    <div className="Issue-content">
+    <div className="IssueItem-content">
       <h3>
         <Link href={issue.url}>{issue.title}</Link>
       </h3>

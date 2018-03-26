@@ -25,10 +25,10 @@ class LoadingIndicator extends Component {
     const { isCenter } = this.props;
     const { dots } = this.state;
 
-    const classNames = ['Loading'];
+    const classNames = ['LoadingIndicator'];
 
     if (isCenter) {
-      classNames.push('Loading_center');
+      classNames.push('LoadingIndicator_center');
     }
 
     return (

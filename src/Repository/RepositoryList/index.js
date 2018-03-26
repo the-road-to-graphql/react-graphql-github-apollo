@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 
 import RepositoryItem from '../RepositoryItem';
 
@@ -34,8 +34,8 @@ const doFetchMore = fetchMore => (cursor, { entry }) =>
     },
   });
 
-const RepositoryList = ({ loading, repositories, entry, fetchMore }) => (
-  <div>
+const RepositoryList = ({ entry, repositories, loading, fetchMore }) => (
+  <Fragment>
     {repositories.edges.map(({ node }) => (
       <div key={node.id} className="Repository">
         <RepositoryItem {...node} />
@@ -55,7 +55,7 @@ const RepositoryList = ({ loading, repositories, entry, fetchMore }) => (
     >
       Repositories
     </FetchMore>
-  </div>
+  </Fragment>
 );
 
 export default RepositoryList;

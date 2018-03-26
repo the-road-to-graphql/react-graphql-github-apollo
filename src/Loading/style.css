@@ -1,10 +1,10 @@
-.Loading {
+.LoadingIndicator {
   display: flex;
   flex-direction: column;
   align-items: center;
   margin: 20px 0;
 }
 
-.Loading_center {
+.LoadingIndicator_center {
   margin-top: 30%;
 }

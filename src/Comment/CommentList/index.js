@@ -57,6 +57,7 @@ const CommentList = ({ repositoryOwner, repositoryName, issue }) => (
       repositoryName,
       number: issue.number,
     }}
+    notifyOnNetworkStatusChange={true}
   >
     {({ data, loading, error, fetchMore }) => {
       const { repository } = data;
@@ -70,7 +71,7 @@ const CommentList = ({ repositoryOwner, repositoryName, issue }) => (
       }
 
       return (
-        <div className="Comments">
+        <div className="CommentList">
           {repository.issue.comments.edges.map(({ node }) => (
             <CommentItem key={node.id} comment={node} />
           ))}
