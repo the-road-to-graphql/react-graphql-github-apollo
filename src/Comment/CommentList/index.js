@@ -88,11 +88,10 @@ const CommentList = ({ repositoryOwner, repositoryName, issue }) => (
               >
                 Comments
               </FetchMore>
-              <CommentAdd issueId={repository.issue.id} />
             </div>
-          ) : (
-            <CommentAdd issueId={repository.issue.id} />
-          )}
+          ) : null}
+
+          <CommentAdd issueId={repository.issue.id} />
         </div>
       );
     }}
