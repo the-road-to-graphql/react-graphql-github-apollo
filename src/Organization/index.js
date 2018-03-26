@@ -1,10 +1,11 @@
 import React from 'react';
 import { Query } from 'react-apollo';
-import gql from 'graphql-tag';
+
+import { REPOSITORIES_OF_ORGANIZATION } from './queries';
+import RepositoryList from '../Repository';
 
 import LoadingIndicator from '../Loading';
 import ErrorMessage from '../Error';
-import RepositoryList, { REPOSITORY_FRAGMENT } from '../Repository';
 
 const Organization = ({ organizationName }) => (
   <Query
@@ -38,28 +39,5 @@ const Organization = ({ organizationName }) => (
     }}
   </Query>
 );
-
-const REPOSITORIES_OF_ORGANIZATION = gql`
-  query($organizationName: String!, $cursor: String) {
-    organization(login: $organizationName) {
-      name
-      login
-      url
-      repositories(first: 5, after: $cursor) {
-        edges {
-          node {
-            ...repository
-          }
-        }
-        pageInfo {
-          endCursor
-          hasNextPage
-        }
-      }
-    }
-  }
-
-  ${REPOSITORY_FRAGMENT}
-`;
 
 export default Organization;

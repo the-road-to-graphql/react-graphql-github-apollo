@@ -1,6 +1,7 @@
 import React from 'react';
 
 import RepositoryItem from '../RepositoryItem';
+
 import IssueList from '../../Issue/IssueList';
 import FetchMore from '../../FetchMore';
 

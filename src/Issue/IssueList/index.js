@@ -1,9 +1,10 @@
 import React from 'react';
 import { Query, ApolloConsumer } from 'react-apollo';
-import gql from 'graphql-tag';
 import { withState } from 'recompose';
 
+import { ISSUES_OF_REPOSITORY } from './queries';
 import IssueItem from '../IssueItem';
+
 import LoadingIndicator from '../../Loading';
 import ErrorMessage from '../../Error';
 import FetchMore from '../../FetchMore';
@@ -172,33 +173,6 @@ const IssuesList = ({ showState, repositoryOwner, repositoryName }) => (
     }}
   </Query>
 );
-
-const ISSUES_OF_REPOSITORY = gql`
-  query(
-    $repositoryOwner: String!
-    $repositoryName: String!
-    $kindOfIssue: IssueState!
-    $cursor: String
-  ) {
-    repository(name: $repositoryName, owner: $repositoryOwner) {
-      issues(first: 5, states: [$kindOfIssue], after: $cursor) {
-        edges {
-          node {
-            id
-            number
-            title
-            url
-            bodyHTML
-          }
-        }
-        pageInfo {
-          endCursor
-          hasNextPage
-        }
-      }
-    }
-  }
-`;
 
 export default withState(
   'showState',

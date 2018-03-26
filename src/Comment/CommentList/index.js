@@ -1,12 +1,13 @@
 import React from 'react';
 import { Query } from 'react-apollo';
-import gql from 'graphql-tag';
+
+import { COMMENTS_OF_ISSUE } from './queries';
+import CommentItem from '../CommentItem';
+import CommentAdd from '../CommentAdd';
 
 import LoadingIndicator from '../../Loading';
 import ErrorMessage from '../../Error';
 import FetchMore from '../../FetchMore';
-import CommentAdd from '../CommentAdd';
-import CommentItem from '../CommentItem';
 
 import './style.css';
 
@@ -93,35 +94,5 @@ const CommentList = ({ repositoryOwner, repositoryName, issue }) => (
     }}
   </Query>
 );
-
-const COMMENTS_OF_ISSUE = gql`
-  query(
-    $repositoryOwner: String!
-    $repositoryName: String!
-    $number: Int!
-    $cursor: String
-  ) {
-    repository(name: $repositoryName, owner: $repositoryOwner) {
-      issue(number: $number) {
-        id
-        comments(first: 5, after: $cursor) {
-          edges {
-            node {
-              id
-              bodyHTML
-              author {
-                login
-              }
-            }
-          }
-          pageInfo {
-            endCursor
-            hasNextPage
-          }
-        }
-      }
-    }
-  }
-`;
 
 export default CommentList;
