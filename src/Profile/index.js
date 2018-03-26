@@ -4,7 +4,7 @@ import gql from 'graphql-tag';
 
 import Loading from '../Loading';
 import ErrorMessage from '../Error';
-import RepositoryList, { REPOSITORY_FRAGMENT } from '../Repositories';
+import RepositoryList, { REPOSITORY_FRAGMENT } from '../Repository';
 
 const REPOSITORIES_OF_CURRENT_USER = gql`
   query($cursor: String) {
