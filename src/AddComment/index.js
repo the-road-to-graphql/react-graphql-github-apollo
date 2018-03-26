@@ -1,7 +1,11 @@
 import React, { Component } from 'react';
+import { Mutation } from 'react-apollo';
+
+import { ADD_COMMENT } from './mutations';
 
 import TextArea from '../TextArea';
 import Button from '../Button';
+import ErrorMessage from '../Error';
 
 import './style.css';
 
@@ -11,8 +15,6 @@ class AddComment extends Component {
 
     this.state = {
       value: '',
-      displaySuccess: false,
-      displayError: false,
     };
   }
 
@@ -20,55 +22,36 @@ class AddComment extends Component {
     this.setState({ value });
   };
 
-  onSubmit = event => {
+  onSubmit = (event, addComment) => {
+    addComment().then(() => this.setState({ value: '' }));
+
     event.preventDefault();
-    const { value } = this.state;
-    const { onCommentAdd } = this.props;
-
-    onCommentAdd({
-      variables: { body: value },
-    })
-      .then(({ data }) => {
-        this.setState({ displaySuccess: true });
-      })
-      .catch(error => {
-        this.setState({ displayError: true, errorMessage: error.toString() });
-      });
-  };
-
-  renderMessage = () => {
-    const { displaySuccess, displayError, errorMessage } = this.state;
-    if (displaySuccess) {
-      return (
-        <div className="AddComment-message AddComment-message--success">
-          Your comment has been posted
-        </div>
-      );
-    } else if (displayError) {
-      return (
-        <div className="AddComment-message AddComment-message--error">
-          {errorMessage}
-        </div>
-      );
-    } else {
-      return null;
-    }
   };
 
   render() {
+    const { issueId } = this.props;
     const { value } = this.state;
+
     return (
-      <div>
-        {this.renderMessage()}
-        <form onSubmit={this.onSubmit}>
-          <TextArea
-            value={value}
-            onChange={e => this.onChange(e.target.value)}
-            placeholder="Leave a comment"
-          />
-          <Button type="submit">Comment</Button>
-        </form>
-      </div>
+      <Mutation
+        mutation={ADD_COMMENT}
+        variables={{ body: value, subjectId: issueId }}
+      >
+        {(addComment, { data, loading, error }) => (
+          <div>
+            {error && <ErrorMessage error={error} />}
+
+            <form onSubmit={e => this.onSubmit(e, addComment)}>
+              <TextArea
+                value={value}
+                onChange={e => this.onChange(e.target.value)}
+                placeholder="Leave a comment"
+              />
+              <Button type="submit">Comment</Button>
+            </form>
+          </div>
+        )}
+      </Mutation>
     );
   }
 }
