@@ -1,8 +1,6 @@
 import React from 'react';
-import { compose } from 'recompose';
-import { graphql } from 'react-apollo';
+import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
-import { ADD_COMMENT } from './mutations';
 
 import Loading from '../Loading';
 import ErrorMessage from '../Error';
@@ -48,50 +46,57 @@ const doFetchMore = fetchMore => (
     },
   });
 
-const Comments = ({
-  repositoryOwner,
-  repositoryName,
-  issue,
-  onCommentAdd,
-  data: { loading, error, repository, fetchMore },
-}) => {
-  if (loading && !repository) {
-    return <Loading />;
-  }
+const Comments = ({ repositoryOwner, repositoryName, issue }) => (
+  <Query
+    query={COMMENTS_OF_ISSUE}
+    variables={{
+      cursor: null,
+      repositoryOwner,
+      repositoryName,
+      number: issue.number,
+    }}
+  >
+    {({ data, loading, error, fetchMore }) => {
+      const { repository } = data;
 
-  if (error) {
-    return <ErrorMessage error={error} />;
-  }
-  return (
-    <div className="Comments">
-      {repository.issue.comments.edges.length ? (
-        <div>
-          {repository.issue.comments.edges.map(comment => (
-            <Comment key={comment.node.id} comment={comment.node} />
-          ))}
+      if (loading && !repository) {
+        return <Loading />;
+      }
 
-          <FetchMore
-            payload={{
-              repositoryOwner,
-              repositoryName,
-              number: issue.number,
-            }}
-            loading={loading}
-            pageInfo={repository.issue.comments.pageInfo}
-            doFetchMore={doFetchMore(fetchMore)}
-          >
-            Comments
-          </FetchMore>
-          <AddComment onCommentAdd={onCommentAdd} />
+      if (error) {
+        return <ErrorMessage error={error} />;
+      }
+
+      return (
+        <div className="Comments">
+          {repository.issue.comments.edges.length ? (
+            <div>
+              {repository.issue.comments.edges.map(comment => (
+                <Comment key={comment.node.id} comment={comment.node} />
+              ))}
+
+              <FetchMore
+                payload={{
+                  repositoryOwner,
+                  repositoryName,
+                  number: issue.number,
+                }}
+                loading={loading}
+                pageInfo={repository.issue.comments.pageInfo}
+                doFetchMore={doFetchMore(fetchMore)}
+              >
+                Comments
+              </FetchMore>
+              <AddComment issueId={repository.issue.id} />
+            </div>
+          ) : (
+            <AddComment issueId={repository.issue.id} />
+          )}
         </div>
-      ) : (
-        <div>
-          <AddComment onCommentAdd={onCommentAdd} />
-        </div>
-      )}
-    </div>
-  );
-};
+      );
+    }}
+  </Query>
+);
 
 const Comment = ({ comment }) => (
   <div className="Comment">
@@ -110,6 +115,7 @@ const COMMENTS_OF_ISSUE = gql`
   ) {
     repository(name: $repositoryName, owner: $repositoryOwner) {
       issue(number: $number) {
+        id
         comments(first: 5, after: $cursor) {
           edges {
             node {
@@ -130,18 +136,4 @@ const COMMENTS_OF_ISSUE = gql`
   }
 `;
 
-const COMMENTS_OF_ISSUE_CONFIG = {
-  options: ({ issue, repositoryOwner, repositoryName }) => ({
-    variables: {
-      cursor: null,
-      repositoryOwner,
-      repositoryName,
-      number: issue.number,
-    },
-  }),
-};
-
-export default compose(
-  graphql(COMMENTS_OF_ISSUE, COMMENTS_OF_ISSUE_CONFIG),
-  graphql(ADD_COMMENT.ADD_COMMENT_MUTATION, ADD_COMMENT.ADD_COMMENT_CONFIG),
-)(Comments);
+export default Comments;
