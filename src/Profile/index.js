@@ -1,38 +1,11 @@
 import React from 'react';
 import { Query } from 'react-apollo';
-import gql from 'graphql-tag';
 
-import Loading from '../Loading';
+import { REPOSITORIES_OF_CURRENT_USER } from './queries';
+import RepositoryList from '../Repository';
+
+import LoadingIndicator from '../Loading';
 import ErrorMessage from '../Error';
-import Repositories from '../Repositories';
-import REPOSITORY_FRAGMENT from '../Repositories/fragments';
-
-const REPOSITORIES_OF_CURRENT_USER = gql`
-  query($cursor: String) {
-    viewer {
-      login
-      name
-      avatarUrl
-      repositories(
-        first: 5
-        orderBy: { direction: DESC, field: STARGAZERS }
-        after: $cursor
-      ) {
-        edges {
-          node {
-            ...repository
-          }
-        }
-        pageInfo {
-          endCursor
-          hasNextPage
-        }
-      }
-    }
-  }
-
-  ${REPOSITORY_FRAGMENT}
-`;
 
 const Profile = () => (
   <Query
@@ -46,7 +19,7 @@ const Profile = () => (
       const { viewer } = data;
 
       if (loading && !viewer) {
-        return <Loading isCenter={true} />;
+        return <LoadingIndicator isCenter={true} />;
       }
 
       if (error) {
@@ -54,7 +27,7 @@ const Profile = () => (
       }
 
       return (
-        <Repositories
+        <RepositoryList
           loading={loading}
           repositories={viewer.repositories}
           fetchMore={fetchMore}

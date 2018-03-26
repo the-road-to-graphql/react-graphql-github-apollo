@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 
-import Navigation from '../Navigation';
-import Footer from '../Footer';
+import Navigation from './Navigation';
+import Footer from './Footer';
 import OrganizationPage from '../Organization';
 import ProfilePage from '../Profile';
 
@@ -13,14 +13,10 @@ import './style.css';
 const ORGANIZATION_DEFAULT = 'the-road-to-learn-react';
 
 class App extends Component {
-  constructor() {
-    super();
-
-    this.state = {
-      value: ORGANIZATION_DEFAULT,
-      organizationName: ORGANIZATION_DEFAULT,
-    };
-  }
+  state = {
+    value: ORGANIZATION_DEFAULT,
+    organizationName: ORGANIZATION_DEFAULT,
+  };
 
   onSubmit = event => {
     const { value } = this.state;

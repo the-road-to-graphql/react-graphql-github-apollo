@@ -5,72 +5,19 @@ import {
   STAR_REPOSITORY,
   UNSTAR_REPOSITORY,
   WATCH_REPOSITORY,
-} from './mutations';
+} from '../mutations';
 
-import REPOSITORY_FRAGMENT from './fragments';
+import REPOSITORY_FRAGMENT from '../fragments';
 
-import Issues from '../Issues';
-import Button from '../Button';
-import FetchMore from '../FetchMore';
-import Link from '../Link';
+import Button from '../../Button';
+import Link from '../../Link';
 
-import './style.css';
+import '../style.css';
 
 const VIEWER_SUBSCRIPTIONS = {
   SUBSCRIBED: 'SUBSCRIBED',
   UNSUBSCRIBED: 'UNSUBSCRIBED',
 };
-
-const doFetchMore = fetchMore => (cursor, { entry }) =>
-  fetchMore({
-    variables: {
-      cursor,
-    },
-    updateQuery: (previousResult, { fetchMoreResult }) => {
-      if (!fetchMoreResult) {
-        return previousResult;
-      }
-
-      return {
-        ...previousResult,
-        [entry]: {
-          ...previousResult[entry],
-          repositories: {
-            ...previousResult[entry].repositories,
-            ...fetchMoreResult[entry].repositories,
-            edges: [
-              ...previousResult[entry].repositories.edges,
-              ...fetchMoreResult[entry].repositories.edges,
-            ],
-          },
-        },
-      };
-    },
-  });
-
-const Repositories = ({ loading, repositories, entry, fetchMore }) => (
-  <div>
-    {repositories.edges.map(repository => (
-      <div key={repository.node.id} className="Repository">
-        <Repository {...repository.node} />
-
-        <Issues
-          repositoryName={repository.node.name}
-          repositoryOwner={repository.node.owner.login}
-        />
-      </div>
-    ))}
-
-    <FetchMore
-      payload={{ entry }}
-      loading={loading}
-      pageInfo={repositories.pageInfo}
-      doFetchMore={doFetchMore(fetchMore)}
-    >
-      Repositories
-    </FetchMore>
-  </div>
-);
 
 const isWatch = viewerSubscription =>
   viewerSubscription === VIEWER_SUBSCRIPTIONS.SUBSCRIBED;
@@ -268,4 +215,4 @@ const Repository = ({
   </div>
 );
 
-export default Repositories;
+export default Repository;

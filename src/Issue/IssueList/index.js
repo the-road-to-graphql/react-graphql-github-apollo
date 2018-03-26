@@ -1,13 +1,14 @@
 import React from 'react';
 import { Query, ApolloConsumer } from 'react-apollo';
-import gql from 'graphql-tag';
 import { withState } from 'recompose';
 
-import Issue from '../Issue';
-import Loading from '../Loading';
-import ErrorMessage from '../Error';
-import FetchMore from '../FetchMore';
-import { ButtonUnobtrusive } from '../Button';
+import { ISSUES_OF_REPOSITORY } from './queries';
+import IssueItem from '../IssueItem';
+
+import LoadingIndicator from '../../Loading';
+import ErrorMessage from '../../Error';
+import FetchMore from '../../FetchMore';
+import { ButtonUnobtrusive } from '../../Button';
 
 import './style.css';
 
@@ -38,7 +39,7 @@ const isShow = showState => showState !== SHOW_STATES.NO_ISSUES;
 
 const prefetchIssues = (client, repositoryOwner, repositoryName, showState) => {
   const nextShowState = SHOW_TRANSITION_STATE[showState];
-  console.log(isShow(nextShowState));
+
   if (isShow(nextShowState)) {
     client.query({
       query: ISSUES_OF_REPOSITORY,
@@ -91,31 +92,45 @@ const Issues = ({
   showState,
   onChangeShowState,
 }) => (
+  <div className="Issues">
+    <IssueFilter
+      repositoryOwner={repositoryOwner}
+      repositoryName={repositoryName}
+      showState={showState}
+      onChangeShowState={onChangeShowState}
+    />
+
+    {isShow(showState) && (
+      <IssuesList
+        repositoryOwner={repositoryOwner}
+        repositoryName={repositoryName}
+        showState={showState}
+      />
+    )}
+  </div>
+);
+
+const IssueFilter = ({
+  repositoryOwner,
+  repositoryName,
+  showState,
+  onChangeShowState,
+}) => (
   <ApolloConsumer>
     {client => (
-      <div className="Issues">
-        <ButtonUnobtrusive
-          onClick={() => onChangeShowState(SHOW_TRANSITION_STATE[showState])}
-          onMouseOver={() =>
-            prefetchIssues(client, repositoryOwner, repositoryName, showState)
-          }
-        >
-          {SHOW_TRANSITION_LABELS[showState]}
-        </ButtonUnobtrusive>
-
-        {isShow(showState) && (
-          <IssuesList
-            showState={showState}
-            repositoryOwner={repositoryOwner}
-            repositoryName={repositoryName}
-          />
-        )}
-      </div>
+      <ButtonUnobtrusive
+        onClick={() => onChangeShowState(SHOW_TRANSITION_STATE[showState])}
+        onMouseOver={() =>
+          prefetchIssues(client, repositoryOwner, repositoryName, showState)
+        }
+      >
+        {SHOW_TRANSITION_LABELS[showState]}
+      </ButtonUnobtrusive>
     )}
   </ApolloConsumer>
 );
 
-const IssuesList = ({ showState, repositoryOwner, repositoryName }) => (
+const IssuesList = ({ repositoryOwner, repositoryName, showState }) => (
   <Query
     query={ISSUES_OF_REPOSITORY}
     variables={{
@@ -124,80 +139,51 @@ const IssuesList = ({ showState, repositoryOwner, repositoryName }) => (
       repositoryName,
       kindOfIssue: KIND_OF_ISSUES[showState],
     }}
-    skip={!isShow(showState)}
+    notifyOnNetworkStatusChange={true}
   >
     {({ data, loading, error, fetchMore }) => {
       const { repository } = data;
 
-      if (loading) {
-        return <Loading />;
+      if (loading && !repository) {
+        return <LoadingIndicator />;
       }
 
       if (error) {
         return <ErrorMessage error={error} />;
       }
 
+      if (!repository.issues.edges.length) {
+        return <div className="IssueList">No issues ...</div>;
+      }
+
       return (
         <div className="IssueList">
-          {repository.issues.edges.length ? (
-            <div>
-              {repository.issues.edges.map(issue => (
-                <Issue
-                  key={issue.node.id}
-                  issue={issue.node}
-                  repositoryOwner={repositoryOwner}
-                  repositoryName={repositoryName}
-                />
-              ))}
+          {repository.issues.edges.map(({ node }) => (
+            <IssueItem
+              key={node.id}
+              issue={node}
+              repositoryOwner={repositoryOwner}
+              repositoryName={repositoryName}
+            />
+          ))}
 
-              <FetchMore
-                payload={{
-                  repositoryOwner,
-                  repositoryName,
-                  showState,
-                }}
-                loading={loading}
-                pageInfo={repository.issues.pageInfo}
-                doFetchMore={doFetchMore(fetchMore)}
-              >
-                Issues
-              </FetchMore>
-            </div>
-          ) : (
-            <div>No issues ...</div>
-          )}
+          <FetchMore
+            payload={{
+              repositoryOwner,
+              repositoryName,
+              showState,
+            }}
+            loading={loading}
+            pageInfo={repository.issues.pageInfo}
+            doFetchMore={doFetchMore(fetchMore)}
+          >
+            Issues
+          </FetchMore>
         </div>
       );
     }}
   </Query>
 );
-
-const ISSUES_OF_REPOSITORY = gql`
-  query(
-    $repositoryOwner: String!
-    $repositoryName: String!
-    $kindOfIssue: IssueState!
-    $cursor: String
-  ) {
-    repository(name: $repositoryName, owner: $repositoryOwner) {
-      issues(first: 5, states: [$kindOfIssue], after: $cursor) {
-        edges {
-          node {
-            id
-            number
-            title
-            url
-            bodyHTML
-          }
-        }
-        pageInfo {
-          endCursor
-          hasNextPage
-        }
-      }
-    }
-  }
-`;
 
 export default withState(
   'showState',

@@ -1,17 +1,17 @@
 import React from 'react';
 import { Query } from 'react-apollo';
-import gql from 'graphql-tag';
 
-import Loading from '../Loading';
+import { REPOSITORIES_OF_ORGANIZATION } from './queries';
+import RepositoryList from '../Repository';
+
+import LoadingIndicator from '../Loading';
 import ErrorMessage from '../Error';
-import Repositories from '../Repositories';
-import REPOSITORY_FRAGMENT from '../Repositories/fragments';
 
 const Organization = ({ organizationName }) => (
   <Query
     query={REPOSITORIES_OF_ORGANIZATION}
     variables={{
-      organizationName: organizationName,
+      organizationName,
       cursor: null,
     }}
     skip={organizationName === ''}
@@ -21,7 +21,7 @@ const Organization = ({ organizationName }) => (
       const { organization } = data;
 
       if (loading && !organization) {
-        return <Loading isCenter={true} />;
+        return <LoadingIndicator isCenter={true} />;
       }
 
       if (error) {
@@ -29,40 +29,15 @@ const Organization = ({ organizationName }) => (
       }
 
       return (
-        <div>
-          <Repositories
-            loading={loading}
-            repositories={organization.repositories}
-            fetchMore={fetchMore}
-            entry={'organization'}
-          />
-        </div>
+        <RepositoryList
+          loading={loading}
+          repositories={organization.repositories}
+          fetchMore={fetchMore}
+          entry={'organization'}
+        />
       );
     }}
   </Query>
 );
-
-const REPOSITORIES_OF_ORGANIZATION = gql`
-  query($organizationName: String!, $cursor: String) {
-    organization(login: $organizationName) {
-      name
-      login
-      url
-      repositories(first: 5, after: $cursor) {
-        edges {
-          node {
-            ...repository
-          }
-        }
-        pageInfo {
-          endCursor
-          hasNextPage
-        }
-      }
-    }
-  }
-
-  ${REPOSITORY_FRAGMENT}
-`;
 
 export default Organization;

@@ -3,7 +3,7 @@ import React from 'react';
 import './style.css';
 
 const ErrorMessage = ({ error }) => (
-  <div className="Error">
+  <div className="ErrorMessage">
     <small>{error.toString()}</small>
   </div>
 );

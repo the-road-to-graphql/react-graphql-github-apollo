@@ -1,0 +1,4 @@
+.CommentItem {
+  display: flex;
+  align-items: baseline;
+}

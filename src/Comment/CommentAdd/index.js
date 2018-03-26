@@ -3,20 +3,14 @@ import { Mutation } from 'react-apollo';
 
 import { ADD_COMMENT } from './mutations';
 
-import TextArea from '../TextArea';
-import Button from '../Button';
-import ErrorMessage from '../Error';
+import TextArea from '../../TextArea';
+import Button from '../../Button';
+import ErrorMessage from '../../Error';
 
-import './style.css';
-
-class AddComment extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      value: '',
-    };
-  }
+class CommentAdd extends Component {
+  state = {
+    value: '',
+  };
 
   onChange = value => {
     this.setState({ value });
@@ -56,4 +50,4 @@ class AddComment extends Component {
   }
 }
 
-export default AddComment;
+export default CommentAdd;

@@ -4,14 +4,10 @@ import './style.css';
 
 const TICK_RATE = 500;
 
-class Loading extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      dots: 0,
-    };
-  }
+class LoadingIndicator extends Component {
+  state = {
+    dots: 0,
+  };
 
   componentDidMount() {
     this.interval = setInterval(this.onTick, TICK_RATE);
@@ -29,18 +25,18 @@ class Loading extends Component {
     const { isCenter } = this.props;
     const { dots } = this.state;
 
-    const classNames = ['Loading'];
+    const classNames = ['LoadingIndicator'];
 
     if (isCenter) {
-      classNames.push('Loading_center');
+      classNames.push('LoadingIndicator_center');
     }
 
     return (
       <div className={classNames.join(' ')}>
-        <small>Loading {new Array(dots).fill(0).map(dot => `.`)}</small>
+        <small>Loading {new Array(dots).fill(0).map(dot => '.')}</small>
       </div>
     );
   }
 }
 
-export default Loading;
+export default LoadingIndicator;
