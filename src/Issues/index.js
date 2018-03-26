@@ -38,7 +38,7 @@ const isShow = showState => showState !== SHOW_STATES.NO_ISSUES;
 
 const prefetchIssues = (client, repositoryOwner, repositoryName, showState) => {
   const nextShowState = SHOW_TRANSITION_STATE[showState];
-
+  console.log(isShow(nextShowState));
   if (isShow(nextShowState)) {
     client.query({
       query: ISSUES_OF_REPOSITORY,
@@ -96,12 +96,9 @@ const Issues = ({
       <div className="Issues">
         <ButtonUnobtrusive
           onClick={() => onChangeShowState(SHOW_TRANSITION_STATE[showState])}
-          onMouseOver={prefetchIssues(
-            client,
-            repositoryOwner,
-            repositoryName,
-            showState,
-          )}
+          onMouseOver={() =>
+            prefetchIssues(client, repositoryOwner, repositoryName, showState)
+          }
         >
           {SHOW_TRANSITION_LABELS[showState]}
         </ButtonUnobtrusive>
