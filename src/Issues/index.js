@@ -125,11 +125,12 @@ const IssuesList = ({ showState, repositoryOwner, repositoryName }) => (
       kindOfIssue: KIND_OF_ISSUES[showState],
     }}
     skip={!isShow(showState)}
+    notifyOnNetworkStatusChange={true}
   >
     {({ data, loading, error, fetchMore }) => {
       const { repository } = data;
 
-      if (loading) {
+      if (loading && !repository) {
         return <Loading />;
       }
 
