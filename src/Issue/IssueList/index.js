@@ -142,10 +142,10 @@ const IssuesList = ({ showState, repositoryOwner, repositoryName }) => (
         <div className="IssueList">
           {repository.issues.edges.length ? (
             <div>
-              {repository.issues.edges.map(issue => (
+              {repository.issues.edges.map(({ node }) => (
                 <IssueItem
-                  key={issue.node.id}
-                  issue={issue.node}
+                  key={node.id}
+                  issue={node}
                   repositoryOwner={repositoryOwner}
                   repositoryName={repositoryName}
                 />

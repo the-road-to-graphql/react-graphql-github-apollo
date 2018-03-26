@@ -35,13 +35,13 @@ const doFetchMore = fetchMore => (cursor, { entry }) =>
 
 const RepositoryList = ({ loading, repositories, entry, fetchMore }) => (
   <div>
-    {repositories.edges.map(repository => (
-      <div key={repository.node.id} className="Repository">
-        <RepositoryItem {...repository.node} />
+    {repositories.edges.map(({ node }) => (
+      <div key={node.id} className="Repository">
+        <RepositoryItem {...node} />
 
         <IssueList
-          repositoryName={repository.node.name}
-          repositoryOwner={repository.node.owner.login}
+          repositoryName={node.name}
+          repositoryOwner={node.owner.login}
         />
       </div>
     ))}

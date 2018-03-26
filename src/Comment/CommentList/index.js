@@ -72,8 +72,8 @@ const CommentList = ({ repositoryOwner, repositoryName, issue }) => (
         <div className="Comments">
           {repository.issue.comments.edges.length ? (
             <div>
-              {repository.issue.comments.edges.map(comment => (
-                <CommentItem key={comment.node.id} comment={comment.node} />
+              {repository.issue.comments.edges.map(({ node }) => (
+                <CommentItem key={node.id} comment={node} />
               ))}
 
               <FetchMore
