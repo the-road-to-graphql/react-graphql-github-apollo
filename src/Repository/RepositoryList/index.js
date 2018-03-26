@@ -1,7 +1,7 @@
 import React from 'react';
 
 import RepositoryItem from '../RepositoryItem';
-import Issues from '../../Issues';
+import IssueList from '../../Issue/IssueList';
 import FetchMore from '../../FetchMore';
 
 import '../style.css';
@@ -39,7 +39,7 @@ const RepositoryList = ({ loading, repositories, entry, fetchMore }) => (
       <div key={repository.node.id} className="Repository">
         <RepositoryItem {...repository.node} />
 
-        <Issues
+        <IssueList
           repositoryName={repository.node.name}
           repositoryOwner={repository.node.owner.login}
         />

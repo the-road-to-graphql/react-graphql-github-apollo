@@ -3,11 +3,11 @@ import { Query, ApolloConsumer } from 'react-apollo';
 import gql from 'graphql-tag';
 import { withState } from 'recompose';
 
-import Issue from '../Issue';
-import Loading from '../Loading';
-import ErrorMessage from '../Error';
-import FetchMore from '../FetchMore';
-import { ButtonUnobtrusive } from '../Button';
+import IssueItem from '../IssueItem';
+import Loading from '../../Loading';
+import ErrorMessage from '../../Error';
+import FetchMore from '../../FetchMore';
+import { ButtonUnobtrusive } from '../../Button';
 
 import './style.css';
 
@@ -143,7 +143,7 @@ const IssuesList = ({ showState, repositoryOwner, repositoryName }) => (
           {repository.issues.edges.length ? (
             <div>
               {repository.issues.edges.map(issue => (
-                <Issue
+                <IssueItem
                   key={issue.node.id}
                   issue={issue.node}
                   repositoryOwner={repositoryOwner}
