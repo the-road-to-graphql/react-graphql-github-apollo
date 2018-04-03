@@ -10,6 +10,7 @@
     "apollo-link-http": "^1.5.3",
     "graphql": "^0.13.2",
     "graphql-tag": "^2.8.0",
+    "ramda": "^0.25.0",
     "react": "^16.2.0",
     "react-apollo": "^2.1.0",
     "react-dom": "^16.2.0",
