@@ -14,7 +14,7 @@
   * Optimistic Updates
   * Pagination
   * Optimistic Fetch (e.g. Issues)
-    * not everywhere for the purpose of demonstrating
+    * not everywhere for the purpose of demonstrating though
 
 ## Installation
 
