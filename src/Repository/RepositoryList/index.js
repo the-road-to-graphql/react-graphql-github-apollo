@@ -1,4 +1,5 @@
 import React, { Fragment } from 'react';
+import { lensPath, set, view, compose } from 'ramda';
 
 import RepositoryItem from '../RepositoryItem';
 
@@ -17,20 +18,18 @@ const doFetchMore = fetchMore => (cursor, { entry }) =>
         return previousResult;
       }
 
-      return {
-        ...previousResult,
-        [entry]: {
-          ...previousResult[entry],
-          repositories: {
-            ...previousResult[entry].repositories,
-            ...fetchMoreResult[entry].repositories,
-            edges: [
-              ...previousResult[entry].repositories.edges,
-              ...fetchMoreResult[entry].repositories.edges,
-            ],
-          },
-        },
-      };
+      const repositoriesLens = lensPath([entry, 'repositories']);
+      const edgesLens = lensPath([entry, 'repositories', 'edges']);
+
+      const updatedRepositoryEdges = [
+        ...view(edgesLens, previousResult),
+        ...view(edgesLens, fetchMoreResult),
+      ];
+
+      return compose(
+        set(edgesLens, updatedRepositoryEdges),
+        set(repositoriesLens, view(repositoriesLens, fetchMoreResult)),
+      )(previousResult);
     },
   });
 

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Query } from 'react-apollo';
+import { lensPath, set, view, compose } from 'ramda';
 
 import { COMMENTS_OF_ISSUE } from './queries';
 import CommentItem from '../CommentItem';
@@ -27,24 +28,18 @@ const doFetchMore = fetchMore => (
         return previousResult;
       }
 
-      return {
-        ...previousResult,
-        repository: {
-          ...previousResult.repository,
-          issue: {
-            ...previousResult.repository.issue,
-            ...fetchMoreResult.repository.issue,
-            comments: {
-              ...previousResult.repository.issue.comments,
-              ...fetchMoreResult.repository.issue.comments,
-              edges: [
-                ...previousResult.repository.issue.comments.edges,
-                ...fetchMoreResult.repository.issue.comments.edges,
-              ],
-            },
-          },
-        },
-      };
+      const commentsLens = lensPath(['repository', 'issue', 'comments']);
+      const edgesLens = lensPath(['repository', 'issue', 'comments', 'edges']);
+
+      const updatedCommentsEdges = [
+        ...view(edgesLens, previousResult),
+        ...view(edgesLens, fetchMoreResult),
+      ];
+
+      return compose(
+        set(edgesLens, updatedCommentsEdges),
+        set(commentsLens, view(commentsLens, fetchMoreResult)),
+      )(previousResult);
     },
   });
 

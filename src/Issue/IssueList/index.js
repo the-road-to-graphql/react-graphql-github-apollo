@@ -1,6 +1,7 @@
 import React from 'react';
 import { Query, ApolloConsumer } from 'react-apollo';
 import { withState } from 'recompose';
+import { lensPath, set, view, compose } from 'ramda';
 
 import { ISSUES_OF_REPOSITORY } from './queries';
 import IssueItem from '../IssueItem';
@@ -69,20 +70,18 @@ const doFetchMore = fetchMore => (
         return previousResult;
       }
 
-      return {
-        ...previousResult,
-        repository: {
-          ...previousResult.repository,
-          issues: {
-            ...previousResult.repository.issues,
-            ...fetchMoreResult.repository.issues,
-            edges: [
-              ...previousResult.repository.issues.edges,
-              ...fetchMoreResult.repository.issues.edges,
-            ],
-          },
-        },
-      };
+      const issuesLens = lensPath(['repository', 'issues']);
+      const edgesLens = lensPath(['repository', 'issues', 'edges']);
+
+      const updatedIssuesEdges = [
+        ...view(edgesLens, previousResult),
+        ...view(edgesLens, fetchMoreResult),
+      ];
+
+      return compose(
+        set(edgesLens, updatedIssuesEdges),
+        set(issuesLens, view(issuesLens, fetchMoreResult)),
+      )(previousResult);
     },
   });
 
