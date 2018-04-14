@@ -10,36 +10,26 @@ import * as routes from '../constants/routes';
 
 import './style.css';
 
-const ORGANIZATION_DEFAULT = 'the-road-to-learn-react';
+const ORGANIZATION_NAME_DEFAULT = 'the-road-to-learn-react';
 
 class App extends Component {
   state = {
-    value: ORGANIZATION_DEFAULT,
-    organizationName: ORGANIZATION_DEFAULT,
+    organizationName: ORGANIZATION_NAME_DEFAULT,
   };
 
-  onSubmit = event => {
-    const { value } = this.state;
-
+  onSubmit = value => {
     this.setState({ organizationName: value });
-
-    event.preventDefault();
-  };
-
-  onChange = value => {
-    this.setState({ value });
   };
 
   render() {
-    const { value, organizationName } = this.state;
+    const { organizationName } = this.state;
 
     return (
       <Router>
         <div className="App">
           <Navigation
-            value={value}
-            onChange={this.onChange}
-            onSubmit={this.onSubmit}
+            initialValue={organizationName}
+            onOrganizationSearch={this.onSubmit}
           />
 
           <div className="App-main">
@@ -48,7 +38,9 @@ class App extends Component {
               path={routes.HOME}
               component={() => (
                 <div className="App-content_large-header">
-                  <OrganizationPage organizationName={organizationName} />
+                  <OrganizationPage
+                    organizationName={organizationName}
+                  />
                 </div>
               )}
             />
