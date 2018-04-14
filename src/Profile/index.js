@@ -1,7 +1,7 @@
 import React from 'react';
 import { Query } from 'react-apollo';
 
-import { REPOSITORIES_OF_CURRENT_USER } from './queries';
+import { GET_REPOSITORIES_OF_CURRENT_USER } from './queries';
 import RepositoryList from '../Repository';
 
 import LoadingIndicator from '../Loading';
@@ -9,7 +9,7 @@ import ErrorMessage from '../Error';
 
 const Profile = () => (
   <Query
-    query={REPOSITORIES_OF_CURRENT_USER}
+    query={GET_REPOSITORIES_OF_CURRENT_USER}
     variables={{
       cursor: null,
     }}

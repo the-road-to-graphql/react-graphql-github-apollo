@@ -23,7 +23,7 @@ export const UNSTAR_REPOSITORY = gql`
 `;
 
 export const WATCH_REPOSITORY = gql`
-  mutation($id: ID!, $viewerSubscription: SubscriptionState!) {
+  mutation Foo($id: ID!, $viewerSubscription: SubscriptionState!) {
     updateSubscription(
       input: { state: $viewerSubscription, subscribableId: $id }
     ) {

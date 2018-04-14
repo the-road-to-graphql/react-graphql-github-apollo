@@ -1,7 +1,7 @@
 import React from 'react';
 import { Query } from 'react-apollo';
 
-import { COMMENTS_OF_ISSUE } from './queries';
+import { GET_COMMENTS_OF_ISSUE } from './queries';
 import CommentItem from '../CommentItem';
 import CommentAdd from '../CommentAdd';
 
@@ -50,7 +50,7 @@ const doFetchMore = fetchMore => (
 
 const CommentList = ({ repositoryOwner, repositoryName, issue }) => (
   <Query
-    query={COMMENTS_OF_ISSUE}
+    query={GET_COMMENTS_OF_ISSUE}
     variables={{
       cursor: null,
       repositoryOwner,

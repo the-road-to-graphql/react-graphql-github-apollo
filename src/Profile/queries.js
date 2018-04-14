@@ -2,7 +2,7 @@ import gql from 'graphql-tag';
 
 import { REPOSITORY_FRAGMENT } from '../Repository';
 
-export const REPOSITORIES_OF_CURRENT_USER = gql`
+export const GET_REPOSITORIES_OF_CURRENT_USER = gql`
   query($cursor: String) {
     viewer {
       login

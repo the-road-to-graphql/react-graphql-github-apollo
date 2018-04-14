@@ -1,7 +1,7 @@
 import React from 'react';
 import { Query } from 'react-apollo';
 
-import { REPOSITORIES_OF_ORGANIZATION } from './queries';
+import { GET_REPOSITORIES_OF_ORGANIZATION } from './queries';
 import RepositoryList from '../Repository';
 
 import LoadingIndicator from '../Loading';
@@ -9,7 +9,7 @@ import ErrorMessage from '../Error';
 
 const Organization = ({ organizationName }) => (
   <Query
-    query={REPOSITORIES_OF_ORGANIZATION}
+    query={GET_REPOSITORIES_OF_ORGANIZATION}
     variables={{
       organizationName,
       cursor: null,

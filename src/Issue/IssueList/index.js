@@ -2,7 +2,7 @@ import React from 'react';
 import { Query, ApolloConsumer } from 'react-apollo';
 import { withState } from 'recompose';
 
-import { ISSUES_OF_REPOSITORY } from './queries';
+import { GET_ISSUES_OF_REPOSITORY } from './queries';
 import IssueItem from '../IssueItem';
 
 import LoadingIndicator from '../../Loading';
@@ -42,7 +42,7 @@ const prefetchIssues = (client, repositoryOwner, repositoryName, showState) => {
 
   if (isShow(nextShowState)) {
     client.query({
-      query: ISSUES_OF_REPOSITORY,
+      query: GET_ISSUES_OF_REPOSITORY,
       variables: {
         cursor: null,
         repositoryOwner,
@@ -132,7 +132,7 @@ const IssueFilter = ({
 
 const IssuesList = ({ repositoryOwner, repositoryName, showState }) => (
   <Query
-    query={ISSUES_OF_REPOSITORY}
+    query={GET_ISSUES_OF_REPOSITORY}
     variables={{
       cursor: null,
       repositoryOwner,

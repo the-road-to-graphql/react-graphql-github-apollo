@@ -1,6 +1,6 @@
 import gql from 'graphql-tag';
 
-export const ISSUES_OF_REPOSITORY = gql`
+export const GET_ISSUES_OF_REPOSITORY = gql`
   query(
     $repositoryOwner: String!
     $repositoryName: String!

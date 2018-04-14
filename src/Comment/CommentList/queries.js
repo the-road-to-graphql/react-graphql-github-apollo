@@ -1,6 +1,6 @@
 import gql from 'graphql-tag';
 
-export const COMMENTS_OF_ISSUE = gql`
+export const GET_COMMENTS_OF_ISSUE = gql`
   query(
     $repositoryOwner: String!
     $repositoryName: String!
