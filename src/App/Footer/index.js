@@ -9,7 +9,10 @@ const Footer = () => (
     <div>
       <small>
         <span className="Footer-text">Built by</span>{' '}
-        <Link className="Footer-link" href="https://www.robinwieruch.de">
+        <Link
+          className="Footer-link"
+          href="https://www.robinwieruch.de"
+        >
           Robin Wieruch
         </Link>{' '}
         <span className="Footer-text">with &hearts;</span>
@@ -26,7 +29,9 @@ const Footer = () => (
         >
           Get updates
         </Link>{' '}
-        <span className="Footer-text">about upcoming articles, books &</span>{' '}
+        <span className="Footer-text">
+          about upcoming articles, books &
+        </span>{' '}
         <Link className="Footer-link" href="https://roadtoreact.com">
           courses
         </Link>

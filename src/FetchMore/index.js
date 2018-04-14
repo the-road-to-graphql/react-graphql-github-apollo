@@ -5,7 +5,13 @@ import { ButtonUnobtrusive } from '../Button';
 
 import './style.css';
 
-const FetchMore = ({ children, payload, loading, pageInfo, doFetchMore }) => (
+const FetchMore = ({
+  children,
+  payload,
+  loading,
+  pageInfo,
+  doFetchMore,
+}) => (
   <div className="FetchMore">
     {loading ? (
       <LoadingIndicator />

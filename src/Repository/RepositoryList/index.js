@@ -34,7 +34,12 @@ const doFetchMore = fetchMore => (cursor, { entry }) =>
     },
   });
 
-const RepositoryList = ({ entry, repositories, loading, fetchMore }) => (
+const RepositoryList = ({
+  entry,
+  repositories,
+  loading,
+  fetchMore,
+}) => (
   <Fragment>
     {repositories.edges.map(({ node }) => (
       <div key={node.id} className="Repository">

@@ -24,7 +24,11 @@ const ButtonUnobtrusive = ({
   type = 'button',
   ...props
 }) => (
-  <button className={`${className} Button_unobtrusive`} type={type} {...props}>
+  <button
+    className={`${className} Button_unobtrusive`}
+    type={type}
+    {...props}
+  >
     {children}
   </button>
 );

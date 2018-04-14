@@ -19,9 +19,15 @@ const isLocalhost = Boolean(
 );
 
 export default function register() {
-  if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
+  if (
+    process.env.NODE_ENV === 'production' &&
+    'serviceWorker' in navigator
+  ) {
     // The URL constructor is available in all browsers that support SW.
-    const publicUrl = new URL(process.env.PUBLIC_URL, window.location);
+    const publicUrl = new URL(
+      process.env.PUBLIC_URL,
+      window.location,
+    );
     if (publicUrl.origin !== window.location.origin) {
       // Our service worker won't work if PUBLIC_URL is on a different origin
       // from what our page is served on. This might happen if a CDN is used to
@@ -65,7 +71,9 @@ function registerValidSW(swUrl) {
               // the fresh content will have been added to the cache.
               // It's the perfect time to display a "New content is
               // available; please refresh." message in your web app.
-              console.log('New content is available; please refresh.');
+              console.log(
+                'New content is available; please refresh.',
+              );
             } else {
               // At this point, everything has been precached.
               // It's the perfect time to display a
@@ -77,7 +85,10 @@ function registerValidSW(swUrl) {
       };
     })
     .catch(error => {
-      console.error('Error during service worker registration:', error);
+      console.error(
+        'Error during service worker registration:',
+        error,
+      );
     });
 }
 
@@ -88,7 +99,8 @@ function checkValidServiceWorker(swUrl) {
       // Ensure service worker exists, and that we really are getting a JS file.
       if (
         response.status === 404 ||
-        response.headers.get('content-type').indexOf('javascript') === -1
+        response.headers.get('content-type').indexOf('javascript') ===
+          -1
       ) {
         // No service worker found. Probably a different app. Reload the page.
         navigator.serviceWorker.ready.then(registration => {

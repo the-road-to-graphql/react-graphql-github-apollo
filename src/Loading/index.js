@@ -33,7 +33,9 @@ class LoadingIndicator extends Component {
 
     return (
       <div className={classNames.join(' ')}>
-        <small>Loading {new Array(dots).fill(0).map(dot => '.')}</small>
+        <small>
+          Loading {new Array(dots).fill(0).map(dot => '.')}
+        </small>
       </div>
     );
   }

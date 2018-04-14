@@ -37,7 +37,12 @@ const KIND_OF_ISSUES = {
 
 const isShow = showState => showState !== SHOW_STATES.NO_ISSUES;
 
-const prefetchIssues = (client, repositoryOwner, repositoryName, showState) => {
+const prefetchIssues = (
+  client,
+  repositoryOwner,
+  repositoryName,
+  showState,
+) => {
   const nextShowState = SHOW_TRANSITION_STATE[showState];
 
   if (isShow(nextShowState)) {
@@ -119,9 +124,16 @@ const IssueFilter = ({
   <ApolloConsumer>
     {client => (
       <ButtonUnobtrusive
-        onClick={() => onChangeShowState(SHOW_TRANSITION_STATE[showState])}
+        onClick={() =>
+          onChangeShowState(SHOW_TRANSITION_STATE[showState])
+        }
         onMouseOver={() =>
-          prefetchIssues(client, repositoryOwner, repositoryName, showState)
+          prefetchIssues(
+            client,
+            repositoryOwner,
+            repositoryName,
+            showState,
+          )
         }
       >
         {SHOW_TRANSITION_LABELS[showState]}
@@ -130,7 +142,11 @@ const IssueFilter = ({
   </ApolloConsumer>
 );
 
-const IssuesList = ({ repositoryOwner, repositoryName, showState }) => (
+const IssuesList = ({
+  repositoryOwner,
+  repositoryName,
+  showState,
+}) => (
   <Query
     query={GET_ISSUES_OF_REPOSITORY}
     variables={{

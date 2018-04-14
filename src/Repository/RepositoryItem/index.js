@@ -25,7 +25,11 @@ const isWatch = viewerSubscription =>
 const updateWatch = (
   client,
   {
-    data: { updateSubscription: { subscribable: { id, viewerSubscription } } },
+    data: {
+      updateSubscription: {
+        subscribable: { id, viewerSubscription },
+      },
+    },
   },
 ) => {
   const fragment = client.readFragment({
@@ -185,7 +189,10 @@ const Repository = ({
             update={updateAddStar}
           >
             {(addStar, { data, loading, error }) => (
-              <Button className={'Repository-title-action'} onClick={addStar}>
+              <Button
+                className={'Repository-title-action'}
+                onClick={addStar}
+              >
                 {stargazers.totalCount} Star
               </Button>
             )}
@@ -201,7 +208,9 @@ const Repository = ({
       />
       <div className="Repository-description-details">
         <div>
-          {primaryLanguage && <span>Language: {primaryLanguage.name}</span>}
+          {primaryLanguage && (
+            <span>Language: {primaryLanguage.name}</span>
+          )}
         </div>
         <div>
           {owner && (

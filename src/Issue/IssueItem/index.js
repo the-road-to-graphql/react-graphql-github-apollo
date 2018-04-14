@@ -36,4 +36,6 @@ const Issue = ({
   </div>
 );
 
-export default withState('isShowComments', 'onShowComments', false)(Issue);
+export default withState('isShowComments', 'onShowComments', false)(
+  Issue,
+);
