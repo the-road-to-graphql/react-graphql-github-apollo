@@ -1,56 +1,56 @@
-.Repository {
+.RepositoryItem {
   padding: 20px;
   border-bottom: 1px solid #000;
 }
 
-.Repository-title {
+.RepositoryItem-title {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
 }
 
 @media only screen and (max-device-width: 480px) {
-  .Repository-title {
+  .RepositoryItem-title {
     flex-direction: column;
     align-items: center;
   }
 }
 
-.Repository-title-action {
+.RepositoryItem-title-action {
   margin-left: 10px;
 }
 
-.Repository-description {
+.RepositoryItem-description {
   margin: 10px 0;
   display: flex;
   justify-content: space-between;
 }
 
 @media only screen and (max-device-width: 480px) {
-  .Repository-description {
+  .RepositoryItem-description {
     flex-direction: column;
     align-items: center;
   }
 }
 
-.Repository-description-info {
+.RepositoryItem-description-info {
   margin-right: 20px;
 }
 
 @media only screen and (max-device-width: 480px) {
-  .Repository-description-info {
+  .RepositoryItem-description-info {
     text-align: center;
     margin: 20px 0;
   }
 }
 
-.Repository-description-details {
+.RepositoryItem-description-details {
   text-align: right;
   white-space: nowrap;
 }
 
 @media only screen and (max-device-width: 480px) {
-  .Repository-description-details {
+  .RepositoryItem-description-details {
     text-align: center;
   }
 }

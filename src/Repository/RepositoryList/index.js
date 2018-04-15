@@ -6,7 +6,7 @@ import '../style.css';
 
 const RepositoryList = ({ repositories }) =>
   repositories.edges.map(({ node }) => (
-    <div key={node.id} className="Repository">
+    <div key={node.id} className="RepositoryItem">
       <RepositoryItem {...node} />
     </div>
   ));
