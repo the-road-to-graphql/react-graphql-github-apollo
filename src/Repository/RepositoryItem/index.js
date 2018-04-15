@@ -138,7 +138,7 @@ const Repository = ({
         >
           {(updateSubscription, { data, loading, error }) => (
             <Button
-              className={'Repository-title-action'}
+              className="Repository-title-action"
               onClick={updateSubscription}
             >
               {watchers.totalCount}{' '}
@@ -165,7 +165,7 @@ const Repository = ({
           >
             {(removeStar, { data, loading, error }) => (
               <Button
-                className={'Repository-title-action'}
+                className="Repository-title-action"
                 onClick={removeStar}
               >
                 {stargazers.totalCount} Unstar
@@ -190,7 +190,7 @@ const Repository = ({
           >
             {(addStar, { data, loading, error }) => (
               <Button
-                className={'Repository-title-action'}
+                className="Repository-title-action"
                 onClick={addStar}
               >
                 {stargazers.totalCount} Star

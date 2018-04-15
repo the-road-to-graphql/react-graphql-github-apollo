@@ -18,14 +18,14 @@ const Organization = ({ organizationName }) => (
     notifyOnNetworkStatusChange={true}
   >
     {({ data, loading, error, fetchMore }) => {
+      if (error) {
+        return <ErrorMessage error={error} />;
+      }
+
       const { organization } = data;
 
       if (loading && !organization) {
         return <Loading isCenter={true} />;
-      }
-
-      if (error) {
-        return <ErrorMessage error={error} />;
       }
 
       return (

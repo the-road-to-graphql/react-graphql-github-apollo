@@ -60,14 +60,14 @@ const CommentList = ({ repositoryOwner, repositoryName, issue }) => (
     notifyOnNetworkStatusChange={true}
   >
     {({ data, loading, error, fetchMore }) => {
+      if (error) {
+        return <ErrorMessage error={error} />;
+      }
+
       const { repository } = data;
 
       if (loading && !repository) {
         return <Loading />;
-      }
-
-      if (error) {
-        return <ErrorMessage error={error} />;
       }
 
       return (
