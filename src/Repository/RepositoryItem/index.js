@@ -95,7 +95,7 @@ const getUpdatedStarData = (client, id, viewerHasStarred) => {
   };
 };
 
-const Repository = ({
+const RepositoryItem = ({
   id,
   name,
   url,
@@ -108,7 +108,7 @@ const Repository = ({
   viewerHasStarred,
 }) => (
   <div>
-    <div className="Repository-title">
+    <div className="RepositoryItem-title">
       <h2>
         <Link href={url}>{name}</Link>
       </h2>
@@ -138,7 +138,7 @@ const Repository = ({
         >
           {(updateSubscription, { data, loading, error }) => (
             <Button
-              className="Repository-title-action"
+              className="RepositoryItem-title-action"
               onClick={updateSubscription}
             >
               {watchers.totalCount}{' '}
@@ -165,7 +165,7 @@ const Repository = ({
           >
             {(removeStar, { data, loading, error }) => (
               <Button
-                className="Repository-title-action"
+                className="RepositoryItem-title-action"
                 onClick={removeStar}
               >
                 {stargazers.totalCount} Unstar
@@ -190,7 +190,7 @@ const Repository = ({
           >
             {(addStar, { data, loading, error }) => (
               <Button
-                className="Repository-title-action"
+                className="RepositoryItem-title-action"
                 onClick={addStar}
               >
                 {stargazers.totalCount} Star
@@ -201,12 +201,12 @@ const Repository = ({
       </div>
     </div>
 
-    <div className="Repository-description">
+    <div className="RepositoryItem-description">
       <div
-        className="Repository-description-info"
+        className="RepositoryItem-description-info"
         dangerouslySetInnerHTML={{ __html: descriptionHTML }}
       />
-      <div className="Repository-description-details">
+      <div className="RepositoryItem-description-details">
         <div>
           {primaryLanguage && (
             <span>Language: {primaryLanguage.name}</span>
@@ -224,4 +224,4 @@ const Repository = ({
   </div>
 );
 
-export default Repository;
+export default RepositoryItem;
