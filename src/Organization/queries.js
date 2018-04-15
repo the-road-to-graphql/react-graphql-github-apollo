@@ -5,9 +5,6 @@ import { REPOSITORY_FRAGMENT } from '../Repository';
 export const GET_REPOSITORIES_OF_ORGANIZATION = gql`
   query($organizationName: String!, $cursor: String) {
     organization(login: $organizationName) {
-      name
-      login
-      url
       repositories(first: 5, after: $cursor) {
         edges {
           node {
