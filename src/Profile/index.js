@@ -4,8 +4,8 @@ import { Query } from 'react-apollo';
 import { GET_REPOSITORIES_OF_CURRENT_USER } from './queries';
 import RepositoryList from '../Repository';
 
-import LoadingIndicator from '../Loading';
-import ErrorMessage from '../Error';
+import Loading from '../Loading';
+import Error from '../Error';
 
 const Profile = () => (
   <Query
@@ -19,11 +19,11 @@ const Profile = () => (
       const { viewer } = data;
 
       if (loading && !viewer) {
-        return <LoadingIndicator isCenter={true} />;
+        return <Loading isCenter={true} />;
       }
 
       if (error) {
-        return <ErrorMessage error={error} />;
+        return <Error error={error} />;
       }
 
       return (

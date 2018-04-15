@@ -5,7 +5,7 @@ import { withState } from 'recompose';
 import { GET_ISSUES_OF_REPOSITORY } from './queries';
 import IssueItem from '../IssueItem';
 
-import LoadingIndicator from '../../Loading';
+import Loading from '../../Loading';
 import ErrorMessage from '../../Error';
 import FetchMore from '../../FetchMore';
 import { ButtonUnobtrusive } from '../../Button';
@@ -161,7 +161,7 @@ const IssuesList = ({
       const { repository } = data;
 
       if (loading && !repository) {
-        return <LoadingIndicator />;
+        return <Loading />;
       }
 
       if (error) {

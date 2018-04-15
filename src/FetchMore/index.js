@@ -1,6 +1,6 @@
 import React from 'react';
 
-import LoadingIndicator from '../Loading';
+import Loading from '../Loading';
 import { ButtonUnobtrusive } from '../Button';
 
 import './style.css';
@@ -14,7 +14,7 @@ const FetchMore = ({
 }) => (
   <div className="FetchMore">
     {loading ? (
-      <LoadingIndicator />
+      <Loading />
     ) : (
       pageInfo.hasNextPage && (
         <ButtonUnobtrusive

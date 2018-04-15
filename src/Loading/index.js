@@ -4,7 +4,7 @@ import './style.css';
 
 const TICK_RATE = 500;
 
-class LoadingIndicator extends Component {
+class Loading extends Component {
   state = {
     dots: 0,
   };
@@ -25,10 +25,10 @@ class LoadingIndicator extends Component {
     const { isCenter } = this.props;
     const { dots } = this.state;
 
-    const classNames = ['LoadingIndicator'];
+    const classNames = ['Loading'];
 
     if (isCenter) {
-      classNames.push('LoadingIndicator_center');
+      classNames.push('Loading_center');
     }
 
     return (
@@ -41,4 +41,4 @@ class LoadingIndicator extends Component {
   }
 }
 
-export default LoadingIndicator;
+export default Loading;

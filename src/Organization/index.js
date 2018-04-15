@@ -4,7 +4,7 @@ import { Query } from 'react-apollo';
 import { GET_REPOSITORIES_OF_ORGANIZATION } from './queries';
 import RepositoryList from '../Repository';
 
-import LoadingIndicator from '../Loading';
+import Loading from '../Loading';
 import ErrorMessage from '../Error';
 
 const Organization = ({ organizationName }) => (
@@ -21,7 +21,7 @@ const Organization = ({ organizationName }) => (
       const { organization } = data;
 
       if (loading && !organization) {
-        return <LoadingIndicator isCenter={true} />;
+        return <Loading isCenter={true} />;
       }
 
       if (error) {

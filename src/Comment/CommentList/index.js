@@ -5,7 +5,7 @@ import { GET_COMMENTS_OF_ISSUE } from './queries';
 import CommentItem from '../CommentItem';
 import CommentAdd from '../CommentAdd';
 
-import LoadingIndicator from '../../Loading';
+import Loading from '../../Loading';
 import ErrorMessage from '../../Error';
 import FetchMore from '../../FetchMore';
 
@@ -63,7 +63,7 @@ const CommentList = ({ repositoryOwner, repositoryName, issue }) => (
       const { repository } = data;
 
       if (loading && !repository) {
-        return <LoadingIndicator />;
+        return <Loading />;
       }
 
       if (error) {
