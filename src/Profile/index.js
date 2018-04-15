@@ -2,16 +2,13 @@ import React from 'react';
 import gql from 'graphql-tag';
 import { Query } from 'react-apollo';
 
-// import { GET_REPOSITORIES_OF_CURRENT_USER } from './queries';
 import RepositoryList from '../Repository';
 import Loading from '../Loading';
-// import ErrorMessage from '../Error';
+import ErrorMessage from '../Error';
 
 export const GET_REPOSITORIES_OF_CURRENT_USER = gql`
   {
     viewer {
-      login
-      name
       repositories(
         first: 5
         orderBy: { direction: DESC, field: STARGAZERS }
@@ -46,7 +43,11 @@ export const GET_REPOSITORIES_OF_CURRENT_USER = gql`
 
 const Profile = () => (
   <Query query={GET_REPOSITORIES_OF_CURRENT_USER}>
-    {({ data, loading }) => {
+    {({ data, loading, error }) => {
+      if (error) {
+        return <ErrorMessage error={error} />;
+      }
+
       const { viewer } = data;
 
       if (loading || !viewer) {
