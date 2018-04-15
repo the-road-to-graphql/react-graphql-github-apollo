@@ -1,6 +1,6 @@
-import Repositories from './RepositoryList';
+import RepositoryList from './RepositoryList';
 import REPOSITORY_FRAGMENT from './fragments';
 
 export { REPOSITORY_FRAGMENT };
 
-export default Repositories;
+export default RepositoryList;
