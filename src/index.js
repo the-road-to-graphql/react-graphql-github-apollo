@@ -24,22 +24,22 @@ const httpLink = new HttpLink({
 });
 
 const errorLink = onError(({ graphQLErrors, networkError }) => {
-  if (graphQLErrors)
+  if (graphQLErrors) {
     graphQLErrors.map(({ message, locations, path }) =>
       console.log(
         `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`,
       ),
     );
+  }
 
-  if (networkError) console.log(`[Network error]: ${networkError}`);
+  if (networkError) {
+    console.log(`[Network error]: ${networkError}`);
+  }
 });
 
 const link = ApolloLink.from([errorLink, httpLink]);
 
-const cache = new InMemoryCache({
-  logger: console.log,
-  loggerEnabled: true,
-});
+const cache = new InMemoryCache();
 
 const client = new ApolloClient({
   link,
