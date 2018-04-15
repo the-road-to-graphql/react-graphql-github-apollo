@@ -3,8 +3,8 @@ import { BrowserRouter as Router, Route } from 'react-router-dom';
 
 import Navigation from './Navigation';
 import Footer from './Footer';
-import OrganizationPage from '../Organization';
-import ProfilePage from '../Profile';
+import Organization from '../Organization';
+import Profile from '../Profile';
 
 import * as routes from '../constants/routes';
 
@@ -38,9 +38,7 @@ class App extends Component {
               path={routes.HOME}
               component={() => (
                 <div className="App-content_large-header">
-                  <OrganizationPage
-                    organizationName={organizationName}
-                  />
+                  <Organization organizationName={organizationName} />
                 </div>
               )}
             />
@@ -49,7 +47,7 @@ class App extends Component {
               path={routes.PROFILE}
               component={() => (
                 <div className="App-content_small-header">
-                  <ProfilePage />
+                  <Profile />
                 </div>
               )}
             />
