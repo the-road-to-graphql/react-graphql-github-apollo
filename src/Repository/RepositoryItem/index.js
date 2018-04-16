@@ -32,12 +32,12 @@ const updateWatch = (
     },
   },
 ) => {
-  const fragment = client.readFragment({
+  const repository = client.readFragment({
     id: `Repository:${id}`,
     fragment: REPOSITORY_FRAGMENT,
   });
 
-  let { totalCount } = fragment.watchers;
+  let { totalCount } = repository.watchers;
   totalCount =
     viewerSubscription === VIEWER_SUBSCRIPTIONS.SUBSCRIBED
       ? totalCount + 1
@@ -47,9 +47,9 @@ const updateWatch = (
     id: `Repository:${id}`,
     fragment: REPOSITORY_FRAGMENT,
     data: {
-      ...fragment,
+      ...repository,
       watchers: {
-        ...fragment.watchers,
+        ...repository.watchers,
         totalCount,
       },
     },
@@ -78,18 +78,18 @@ const updateRemoveStar = (
 };
 
 const getUpdatedStarData = (client, id, viewerHasStarred) => {
-  const fragment = client.readFragment({
+  const repository = client.readFragment({
     id: `Repository:${id}`,
     fragment: REPOSITORY_FRAGMENT,
   });
 
-  let { totalCount } = fragment.stargazers;
+  let { totalCount } = repository.stargazers;
   totalCount = viewerHasStarred ? totalCount + 1 : totalCount - 1;
 
   return {
-    ...fragment,
+    ...repository,
     stargazers: {
-      ...fragment.stargazers,
+      ...repository.stargazers,
       totalCount,
     },
   };
