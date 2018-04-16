@@ -5,7 +5,7 @@ import { GET_REPOSITORIES_OF_CURRENT_USER } from './queries';
 import RepositoryList from '../Repository';
 
 import Loading from '../Loading';
-import Error from '../Error';
+import ErrorMessage from '../Error';
 
 const Profile = () => (
   <Query
@@ -23,7 +23,7 @@ const Profile = () => (
       }
 
       if (error) {
-        return <Error error={error} />;
+        return <ErrorMessage error={error} />;
       }
 
       return (
