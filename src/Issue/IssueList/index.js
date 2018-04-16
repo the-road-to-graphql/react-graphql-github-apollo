@@ -49,7 +49,6 @@ const prefetchIssues = (
     client.query({
       query: GET_ISSUES_OF_REPOSITORY,
       variables: {
-        cursor: null,
         repositoryOwner,
         repositoryName,
         kindOfIssue: KIND_OF_ISSUES[nextShowState],
@@ -150,7 +149,6 @@ const IssuesList = ({
   <Query
     query={GET_ISSUES_OF_REPOSITORY}
     variables={{
-      cursor: null,
       repositoryOwner,
       repositoryName,
       kindOfIssue: KIND_OF_ISSUES[showState],

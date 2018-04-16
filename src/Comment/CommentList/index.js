@@ -52,7 +52,6 @@ const CommentList = ({ repositoryOwner, repositoryName, issue }) => (
   <Query
     query={GET_COMMENTS_OF_ISSUE}
     variables={{
-      cursor: null,
       repositoryOwner,
       repositoryName,
       number: issue.number,

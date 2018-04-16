@@ -10,9 +10,6 @@ import ErrorMessage from '../Error';
 const Profile = () => (
   <Query
     query={GET_REPOSITORIES_OF_CURRENT_USER}
-    variables={{
-      cursor: null,
-    }}
     notifyOnNetworkStatusChange={true}
   >
     {({ data, loading, error, fetchMore }) => {

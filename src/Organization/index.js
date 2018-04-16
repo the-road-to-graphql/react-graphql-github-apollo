@@ -12,7 +12,6 @@ const Organization = ({ organizationName }) => (
     query={GET_REPOSITORIES_OF_ORGANIZATION}
     variables={{
       organizationName,
-      cursor: null,
     }}
     skip={organizationName === ''}
     notifyOnNetworkStatusChange={true}

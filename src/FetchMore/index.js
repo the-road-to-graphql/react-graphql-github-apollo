@@ -20,7 +20,6 @@ const FetchMore = ({
         <ButtonUnobtrusive
           className="FetchMore-button"
           onClick={() => doFetchMore(pageInfo.endCursor, payload)}
-          disabled={!pageInfo.hasNextPage}
         >
           {`More ${children}`}
         </ButtonUnobtrusive>
