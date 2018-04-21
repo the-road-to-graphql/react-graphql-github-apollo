@@ -7,31 +7,29 @@ import FetchMore from '../../FetchMore';
 
 import '../style.css';
 
-const getConfiguration = (cursor, entry) => ({
-  variables: {
-    cursor,
-  },
-  updateQuery: (previousResult, { fetchMoreResult }) => {
-    if (!fetchMoreResult) {
-      return previousResult;
-    }
+const getUpdateQuery = entry => (
+  previousResult,
+  { fetchMoreResult },
+) => {
+  if (!fetchMoreResult) {
+    return previousResult;
+  }
 
-    return {
-      ...previousResult,
-      [entry]: {
-        ...previousResult[entry],
-        repositories: {
-          ...previousResult[entry].repositories,
-          ...fetchMoreResult[entry].repositories,
-          edges: [
-            ...previousResult[entry].repositories.edges,
-            ...fetchMoreResult[entry].repositories.edges,
-          ],
-        },
+  return {
+    ...previousResult,
+    [entry]: {
+      ...previousResult[entry],
+      repositories: {
+        ...previousResult[entry].repositories,
+        ...fetchMoreResult[entry].repositories,
+        edges: [
+          ...previousResult[entry].repositories.edges,
+          ...fetchMoreResult[entry].repositories.edges,
+        ],
       },
-    };
-  },
-});
+    },
+  };
+};
 
 const RepositoryList = ({
   entry,
@@ -54,10 +52,10 @@ const RepositoryList = ({
     <FetchMore
       loading={loading}
       hasNextPage={repositories.pageInfo.hasNextPage}
-      fetchMoreConfiguration={getConfiguration(
-        repositories.pageInfo.endCursor,
-        entry,
-      )}
+      variables={{
+        cursor: repositories.pageInfo.endCursor,
+      }}
+      updateQuery={getUpdateQuery(entry)}
       fetchMore={fetchMore}
     >
       Repositories

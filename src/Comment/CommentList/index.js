@@ -11,43 +11,30 @@ import FetchMore from '../../FetchMore';
 
 import './style.css';
 
-const getConfiguration = (
-  cursor,
-  repositoryOwner,
-  repositoryName,
-  number,
-) => ({
-  variables: {
-    cursor,
-    repositoryOwner,
-    repositoryName,
-    number,
-  },
-  updateQuery: (previousResult, { fetchMoreResult }) => {
-    if (!fetchMoreResult) {
-      return previousResult;
-    }
+const updateQuery = (previousResult, { fetchMoreResult }) => {
+  if (!fetchMoreResult) {
+    return previousResult;
+  }
 
-    return {
-      ...previousResult,
-      repository: {
-        ...previousResult.repository,
-        issue: {
-          ...previousResult.repository.issue,
-          ...fetchMoreResult.repository.issue,
-          comments: {
-            ...previousResult.repository.issue.comments,
-            ...fetchMoreResult.repository.issue.comments,
-            edges: [
-              ...previousResult.repository.issue.comments.edges,
-              ...fetchMoreResult.repository.issue.comments.edges,
-            ],
-          },
+  return {
+    ...previousResult,
+    repository: {
+      ...previousResult.repository,
+      issue: {
+        ...previousResult.repository.issue,
+        ...fetchMoreResult.repository.issue,
+        comments: {
+          ...previousResult.repository.issue.comments,
+          ...fetchMoreResult.repository.issue.comments,
+          edges: [
+            ...previousResult.repository.issue.comments.edges,
+            ...fetchMoreResult.repository.issue.comments.edges,
+          ],
         },
       },
-    };
-  },
-});
+    },
+  };
+};
 
 const CommentList = ({ repositoryOwner, repositoryName, issue }) => (
   <Query
@@ -81,12 +68,13 @@ const CommentList = ({ repositoryOwner, repositoryName, issue }) => (
             hasNextPage={
               repository.issue.comments.pageInfo.hasNextPage
             }
-            fetchMoreConfiguration={getConfiguration(
-              repository.issue.comments.pageInfo.endCursor,
+            variables={{
+              cursor: repository.issue.comments.pageInfo.endCursor,
               repositoryOwner,
               repositoryName,
-              issue.number,
-            )}
+              number: issue.number,
+            }}
+            updateQuery={updateQuery}
             fetchMore={fetchMore}
           >
             Comments

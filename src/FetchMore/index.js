@@ -8,7 +8,8 @@ import './style.css';
 const FetchMore = ({
   loading,
   hasNextPage,
-  fetchMoreConfiguration,
+  variables,
+  updateQuery,
   fetchMore,
   children,
 }) => (
@@ -19,7 +20,7 @@ const FetchMore = ({
       hasNextPage && (
         <ButtonUnobtrusive
           className="FetchMore-button"
-          onClick={() => fetchMore(fetchMoreConfiguration)}
+          onClick={() => fetchMore({ variables, updateQuery })}
         >
           {`More ${children}`}
         </ButtonUnobtrusive>

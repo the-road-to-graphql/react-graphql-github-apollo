@@ -57,39 +57,26 @@ const prefetchIssues = (
   }
 };
 
-const getConfiguration = (
-  cursor,
-  repositoryOwner,
-  repositoryName,
-  showState,
-) => ({
-  variables: {
-    cursor,
-    repositoryOwner,
-    repositoryName,
-    kindOfIssue: KIND_OF_ISSUES[showState],
-  },
-  updateQuery: (previousResult, { fetchMoreResult }) => {
-    if (!fetchMoreResult) {
-      return previousResult;
-    }
+const updateQuery = (previousResult, { fetchMoreResult }) => {
+  if (!fetchMoreResult) {
+    return previousResult;
+  }
 
-    return {
-      ...previousResult,
-      repository: {
-        ...previousResult.repository,
-        issues: {
-          ...previousResult.repository.issues,
-          ...fetchMoreResult.repository.issues,
-          edges: [
-            ...previousResult.repository.issues.edges,
-            ...fetchMoreResult.repository.issues.edges,
-          ],
-        },
+  return {
+    ...previousResult,
+    repository: {
+      ...previousResult.repository,
+      issues: {
+        ...previousResult.repository.issues,
+        ...fetchMoreResult.repository.issues,
+        edges: [
+          ...previousResult.repository.issues.edges,
+          ...fetchMoreResult.repository.issues.edges,
+        ],
       },
-    };
-  },
-});
+    },
+  };
+};
 
 const Issues = ({
   repositoryOwner,
@@ -185,12 +172,13 @@ const IssuesList = ({
           <FetchMore
             loading={loading}
             hasNextPage={repository.issues.pageInfo.hasNextPage}
-            fetchMoreConfiguration={getConfiguration(
-              repository.issues.pageInfo.endCursor,
+            variables={{
+              cursor: repository.issues.pageInfo.endCursor,
               repositoryOwner,
               repositoryName,
-              showState,
-            )}
+              kindOfIssue: KIND_OF_ISSUES[showState],
+            }}
+            updateQuery={updateQuery}
             fetchMore={fetchMore}
           >
             Issues
