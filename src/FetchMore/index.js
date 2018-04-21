@@ -22,7 +22,7 @@ const FetchMore = ({
           className="FetchMore-button"
           onClick={() => fetchMore({ variables, updateQuery })}
         >
-          {`More ${children}`}
+          More {children}
         </ButtonUnobtrusive>
       )
     )}
