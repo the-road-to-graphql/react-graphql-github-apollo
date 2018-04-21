@@ -6,20 +6,20 @@ import { ButtonUnobtrusive } from '../Button';
 import './style.css';
 
 const FetchMore = ({
-  children,
-  payload,
   loading,
-  pageInfo,
-  doFetchMore,
+  hasNextPage,
+  fetchMoreConfiguration,
+  fetchMore,
+  children,
 }) => (
   <div className="FetchMore">
     {loading ? (
       <Loading />
     ) : (
-      pageInfo.hasNextPage && (
+      hasNextPage && (
         <ButtonUnobtrusive
           className="FetchMore-button"
-          onClick={() => doFetchMore(pageInfo.endCursor, payload)}
+          onClick={() => fetchMore(fetchMoreConfiguration)}
         >
           {`More ${children}`}
         </ButtonUnobtrusive>

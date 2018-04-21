@@ -57,38 +57,39 @@ const prefetchIssues = (
   }
 };
 
-const doFetchMore = fetchMore => (
+const getConfiguration = (
   cursor,
-  { repositoryOwner, repositoryName, showState },
-) =>
-  fetchMore({
-    variables: {
-      cursor,
-      repositoryOwner,
-      repositoryName,
-      kindOfIssue: KIND_OF_ISSUES[showState],
-    },
-    updateQuery: (previousResult, { fetchMoreResult }) => {
-      if (!fetchMoreResult) {
-        return previousResult;
-      }
+  repositoryOwner,
+  repositoryName,
+  showState,
+) => ({
+  variables: {
+    cursor,
+    repositoryOwner,
+    repositoryName,
+    kindOfIssue: KIND_OF_ISSUES[showState],
+  },
+  updateQuery: (previousResult, { fetchMoreResult }) => {
+    if (!fetchMoreResult) {
+      return previousResult;
+    }
 
-      return {
-        ...previousResult,
-        repository: {
-          ...previousResult.repository,
-          issues: {
-            ...previousResult.repository.issues,
-            ...fetchMoreResult.repository.issues,
-            edges: [
-              ...previousResult.repository.issues.edges,
-              ...fetchMoreResult.repository.issues.edges,
-            ],
-          },
+    return {
+      ...previousResult,
+      repository: {
+        ...previousResult.repository,
+        issues: {
+          ...previousResult.repository.issues,
+          ...fetchMoreResult.repository.issues,
+          edges: [
+            ...previousResult.repository.issues.edges,
+            ...fetchMoreResult.repository.issues.edges,
+          ],
         },
-      };
-    },
-  });
+      },
+    };
+  },
+});
 
 const Issues = ({
   repositoryOwner,
@@ -182,14 +183,15 @@ const IssuesList = ({
           ))}
 
           <FetchMore
-            payload={{
+            loading={loading}
+            hasNextPage={repository.issues.pageInfo.hasNextPage}
+            fetchMoreConfiguration={getConfiguration(
+              repository.issues.pageInfo.endCursor,
               repositoryOwner,
               repositoryName,
               showState,
-            }}
-            loading={loading}
-            pageInfo={repository.issues.pageInfo}
-            doFetchMore={doFetchMore(fetchMore)}
+            )}
+            fetchMore={fetchMore}
           >
             Issues
           </FetchMore>

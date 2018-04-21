@@ -11,42 +11,43 @@ import FetchMore from '../../FetchMore';
 
 import './style.css';
 
-const doFetchMore = fetchMore => (
+const getConfiguration = (
   cursor,
-  { repositoryOwner, repositoryName, number },
-) =>
-  fetchMore({
-    variables: {
-      cursor,
-      repositoryOwner,
-      repositoryName,
-      number,
-    },
-    updateQuery: (previousResult, { fetchMoreResult }) => {
-      if (!fetchMoreResult) {
-        return previousResult;
-      }
+  repositoryOwner,
+  repositoryName,
+  number,
+) => ({
+  variables: {
+    cursor,
+    repositoryOwner,
+    repositoryName,
+    number,
+  },
+  updateQuery: (previousResult, { fetchMoreResult }) => {
+    if (!fetchMoreResult) {
+      return previousResult;
+    }
 
-      return {
-        ...previousResult,
-        repository: {
-          ...previousResult.repository,
-          issue: {
-            ...previousResult.repository.issue,
-            ...fetchMoreResult.repository.issue,
-            comments: {
-              ...previousResult.repository.issue.comments,
-              ...fetchMoreResult.repository.issue.comments,
-              edges: [
-                ...previousResult.repository.issue.comments.edges,
-                ...fetchMoreResult.repository.issue.comments.edges,
-              ],
-            },
+    return {
+      ...previousResult,
+      repository: {
+        ...previousResult.repository,
+        issue: {
+          ...previousResult.repository.issue,
+          ...fetchMoreResult.repository.issue,
+          comments: {
+            ...previousResult.repository.issue.comments,
+            ...fetchMoreResult.repository.issue.comments,
+            edges: [
+              ...previousResult.repository.issue.comments.edges,
+              ...fetchMoreResult.repository.issue.comments.edges,
+            ],
           },
         },
-      };
-    },
-  });
+      },
+    };
+  },
+});
 
 const CommentList = ({ repositoryOwner, repositoryName, issue }) => (
   <Query
@@ -76,14 +77,17 @@ const CommentList = ({ repositoryOwner, repositoryName, issue }) => (
           ))}
 
           <FetchMore
-            payload={{
+            loading={loading}
+            hasNextPage={
+              repository.issue.comments.pageInfo.hasNextPage
+            }
+            fetchMoreConfiguration={getConfiguration(
+              repository.issue.comments.pageInfo.endCursor,
               repositoryOwner,
               repositoryName,
-              number: issue.number,
-            }}
-            loading={loading}
-            pageInfo={repository.issue.comments.pageInfo}
-            doFetchMore={doFetchMore(fetchMore)}
+              issue.number,
+            )}
+            fetchMore={fetchMore}
           >
             Comments
           </FetchMore>
