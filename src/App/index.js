@@ -17,7 +17,7 @@ class App extends Component {
     organizationName: ORGANIZATION_NAME_DEFAULT,
   };
 
-  onSubmit = value => {
+  onOrganizationSearch = value => {
     this.setState({ organizationName: value });
   };
 
@@ -28,8 +28,8 @@ class App extends Component {
       <Router>
         <div className="App">
           <Navigation
-            initialValue={organizationName}
-            onOrganizationSearch={this.onSubmit}
+            organizationName={organizationName}
+            onOrganizationSearch={this.onOrganizationSearch}
           />
 
           <div className="App-main">

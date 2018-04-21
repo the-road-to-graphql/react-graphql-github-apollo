@@ -9,7 +9,7 @@ import './style.css';
 
 const Navigation = ({
   location: { pathname },
-  initialValue,
+  organizationName,
   onOrganizationSearch,
 }) => (
   <header className="Navigation">
@@ -22,7 +22,7 @@ const Navigation = ({
 
     {pathname === routes.ORGANIZATION && (
       <OrganizationSearch
-        initialValue={initialValue}
+        organizationName={organizationName}
         onOrganizationSearch={onOrganizationSearch}
       />
     )}
@@ -31,7 +31,7 @@ const Navigation = ({
 
 class OrganizationSearch extends React.Component {
   state = {
-    value: this.props.initialValue,
+    value: this.props.organizationName,
   };
 
   onChange = event => {
