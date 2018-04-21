@@ -17,10 +17,10 @@ const Navigation = ({
       <Link to={routes.PROFILE}>Profile</Link>
     </div>
     <div className="Navigation-link">
-      <Link to={routes.HOME}>Organization</Link>
+      <Link to={routes.ORGANIZATION}>Organization</Link>
     </div>
 
-    {pathname === routes.HOME && (
+    {pathname === routes.ORGANIZATION && (
       <OrganizationSearch
         initialValue={initialValue}
         onOrganizationSearch={onOrganizationSearch}

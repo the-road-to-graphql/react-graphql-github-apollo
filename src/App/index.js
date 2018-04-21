@@ -35,7 +35,7 @@ class App extends Component {
           <div className="App-main">
             <Route
               exact
-              path={routes.HOME}
+              path={routes.ORGANIZATION}
               component={() => (
                 <div className="App-content_large-header">
                   <Organization organizationName={organizationName} />
