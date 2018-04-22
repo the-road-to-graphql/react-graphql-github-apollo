@@ -119,11 +119,11 @@ const Issues = ({
 
           return (
             <IssuesList
-              showState={showState}
-              repositoryOwner={repositoryOwner}
-              repositoryName={repositoryName}
               issues={repository.issues}
               loading={loading}
+              repositoryOwner={repositoryOwner}
+              repositoryName={repositoryName}
+              showState={showState}
               fetchMore={fetchMore}
             />
           );
@@ -161,11 +161,11 @@ const IssueFilter = ({
 );
 
 const IssuesList = ({
-  showState,
-  repositoryOwner,
-  repositoryName,
   issues,
   loading,
+  repositoryOwner,
+  repositoryName,
+  showState,
   fetchMore,
 }) => (
   <div className="IssueList">

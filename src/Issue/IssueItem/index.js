@@ -2,12 +2,12 @@ import React from 'react';
 import { withState } from 'recompose';
 
 import Button from '../../Button';
-import CommentList from '../../Comment';
+import Comments from '../../Comment';
 import Link from '../../Link';
 
 import './style.css';
 
-const Issue = ({
+const IssueItem = ({
   issue,
   repositoryOwner,
   repositoryName,
@@ -26,7 +26,7 @@ const Issue = ({
       <div dangerouslySetInnerHTML={{ __html: issue.bodyHTML }} />
 
       {isShowComments && (
-        <CommentList
+        <Comments
           repositoryOwner={repositoryOwner}
           repositoryName={repositoryName}
           issue={issue}
@@ -37,5 +37,5 @@ const Issue = ({
 );
 
 export default withState('isShowComments', 'onShowComments', false)(
-  Issue,
+  IssueItem,
 );

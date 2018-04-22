@@ -10,7 +10,7 @@ export const GET_COMMENTS_OF_ISSUE = gql`
     repository(name: $repositoryName, owner: $repositoryOwner) {
       issue(number: $number) {
         id
-        comments(first: 5, after: $cursor) {
+        comments(first: 1, after: $cursor) {
           edges {
             node {
               id

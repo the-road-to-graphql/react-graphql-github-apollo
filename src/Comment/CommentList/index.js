@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { Query } from 'react-apollo';
 
 import { GET_COMMENTS_OF_ISSUE } from './queries';
@@ -36,7 +36,7 @@ const updateQuery = (previousResult, { fetchMoreResult }) => {
   };
 };
 
-const CommentList = ({ repositoryOwner, repositoryName, issue }) => (
+const Comments = ({ repositoryOwner, repositoryName, issue }) => (
   <Query
     query={GET_COMMENTS_OF_ISSUE}
     variables={{
@@ -58,33 +58,51 @@ const CommentList = ({ repositoryOwner, repositoryName, issue }) => (
       }
 
       return (
-        <div className="CommentList">
-          {repository.issue.comments.edges.map(({ node }) => (
-            <CommentItem key={node.id} comment={node} />
-          ))}
-
-          <FetchMore
+        <Fragment>
+          <CommentList
+            comments={repository.issue.comments}
             loading={loading}
-            hasNextPage={
-              repository.issue.comments.pageInfo.hasNextPage
-            }
-            variables={{
-              cursor: repository.issue.comments.pageInfo.endCursor,
-              repositoryOwner,
-              repositoryName,
-              number: issue.number,
-            }}
-            updateQuery={updateQuery}
+            number={issue.number}
+            repositoryOwner={repositoryOwner}
+            repositoryName={repositoryName}
             fetchMore={fetchMore}
-          >
-            Comments
-          </FetchMore>
+          />
 
           <CommentAdd issueId={repository.issue.id} />
-        </div>
+        </Fragment>
       );
     }}
   </Query>
 );
 
-export default CommentList;
+const CommentList = ({
+  comments,
+  loading,
+  repositoryOwner,
+  repositoryName,
+  number,
+  fetchMore,
+}) => (
+  <div className="CommentList">
+    {comments.edges.map(({ node }) => (
+      <CommentItem key={node.id} comment={node} />
+    ))}
+
+    <FetchMore
+      loading={loading}
+      hasNextPage={comments.pageInfo.hasNextPage}
+      variables={{
+        cursor: comments.pageInfo.endCursor,
+        repositoryOwner,
+        repositoryName,
+        number,
+      }}
+      updateQuery={updateQuery}
+      fetchMore={fetchMore}
+    >
+      Comments
+    </FetchMore>
+  </div>
+);
+
+export default Comments;
