@@ -93,11 +93,42 @@ const Issues = ({
     />
 
     {isShow(showState) && (
-      <IssuesList
-        repositoryOwner={repositoryOwner}
-        repositoryName={repositoryName}
-        showState={showState}
-      />
+      <Query
+        query={GET_ISSUES_OF_REPOSITORY}
+        variables={{
+          repositoryOwner,
+          repositoryName,
+          kindOfIssue: KIND_OF_ISSUES[showState],
+        }}
+        notifyOnNetworkStatusChange={true}
+      >
+        {({ data, loading, error, fetchMore }) => {
+          if (error) {
+            return <ErrorMessage error={error} />;
+          }
+
+          const { repository } = data;
+
+          if (loading && !repository) {
+            return <Loading />;
+          }
+
+          if (!repository.issues.edges.length) {
+            return <div className="IssueList">No issues ...</div>;
+          }
+
+          return (
+            <IssuesList
+              showState={showState}
+              repositoryOwner={repositoryOwner}
+              repositoryName={repositoryName}
+              issues={repository.issues}
+              loading={loading}
+              fetchMore={fetchMore}
+            />
+          );
+        }}
+      </Query>
     )}
   </div>
 );
@@ -130,63 +161,38 @@ const IssueFilter = ({
 );
 
 const IssuesList = ({
+  showState,
   repositoryOwner,
   repositoryName,
-  showState,
+  issues,
+  loading,
+  fetchMore,
 }) => (
-  <Query
-    query={GET_ISSUES_OF_REPOSITORY}
-    variables={{
-      repositoryOwner,
-      repositoryName,
-      kindOfIssue: KIND_OF_ISSUES[showState],
-    }}
-    notifyOnNetworkStatusChange={true}
-  >
-    {({ data, loading, error, fetchMore }) => {
-      if (error) {
-        return <ErrorMessage error={error} />;
-      }
+  <div className="IssueList">
+    {issues.edges.map(({ node }) => (
+      <IssueItem
+        key={node.id}
+        issue={node}
+        repositoryOwner={repositoryOwner}
+        repositoryName={repositoryName}
+      />
+    ))}
 
-      const { repository } = data;
-
-      if (loading && !repository) {
-        return <Loading />;
-      }
-
-      if (!repository.issues.edges.length) {
-        return <div className="IssueList">No issues ...</div>;
-      }
-
-      return (
-        <div className="IssueList">
-          {repository.issues.edges.map(({ node }) => (
-            <IssueItem
-              key={node.id}
-              issue={node}
-              repositoryOwner={repositoryOwner}
-              repositoryName={repositoryName}
-            />
-          ))}
-
-          <FetchMore
-            loading={loading}
-            hasNextPage={repository.issues.pageInfo.hasNextPage}
-            variables={{
-              cursor: repository.issues.pageInfo.endCursor,
-              repositoryOwner,
-              repositoryName,
-              kindOfIssue: KIND_OF_ISSUES[showState],
-            }}
-            updateQuery={updateQuery}
-            fetchMore={fetchMore}
-          >
-            Issues
-          </FetchMore>
-        </div>
-      );
-    }}
-  </Query>
+    <FetchMore
+      loading={loading}
+      hasNextPage={issues.pageInfo.hasNextPage}
+      variables={{
+        cursor: issues.pageInfo.endCursor,
+        repositoryOwner,
+        repositoryName,
+        kindOfIssue: KIND_OF_ISSUES[showState],
+      }}
+      updateQuery={updateQuery}
+      fetchMore={fetchMore}
+    >
+      Issues
+    </FetchMore>
+  </div>
 );
 
 export default withState(
