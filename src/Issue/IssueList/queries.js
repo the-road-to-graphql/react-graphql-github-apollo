@@ -4,11 +4,11 @@ export const GET_ISSUES_OF_REPOSITORY = gql`
   query(
     $repositoryOwner: String!
     $repositoryName: String!
-    $kindOfIssue: IssueState!
+    $issueState: IssueState!
     $cursor: String
   ) {
     repository(name: $repositoryName, owner: $repositoryOwner) {
-      issues(first: 5, states: [$kindOfIssue], after: $cursor) {
+      issues(first: 5, states: [$issueState], after: $cursor) {
         edges {
           node {
             id

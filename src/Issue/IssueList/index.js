@@ -46,7 +46,7 @@ const prefetchIssues = (
       variables: {
         repositoryOwner,
         repositoryName,
-        kindOfIssue: nextIssueState,
+        issueState: nextIssueState,
       },
     });
   }
@@ -93,7 +93,7 @@ const Issues = ({
         variables={{
           repositoryOwner,
           repositoryName,
-          kindOfIssue: issueState,
+          issueState,
         }}
         notifyOnNetworkStatusChange={true}
       >
@@ -180,7 +180,7 @@ const IssueList = ({
         cursor: issues.pageInfo.endCursor,
         repositoryOwner,
         repositoryName,
-        kindOfIssue: issueState,
+        issueState,
       }}
       updateQuery={updateQuery}
       fetchMore={fetchMore}
