@@ -13,9 +13,9 @@ import { ButtonUnobtrusive } from '../../Button';
 import './style.css';
 
 const SHOW_STATES = {
-  NO_ISSUES: 'NO_ISSUES',
-  OPEN_ISSUES: 'OPEN_ISSUES',
-  CLOSED_ISSUES: 'CLOSES_ISSUES',
+  NO_ISSUES: 'NONE',
+  OPEN_ISSUES: 'OPEN',
+  CLOSED_ISSUES: 'CLOSED',
 };
 
 const SHOW_TRANSITION_LABELS = {
