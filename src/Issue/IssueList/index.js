@@ -12,46 +12,41 @@ import { ButtonUnobtrusive } from '../../Button';
 
 import './style.css';
 
-const SHOW_STATES = {
-  NO_ISSUES: 'NONE',
-  OPEN_ISSUES: 'OPEN',
-  CLOSED_ISSUES: 'CLOSED',
+const ISSUE_STATES = {
+  NONE: 'NONE',
+  OPEN: 'OPEN',
+  CLOSED: 'CLOSED',
 };
 
-const SHOW_TRANSITION_LABELS = {
-  [SHOW_STATES.NO_ISSUES]: 'Show Open Issues',
-  [SHOW_STATES.OPEN_ISSUES]: 'Show Closed Issues',
-  [SHOW_STATES.CLOSED_ISSUES]: 'Hide Issues',
+const TRANSITION_LABELS = {
+  [ISSUE_STATES.NONE]: 'Show Open Issues',
+  [ISSUE_STATES.OPEN]: 'Show Closed Issues',
+  [ISSUE_STATES.CLOSED]: 'Hide Issues',
 };
 
-const SHOW_TRANSITION_STATE = {
-  [SHOW_STATES.NO_ISSUES]: SHOW_STATES.OPEN_ISSUES,
-  [SHOW_STATES.OPEN_ISSUES]: SHOW_STATES.CLOSED_ISSUES,
-  [SHOW_STATES.CLOSED_ISSUES]: SHOW_STATES.NO_ISSUES,
+const TRANSITION_STATE = {
+  [ISSUE_STATES.NONE]: ISSUE_STATES.OPEN,
+  [ISSUE_STATES.OPEN]: ISSUE_STATES.CLOSED,
+  [ISSUE_STATES.CLOSED]: ISSUE_STATES.NONE,
 };
 
-const KIND_OF_ISSUES = {
-  [SHOW_STATES.OPEN_ISSUES]: 'OPEN',
-  [SHOW_STATES.CLOSED_ISSUES]: 'CLOSED',
-};
-
-const isShow = showState => showState !== SHOW_STATES.NO_ISSUES;
+const isShow = issueState => issueState !== ISSUE_STATES.NONE;
 
 const prefetchIssues = (
   client,
   repositoryOwner,
   repositoryName,
-  showState,
+  issueState,
 ) => {
-  const nextShowState = SHOW_TRANSITION_STATE[showState];
+  const nextIssueState = TRANSITION_STATE[issueState];
 
-  if (isShow(nextShowState)) {
+  if (isShow(nextIssueState)) {
     client.query({
       query: GET_ISSUES_OF_REPOSITORY,
       variables: {
         repositoryOwner,
         repositoryName,
-        kindOfIssue: KIND_OF_ISSUES[nextShowState],
+        kindOfIssue: nextIssueState,
       },
     });
   }
@@ -81,24 +76,24 @@ const updateQuery = (previousResult, { fetchMoreResult }) => {
 const Issues = ({
   repositoryOwner,
   repositoryName,
-  showState,
-  onChangeShowState,
+  issueState,
+  onChangeIssueState,
 }) => (
   <div className="Issues">
     <IssueFilter
       repositoryOwner={repositoryOwner}
       repositoryName={repositoryName}
-      showState={showState}
-      onChangeShowState={onChangeShowState}
+      issueState={issueState}
+      onChangeIssueState={onChangeIssueState}
     />
 
-    {isShow(showState) && (
+    {isShow(issueState) && (
       <Query
         query={GET_ISSUES_OF_REPOSITORY}
         variables={{
           repositoryOwner,
           repositoryName,
-          kindOfIssue: KIND_OF_ISSUES[showState],
+          kindOfIssue: issueState,
         }}
         notifyOnNetworkStatusChange={true}
       >
@@ -123,7 +118,7 @@ const Issues = ({
               loading={loading}
               repositoryOwner={repositoryOwner}
               repositoryName={repositoryName}
-              showState={showState}
+              issueState={issueState}
               fetchMore={fetchMore}
             />
           );
@@ -136,25 +131,25 @@ const Issues = ({
 const IssueFilter = ({
   repositoryOwner,
   repositoryName,
-  showState,
-  onChangeShowState,
+  issueState,
+  onChangeIssueState,
 }) => (
   <ApolloConsumer>
     {client => (
       <ButtonUnobtrusive
         onClick={() =>
-          onChangeShowState(SHOW_TRANSITION_STATE[showState])
+          onChangeIssueState(TRANSITION_STATE[issueState])
         }
         onMouseOver={() =>
           prefetchIssues(
             client,
             repositoryOwner,
             repositoryName,
-            showState,
+            issueState,
           )
         }
       >
-        {SHOW_TRANSITION_LABELS[showState]}
+        {TRANSITION_LABELS[issueState]}
       </ButtonUnobtrusive>
     )}
   </ApolloConsumer>
@@ -165,7 +160,7 @@ const IssueList = ({
   loading,
   repositoryOwner,
   repositoryName,
-  showState,
+  issueState,
   fetchMore,
 }) => (
   <div className="IssueList">
@@ -185,7 +180,7 @@ const IssueList = ({
         cursor: issues.pageInfo.endCursor,
         repositoryOwner,
         repositoryName,
-        kindOfIssue: KIND_OF_ISSUES[showState],
+        kindOfIssue: issueState,
       }}
       updateQuery={updateQuery}
       fetchMore={fetchMore}
@@ -196,7 +191,7 @@ const IssueList = ({
 );
 
 export default withState(
-  'showState',
-  'onChangeShowState',
-  SHOW_STATES.NO_ISSUES,
+  'issueState',
+  'onChangeIssueState',
+  ISSUE_STATES.NONE,
 )(Issues);

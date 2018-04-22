@@ -13,6 +13,7 @@ export const GET_ISSUES_OF_REPOSITORY = gql`
           node {
             id
             number
+            state
             title
             url
             bodyHTML
