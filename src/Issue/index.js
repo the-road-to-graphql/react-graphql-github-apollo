@@ -1,3 +1,3 @@
-import IssueList from './IssueList';
+import Issues from './IssueList';
 
-export default IssueList;
+export default Issues;

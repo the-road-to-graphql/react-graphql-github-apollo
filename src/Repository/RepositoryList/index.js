@@ -2,7 +2,7 @@ import React, { Fragment } from 'react';
 
 import RepositoryItem from '../RepositoryItem';
 
-import IssueList from '../../Issue/IssueList';
+import Issues from '../../Issue';
 import FetchMore from '../../FetchMore';
 
 import '../style.css';
@@ -42,7 +42,7 @@ const RepositoryList = ({
       <div key={node.id} className="RepositoryItem">
         <RepositoryItem {...node} />
 
-        <IssueList
+        <Issues
           repositoryName={node.name}
           repositoryOwner={node.owner.login}
         />
