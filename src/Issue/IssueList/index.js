@@ -118,7 +118,7 @@ const Issues = ({
           }
 
           return (
-            <IssuesList
+            <IssueList
               issues={repository.issues}
               loading={loading}
               repositoryOwner={repositoryOwner}
@@ -160,7 +160,7 @@ const IssueFilter = ({
   </ApolloConsumer>
 );
 
-const IssuesList = ({
+const IssueList = ({
   issues,
   loading,
   repositoryOwner,
