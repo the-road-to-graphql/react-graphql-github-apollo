@@ -58,7 +58,13 @@ const updateWatch = (
 
 const updateAddStar = (
   client,
-  { data: { addStar: { starrable: { id, viewerHasStarred } } } },
+  {
+    data: {
+      addStar: {
+        starrable: { id, viewerHasStarred },
+      },
+    },
+  },
 ) =>
   client.writeFragment({
     id: `Repository:${id}`,
@@ -68,7 +74,13 @@ const updateAddStar = (
 
 const updateRemoveStar = (
   client,
-  { data: { removeStar: { starrable: { id, viewerHasStarred } } } },
+  {
+    data: {
+      removeStar: {
+        starrable: { id, viewerHasStarred },
+      },
+    },
+  },
 ) => {
   client.writeFragment({
     id: `Repository:${id}`,
@@ -139,6 +151,7 @@ const RepositoryItem = ({
           {(updateSubscription, { data, loading, error }) => (
             <Button
               className="RepositoryItem-title-action"
+              data-test-id="updateSubscription"
               onClick={updateSubscription}
             >
               {watchers.totalCount}{' '}

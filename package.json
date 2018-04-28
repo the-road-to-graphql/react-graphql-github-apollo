@@ -14,7 +14,7 @@
     "react-apollo": "^2.1.0",
     "react-dom": "^16.2.0",
     "react-router-dom": "^4.2.2",
-    "react-scripts": "1.1.1",
+    "react-scripts": "^1.1.4",
     "recompose": "^0.26.0"
   },
   "scripts": {
@@ -25,6 +25,9 @@
     "eject": "react-scripts eject"
   },
   "devDependencies": {
-    "prettier": "^1.11.1"
+    "enzyme": "^3.3.0",
+    "enzyme-adapter-react-16": "^1.1.1",
+    "prettier": "^1.11.1",
+    "react-apollo-async-testing": "0.0.3"
   }
 }
