@@ -1,6 +1,6 @@
 # A React + Apollo + GraphQL GitHub Client
 
-[![Build Status](https://travis-ci.org/rwieruch/react-graphql-github-apollo.svg?branch=master)](https://travis-ci.org/rwieruch/react-graphql-github-apollo)
+[![Build Status](https://travis-ci.org/rwieruch/react-graphql-github-apollo.svg?branch=master)](https://travis-ci.org/rwieruch/react-graphql-github-apollo) [![Slack](https://slack-the-road-to-learn-react.wieruch.com/badge.svg)](https://slack-the-road-to-learn-react.wieruch.com/)
 
 <img src="https://user-images.githubusercontent.com/2479967/35777369-14a2d1ae-09ad-11e8-80c6-7a3ddeabb716.gif" width="300" />
 
