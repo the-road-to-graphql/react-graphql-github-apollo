@@ -107,18 +107,6 @@ const Issues = ({
             return <Loading />;
           }
 
-          const filteredRepository = {
-            issues: {
-              edges: repository.issues.edges.filter(
-                issue => issue.node.state === issueState,
-              ),
-            },
-          };
-
-          if (!filteredRepository.issues.edges.length) {
-            return <div className="IssueList">No issues ...</div>;
-          }
-
           return (
             <IssueList
               issues={repository.issues}
