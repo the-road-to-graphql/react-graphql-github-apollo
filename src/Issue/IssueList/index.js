@@ -172,7 +172,12 @@ const IssueList = ({
 }) => (
   <div className="IssueList">
     {issues.edges.map(({ node }) => (
-      <IssueItem key={node.id} issue={node} />
+      <IssueItem
+        key={node.id}
+        issue={node}
+        repositoryOwner={repositoryOwner}
+        repositoryName={repositoryName}
+      />
     ))}
 
     <FetchMore
