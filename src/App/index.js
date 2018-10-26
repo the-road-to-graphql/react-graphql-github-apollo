@@ -3,18 +3,16 @@ import { BrowserRouter as Router, Route } from 'react-router-dom';
 
 import Navigation from './Navigation';
 import Footer from './Footer';
-import Organization from '../Organization';
 import Profile from '../Profile';
+import Organization from '../Organization';
 
 import * as routes from '../constants/routes';
 
 import './style.css';
 
-const ORGANIZATION_NAME_DEFAULT = 'the-road-to-learn-react';
-
 class App extends Component {
   state = {
-    organizationName: ORGANIZATION_NAME_DEFAULT,
+    organizationName: 'the-road-to-learn-react',
   };
 
   onOrganizationSearch = value => {

@@ -1,18 +1,17 @@
 import React from 'react';
 import { Mutation } from 'react-apollo';
 
+import REPOSITORY_FRAGMENT from '../fragments';
+import Link from '../../Link';
+import Button from '../../Button';
+
+import '../style.css';
+
 import {
   STAR_REPOSITORY,
   UNSTAR_REPOSITORY,
   WATCH_REPOSITORY,
 } from '../mutations';
-
-import REPOSITORY_FRAGMENT from '../fragments';
-
-import Button from '../../Button';
-import Link from '../../Link';
-
-import '../style.css';
 
 const VIEWER_SUBSCRIPTIONS = {
   SUBSCRIBED: 'SUBSCRIBED',
@@ -160,7 +159,32 @@ const RepositoryItem = ({
           )}
         </Mutation>
 
-        {viewerHasStarred ? (
+        {!viewerHasStarred ? (
+          <Mutation
+            mutation={STAR_REPOSITORY}
+            variables={{ id }}
+            optimisticResponse={{
+              addStar: {
+                __typename: 'Mutation',
+                starrable: {
+                  __typename: 'Repository',
+                  id,
+                  viewerHasStarred: !viewerHasStarred,
+                },
+              },
+            }}
+            update={updateAddStar}
+          >
+            {(addStar, { data, loading, error }) => (
+              <Button
+                className={'RepositoryItem-title-action'}
+                onClick={addStar}
+              >
+                {stargazers.totalCount} Star
+              </Button>
+            )}
+          </Mutation>
+        ) : (
           <Mutation
             mutation={UNSTAR_REPOSITORY}
             variables={{ id }}
@@ -182,31 +206,6 @@ const RepositoryItem = ({
                 onClick={removeStar}
               >
                 {stargazers.totalCount} Unstar
-              </Button>
-            )}
-          </Mutation>
-        ) : (
-          <Mutation
-            mutation={STAR_REPOSITORY}
-            variables={{ id }}
-            optimisticResponse={{
-              addStar: {
-                __typename: 'Mutation',
-                starrable: {
-                  __typename: 'Repository',
-                  id,
-                  viewerHasStarred: !viewerHasStarred,
-                },
-              },
-            }}
-            update={updateAddStar}
-          >
-            {(addStar, { data, loading, error }) => (
-              <Button
-                className="RepositoryItem-title-action"
-                onClick={addStar}
-              >
-                {stargazers.totalCount} Star
               </Button>
             )}
           </Mutation>

@@ -1,9 +1,8 @@
 import React, { Fragment } from 'react';
 
-import RepositoryItem from '../RepositoryItem';
-
-import Issues from '../../Issue';
 import FetchMore from '../../FetchMore';
+import RepositoryItem from '../RepositoryItem';
+import Issues from '../../Issue';
 
 import '../style.css';
 
@@ -32,10 +31,10 @@ const getUpdateQuery = entry => (
 };
 
 const RepositoryList = ({
-  entry,
   repositories,
   loading,
   fetchMore,
+  entry,
 }) => (
   <Fragment>
     {repositories.edges.map(({ node }) => (

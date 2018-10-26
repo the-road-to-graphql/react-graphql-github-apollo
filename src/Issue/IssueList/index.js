@@ -4,7 +4,6 @@ import { withState } from 'recompose';
 
 import { GET_ISSUES_OF_REPOSITORY } from './queries';
 import IssueItem from '../IssueItem';
-
 import Loading from '../../Loading';
 import ErrorMessage from '../../Error';
 import FetchMore from '../../FetchMore';
@@ -32,26 +31,6 @@ const TRANSITION_STATE = {
 
 const isShow = issueState => issueState !== ISSUE_STATES.NONE;
 
-const prefetchIssues = (
-  client,
-  repositoryOwner,
-  repositoryName,
-  issueState,
-) => {
-  const nextIssueState = TRANSITION_STATE[issueState];
-
-  if (isShow(nextIssueState)) {
-    client.query({
-      query: GET_ISSUES_OF_REPOSITORY,
-      variables: {
-        repositoryOwner,
-        repositoryName,
-        issueState: nextIssueState,
-      },
-    });
-  }
-};
-
 const updateQuery = (previousResult, { fetchMoreResult }) => {
   if (!fetchMoreResult) {
     return previousResult;
@@ -71,6 +50,26 @@ const updateQuery = (previousResult, { fetchMoreResult }) => {
       },
     },
   };
+};
+
+const prefetchIssues = (
+  client,
+  repositoryOwner,
+  repositoryName,
+  issueState,
+) => {
+  const nextIssueState = TRANSITION_STATE[issueState];
+
+  if (isShow(nextIssueState)) {
+    client.query({
+      query: GET_ISSUES_OF_REPOSITORY,
+      variables: {
+        repositoryOwner,
+        repositoryName,
+        issueState: nextIssueState,
+      },
+    });
+  }
 };
 
 const Issues = ({
