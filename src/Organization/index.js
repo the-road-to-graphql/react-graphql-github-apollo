@@ -42,7 +42,7 @@ const Organization = ({ organizationName }) => (
       const { organization } = data;
 
       if (loading && !organization) {
-        return <Loading />;
+        return <Loading isCenter={true} />;
       }
 
       return (

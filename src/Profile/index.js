@@ -36,14 +36,14 @@ const Profile = () => (
     notifyOnNetworkStatusChange={true}
   >
     {({ data, loading, error, fetchMore }) => {
-      if (error) {
-        return <ErrorMessage error={error} />;
-      }
-
       const { viewer } = data;
 
       if (loading && !viewer) {
-        return <Loading />;
+        return <Loading isCenter={true} />;
+      }
+
+      if (error) {
+        return <ErrorMessage error={error} />;
       }
 
       return (
