@@ -10,7 +10,7 @@
     "apollo-link-http": "^1.5.5",
     "graphql": "^14.0.2",
     "graphql-tag": "^2.10.0",
-    "react": "^16.6.0",
+    "react": "^16.8.4",
     "react-apollo": "^2.2.4",
     "react-dom": "^16.6.0",
     "react-router-dom": "^4.3.1",
