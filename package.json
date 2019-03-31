@@ -8,7 +8,7 @@
     "apollo-link": "^1.2.3",
     "apollo-link-error": "^1.1.1",
     "apollo-link-http": "^1.5.5",
-    "graphql": "^14.0.2",
+    "graphql": "^14.2.1",
     "graphql-tag": "^2.10.0",
     "react": "^16.6.0",
     "react-apollo": "^2.2.4",
