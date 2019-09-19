@@ -14,7 +14,7 @@
     "react-apollo": "^2.2.4",
     "react-dom": "^16.6.0",
     "react-router-dom": "^4.3.1",
-    "react-scripts": "3.1.0",
+    "react-scripts": "3.1.2",
     "recompose": "^0.30.0"
   },
   "scripts": {
